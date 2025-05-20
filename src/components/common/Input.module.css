@@ -1,0 +1,35 @@
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #1b752f;
+}
+
+.inputError {
+  border-color: #e53935;
+}
+
+.errorText {
+  color: #e53935;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
+}

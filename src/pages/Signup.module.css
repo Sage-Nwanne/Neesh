@@ -1,0 +1,58 @@
+.signupPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.signupCard {
+  width: 100%;
+  max-width: 450px;
+  padding: 30px;
+}
+
+.signupCard h1 {
+  margin-bottom: 10px;
+}
+
+.subheading {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.form {
+  margin-bottom: 20px;
+}
+
+.signupButton {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.loginText {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+.loginText a {
+  color: #1b752f;
+  font-weight: 500;
+}
+
+.loginText a:hover {
+  text-decoration: underline;
+}
+
+select {
+  color: darkgreen !important;
+  font-weight: bolder;
+}
