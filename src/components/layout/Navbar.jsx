@@ -1,13 +1,34 @@
-import { Link, useNavigate } from 'react-router-dom';
-import Button from '../common/Button';
-import styles from './Navbar.module.css';
+import { Link, useNavigate } from 'react-router-dom'; // Fix the import path
+import Button from '../../components/common/Button';
+import styles from '../../components/layout/Navbar.module.css';
+import { logout } from '../../api'; // Fix the import path
 
 const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setUser(null);
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      // Call logout API
+      await logout();
+      
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Update state
+      setUser(null);
+      
+      // Redirect to home
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      
+      // Even if API fails, clear local data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      navigate('/');
+    }
   };
 
   return (
@@ -25,12 +46,12 @@ const Navbar = ({ user, setUser }) => {
             </>
           ) : (
             <>
-              {user.role === 'publisher' ? (
+              {user.role === 'Publisher' ? (
                 <Link to="/publisher-dashboard" className={styles.navLink}>Dashboard</Link>
               ) : (
                 <Link to="/retailer-dashboard" className={styles.navLink}>Dashboard</Link>
               )}
-              <span className={styles.welcome}>Welcome, {user.name}</span>
+              <span className={styles.welcome}>Welcome, {user.username}</span>
               <Button onClick={handleLogout} variant="outline" size="small">Logout</Button>
             </>
           )}

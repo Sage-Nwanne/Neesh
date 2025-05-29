@@ -4,7 +4,6 @@ import styles from './Login.module.css';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
-import { login } from '../api';
 
 const Login = ({ setUser }) => {
   const navigate = useNavigate();
@@ -23,75 +22,60 @@ const Login = ({ setUser }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     
-    try {
-      // Make API call to login
-      const response = await login(formData);
-      
-      // Store token in localStorage
-      localStorage.setItem('token', response.data.token);
-      
-      // Set user in state
-      const userData = response.data.user;
-      setUser(userData);
-      
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Redirect based on user role
-      if (userData.role === 'publisher') {
-        navigate('/publisher-dashboard');
+    // Get stored user data from localStorage
+    const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = storedUsers.find(u => u.email === formData.email);
+    
+    setTimeout(() => {
+      // Check if user exists and password matches
+      if (user && user.password === formData.password) {
+        // Create a user object without the password for security
+        const loggedInUser = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        };
+        
+        setUser(loggedInUser);
+        
+        // Store current user in localStorage
+        localStorage.setItem('currentUser', JSON.stringify(loggedInUser));
+        
+        if (user.role === 'publisher') {
+          navigate('/publisher-dashboard');
+        } else {
+          navigate('/retailer-dashboard');
+        }
       } else {
-        navigate('/retailer-dashboard');
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      
-      // Handle different error scenarios
-      if (err.response) {
-        // Server responded with an error
-        setError(err.response.data.message || 'Invalid email or password');
-      } else if (err.request) {
-        // No response received
-        setError('Server not responding. Please try again later.');
-      } else {
-        // Something else went wrong
-        setError('An error occurred. Please try again.');
-      }
-      
-      // Fallback to demo accounts for testing/development
-      if (process.env.NODE_ENV === 'development') {
+        // Fallback to demo accounts for testing
         if (formData.email === 'publisher@example.com' && formData.password === 'password') {
-          const demoUser = {
+          setUser({
             id: 1,
-            username: 'JohnPublisher',
+            name: 'John Publisher',
             email: 'publisher@example.com',
             role: 'publisher'
-          };
-          setUser(demoUser);
-          localStorage.setItem('user', JSON.stringify(demoUser));
+          });
           navigate('/publisher-dashboard');
-          setError('');
         } else if (formData.email === 'retailer@example.com' && formData.password === 'password') {
-          const demoUser = {
+          setUser({
             id: 2,
-            username: 'JaneRetailer',
+            name: 'Jane Retailer',
             email: 'retailer@example.com',
             role: 'retailer'
-          };
-          setUser(demoUser);
-          localStorage.setItem('user', JSON.stringify(demoUser));
+          });
           navigate('/retailer-dashboard');
-          setError('');
+        } else {
+          setError('Invalid email or password');
         }
       }
-    } finally {
       setLoading(false);
-    }
+    }, 1000);
   };
 
   return (

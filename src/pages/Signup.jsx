@@ -5,15 +5,16 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
+import { signup } from '../api';
 
 const Signup = ({ setUser }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'retailer'
+    role: 'Retailer'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ const Signup = ({ setUser }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
@@ -43,24 +44,51 @@ const Signup = ({ setUser }) => {
     
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      // Demo signup logic
-      setUser({
-        id: Math.floor(Math.random() * 1000),
-        name: formData.name,
+    try {
+      // Prepare data for API (exclude confirmPassword)
+      const userData = {
+        username: formData.username,
         email: formData.email,
+        password: formData.password,
         role: formData.role
-      });
+      };
       
-      if (formData.role === 'publisher') {
+      // Make API call to signup
+      const response = await signup(userData);
+      
+      // Store token in localStorage
+      localStorage.setItem('token', response.data.token);
+      
+      // Set user in state
+      const newUser = response.data.user;
+      setUser(newUser);
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(newUser));
+      
+      // Redirect based on user role
+      if (newUser.role === 'Publisher') {
         navigate('/publisher-dashboard');
       } else {
         navigate('/retailer-dashboard');
       }
+    } catch (err) {
+      console.error('Signup error:', err);
       
+      // Handle different error scenarios
+      if (err.response) {
+        // Server responded with an error
+        setError(err.response.data.message || 'Error creating account');
+      } else if (err.request) {
+        // No response received
+        setError('Server not responding. Please try again later.');
+      } else {
+        // Something else went wrong
+        setError('An error occurred. Please try again.');
+      }
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -73,13 +101,13 @@ const Signup = ({ setUser }) => {
         
         <form onSubmit={handleSubmit} className={styles.form}>
           <Input
-            label="Full Name"
+            label="Username"
             type="text"
-            name="name"
-            value={formData.name}
+            name="username"
+            value={formData.username}
             onChange={handleChange}
             required
-            placeholder="Your full name"
+            placeholder="Your username"
           />
           
           <Input
@@ -118,8 +146,8 @@ const Signup = ({ setUser }) => {
             value={formData.role}
             onChange={handleChange}
             options={[
-              { value: 'retailer', label: 'Retailer' },
-              { value: 'publisher', label: 'Publisher' }
+              { value: 'Retailer', label: 'Retailer' },
+              { value: 'Publisher', label: 'Publisher' }
             ]}
           />
           
