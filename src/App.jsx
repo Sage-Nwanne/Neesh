@@ -11,6 +11,7 @@ import PublisherDashboard from './pages/PublisherDashboard';
 import RetailerDashboard from './pages/RetailerDashboard';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import HealthStatus from './components/common/HealthStatus';
 import { getCurrentUser } from './api';
 
 function App() {
@@ -22,8 +23,9 @@ function App() {
   useEffect(() => {
     const checkBackendConnection = async () => {
       try {
-        // Simple ping to backend - adjust URL as needed
-        await axios.get('https://neesh-backend-8378fc8ecdf9.herokuapp.com/api/health');
+        // Use the health endpoint you just added
+        const response = await axios.get('https://neesh-backend-8378fc8ecdf9.herokuapp.com/api/health');
+        console.log('Backend health check response:', response.data);
         setBackendStatus('Connected');
       } catch (error) {
         console.error('Backend connection error:', error);
@@ -79,6 +81,11 @@ function App() {
       {backendStatus !== 'Connected' && (
         <div style={{ background: 'red', color: 'white', padding: '10px', textAlign: 'center' }}>
           Warning: Backend connection issue. Some features may not work.
+        </div>
+      )}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{ padding: '0 20px' }}>
+          <HealthStatus />
         </div>
       )}
       <main className="container">

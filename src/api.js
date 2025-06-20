@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 // const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const API_URL = 'https://neesh-backend-8378fc8ecdf9.herokuapp.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://neesh-backend-8378fc8ecdf9.herokuapp.com/api';
+
 
 const API = axios.create({
   baseURL: API_URL,
@@ -60,5 +61,21 @@ export const updateRetailerInventory = (inventoryId, inventoryData) =>
   API.put(`/retailer/inventory/${inventoryId}`, inventoryData);
 export const deleteRetailerInventory = (inventoryId) => 
   API.delete(`/retailer/inventory/${inventoryId}`);
+
+export const checkHealth = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/health`);
+    return {
+      status: 'connected',
+      data: response.data
+    };
+  } catch (error) {
+    return {
+      status: 'error',
+      error: error.message,
+      response: error.response?.data
+    };
+  }
+};
 
 export default API;

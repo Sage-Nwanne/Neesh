@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import BackendTest from '../components/common/BackendTest';
 import { magazineData } from '../data/dummyData';
 
 const Home = () => {
@@ -23,6 +24,14 @@ const Home = () => {
           <Button size="large">Browse Magazines</Button>
         </div>
       </section>
+      
+      {/* Add the test component in development mode */}
+      {process.env.NODE_ENV === 'development' && (
+        <section className={styles.section}>
+          <h2>Developer Tools</h2>
+          <BackendTest />
+        </section>
+      )}
       
       <section className={styles.section}>
         <h2>Featured Magazines</h2>
