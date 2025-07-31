@@ -1,158 +1,226 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { getAvailableMagazines, getRetailerOrders, createOrder, getRetailerInventory } from '../api';
 import styles from './RetailerDashboard.module.css';
-import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import { retailerOrders, retailerInventory, magazineData } from '../data/dummyData';
+import Card from '../components/common/Card';
 
 const RetailerDashboard = ({ user }) => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('inventory');
-  const [inventory, setInventory] = useState([]);
+  const [magazines, setMagazines] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [availableMagazines, setAvailableMagazines] = useState([]);
+  const [inventory, setInventory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    // Redirect if not logged in or not a retailer
-    if (!user) {
-      console.log('No user found, redirecting to login');
-      navigate('/login');
-      return;
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchMagazines();
+  }, [selectedCategory, searchTerm]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [ordersRes, inventoryRes] = await Promise.all([
+        getRetailerOrders(),
+        getRetailerInventory()
+      ]);
+      
+      setOrders(ordersRes.data || []);
+      setInventory(inventoryRes.data || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Failed to load dashboard data');
+    } finally {
+      setLoading(false);
     }
-    
-    console.log('User role:', user.role); // Debug log
-    
-    if (user.role !== 'retailer') {
-      console.log('User is not a retailer, redirecting to home');
-      navigate('/');
-      return;
+  };
+
+  const fetchMagazines = async () => {
+    try {
+      const params = {};
+      if (selectedCategory !== 'all') params.category = selectedCategory;
+      if (searchTerm) params.search = searchTerm;
+      
+      const response = await getAvailableMagazines(params);
+      setMagazines(response.data || []);
+    } catch (error) {
+      console.error('Error fetching magazines:', error);
     }
-    
-    // Load data
-    setInventory(retailerInventory);
-    setOrders(retailerOrders);
-    setAvailableMagazines(magazineData);
-  }, [user, navigate]);
+  };
+
+  const handleOrder = async (magazineId, quantity = 1) => {
+    try {
+      await createOrder({ magazine_id: magazineId, quantity });
+      fetchData(); // Refresh orders
+      alert('Order placed successfully!');
+    } catch (error) {
+      console.error('Error placing order:', error);
+      setError('Failed to place order');
+    }
+  };
+
+  const totalSpent = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+  const totalOrders = orders.length;
+  const totalInventory = inventory.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (loading) {
+    return <div className={styles.loading}>Loading dashboard...</div>;
+  }
 
   return (
     <div className={styles.dashboard}>
       <div className={styles.header}>
         <h1>Retailer Dashboard</h1>
-        <p>Welcome back, {user?.name || 'Retailer'}!</p>
+        <p>Welcome back, {user?.username || 'Retailer'}!</p>
       </div>
+      
+      {error && <div className={styles.error}>{error}</div>}
       
       <div className={styles.stats}>
         <Card className={styles.statCard}>
-          <h3>Inventory Items</h3>
-          <p className={styles.statValue}>{inventory.length}</p>
-        </Card>
-        
-        <Card className={styles.statCard}>
           <h3>Total Orders</h3>
-          <p className={styles.statValue}>{orders.length}</p>
+          <p className={styles.statValue}>{totalOrders}</p>
         </Card>
         
         <Card className={styles.statCard}>
-          <h3>Total Sales</h3>
+          <h3>Total Spent</h3>
+          <p className={styles.statValue}>${totalSpent.toFixed(2)}</p>
+        </Card>
+        
+        <Card className={styles.statCard}>
+          <h3>Inventory Items</h3>
+          <p className={styles.statValue}>{totalInventory}</p>
+        </Card>
+        
+        <Card className={styles.statCard}>
+          <h3>Pending Orders</h3>
           <p className={styles.statValue}>
-            ${inventory.reduce((sum, item) => sum + (item.sold * item.price), 0).toFixed(2)}
+            {orders.filter(order => order.status === 'pending').length}
           </p>
         </Card>
       </div>
-      
-      <div className={styles.tabs}>
-        <button 
-          className={`${styles.tab} ${activeTab === 'inventory' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('inventory')}
-        >
-          My Inventory
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'orders' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('orders')}
-        >
-          Orders
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'browse' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('browse')}
-        >
-          Browse Magazines
-        </button>
+
+      <div className={styles.section}>
+        <h2>Browse Magazines</h2>
+        
+        <div className={styles.filters}>
+          <div className={styles.searchBox}>
+            <input
+              type="text"
+              placeholder="Search magazines..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className={styles.categoryFilter}
+          >
+            <option value="all">All Categories</option>
+            <option value="fashion">Fashion</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="tech">Technology</option>
+            <option value="food">Food</option>
+            <option value="travel">Travel</option>
+          </select>
+        </div>
+
+        <div className={styles.magazineGrid}>
+          {magazines.map(magazine => (
+            <Card key={magazine.id} className={styles.magazineCard}>
+              {magazine.cover_image_url && (
+                <img 
+                  src={magazine.cover_image_url} 
+                  alt={magazine.title}
+                  className={styles.coverImage}
+                />
+              )}
+              <h3>{magazine.title}</h3>
+              <p className={styles.price}>${magazine.price}</p>
+              <p className={styles.category}>{magazine.category}</p>
+              <p className={styles.publisher}>
+                by {magazine.users?.username || 'Unknown Publisher'}
+              </p>
+              <p className={styles.description}>{magazine.description}</p>
+              <Button 
+                onClick={() => handleOrder(magazine.id)}
+                variant="primary"
+                size="small"
+              >
+                Order Now
+              </Button>
+            </Card>
+          ))}
+        </div>
       </div>
-      
-      {activeTab === 'inventory' && (
-        <div className={styles.tabContent}>
-          <h2>My Inventory</h2>
-          <div className={styles.inventoryList}>
-            {inventory.map(item => (
-              <Card key={item.id} className={styles.inventoryItem}>
-                <div className={styles.inventoryDetails}>
-                  <img src={item.coverImage} alt={item.title} className={styles.magazineCover} />
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>Publisher: {item.publisher}</p>
-                    <p>Price: ${item.price.toFixed(2)}</p>
-                    <p>In Stock: {item.inStock}</p>
-                    <p>Sold: {item.sold}</p>
-                  </div>
-                </div>
-                <div className={styles.inventoryActions}>
-                  <Button variant="outline" size="small">Order More</Button>
-                </div>
+
+      <div className={styles.section}>
+        <h2>My Orders</h2>
+        <div className={styles.ordersTable}>
+          {orders.length === 0 ? (
+            <p>No orders yet.</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Magazine</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map(order => (
+                  <tr key={order.id}>
+                    <td>{order.id.slice(0, 8)}...</td>
+                    <td>{order.magazines?.title}</td>
+                    <td>{order.quantity}</td>
+                    <td>${order.total_price}</td>
+                    <td>
+                      <span className={`${styles.status} ${styles[order.status]}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td>{new Date(order.created_at).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <h2>My Inventory</h2>
+        <div className={styles.inventoryGrid}>
+          {inventory.length === 0 ? (
+            <p>No inventory items yet.</p>
+          ) : (
+            inventory.map(item => (
+              <Card key={item.id} className={styles.inventoryCard}>
+                {item.magazine?.cover_image_url && (
+                  <img 
+                    src={item.magazine.cover_image_url} 
+                    alt={item.magazine.title}
+                    className={styles.coverImage}
+                  />
+                )}
+                <h4>{item.magazine?.title}</h4>
+                <p className={styles.quantity}>Quantity: {item.quantity}</p>
+                <p className={styles.category}>{item.magazine?.category}</p>
               </Card>
-            ))}
-          </div>
+            ))
+          )}
         </div>
-      )}
-      
-      {activeTab === 'orders' && (
-        <div className={styles.tabContent}>
-          <h2>Orders</h2>
-          <div className={styles.ordersTable}>
-            <div className={styles.tableHeader}>
-              <div>Date</div>
-              <div>Magazine</div>
-              <div>Publisher</div>
-              <div>Quantity</div>
-              <div>Amount</div>
-              <div>Status</div>
-            </div>
-            {orders.map(order => (
-              <div key={order.id} className={styles.tableRow}>
-                <div>{new Date(order.date).toLocaleDateString()}</div>
-                <div>{order.magazineTitle}</div>
-                <div>{order.publisherName}</div>
-                <div>{order.quantity}</div>
-                <div>${order.amount.toFixed(2)}</div>
-                <div>
-                  <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
-                    {order.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {activeTab === 'browse' && (
-        <div className={styles.tabContent}>
-          <h2>Browse Magazines</h2>
-          <div className={styles.magazineGrid}>
-            {availableMagazines.map(magazine => (
-              <Card key={magazine.id} className={styles.magazineCard}>
-                <img src={magazine.coverImage} alt={magazine.title} className={styles.magazineCover} />
-                <h3>{magazine.title}</h3>
-                <p>Publisher: {magazine.publisher}</p>
-                <p>Category: {magazine.category}</p>
-                <p className={styles.price}>${magazine.price.toFixed(2)}</p>
-                <Button>Order</Button>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -1,26 +1,24 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { login } from '../api';
 import styles from './Login.module.css';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import Input from '../components/common/Input';
-import { login } from '../api';
 
 const Login = ({ setUser }) => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -29,41 +27,26 @@ const Login = ({ setUser }) => {
     setLoading(true);
     
     try {
-      // Make API call to login
       const response = await login(formData);
       
-      // Store token in localStorage
+      // Store token and user data
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       
       // Set user in state
-      const userData = response.data.user;
-      setUser(userData);
-      
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(response.data.user);
       
       // Redirect based on user role
-      if (userData.role === 'publisher') {
+      if (response.data.user.role === 'publisher') {
         navigate('/publisher-dashboard');
-      } else if (userData.role === 'retailer') {
+      } else if (response.data.user.role === 'retailer') {
         navigate('/retailer-dashboard');
       } else {
-        navigate('/'); // Fallback
+        navigate('/');
       }
-    } catch (err) {
-      console.error('Login error:', err);
-      
-      // Handle different error scenarios
-      if (err.response) {
-        // Server responded with an error
-        setError(err.response.data.message || 'Invalid email or password');
-      } else if (err.request) {
-        // No response received
-        setError('Server not responding. Please try again later.');
-      } else {
-        // Something else went wrong
-        setError('An error occurred. Please try again.');
-      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
       
       // Fallback to demo accounts for testing/development
       if (process.env.NODE_ENV === 'development') {
@@ -97,42 +80,61 @@ const Login = ({ setUser }) => {
   };
 
   return (
-    <div className={styles.loginPage}>
+    <div className={styles.loginContainer}>
       <Card className={styles.loginCard}>
-        <h1>Login to Neesh</h1>
-        <p className={styles.subheading}>Enter your credentials to access your account</p>
+        <h2>Login to NEESH</h2>
         
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <div className={styles.error}>{error}</div>}
         
         <form onSubmit={handleSubmit} className={styles.form}>
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="your@email.com"
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
           
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Your password"
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Enter your password"
+            />
+          </div>
           
-          <Button type="submit" disabled={loading} className={styles.loginButton}>
+          <Button 
+            type="submit" 
+            size="large" 
+            variant="primary" 
+            disabled={loading}
+            className={styles.submitButton}
+          >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
         
-        <p className={styles.signupText}>
-          Don't have an account? <Link to="/signup">Sign up</Link>
+        <p className={styles.signupLink}>
+          Don't have an account? <Link to="/signup">Sign up here</Link>
         </p>
+
+        {process.env.NODE_ENV === 'development' && (
+          <div className={styles.demoAccounts}>
+            <h4>Demo Accounts:</h4>
+            <p>Publisher: publisher@example.com / password</p>
+            <p>Retailer: retailer@example.com / password</p>
+          </div>
+        )}
       </Card>
     </div>
   );

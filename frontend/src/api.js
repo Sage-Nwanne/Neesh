@@ -21,13 +21,12 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add response interceptor
+// Add response interceptor for error handling
 API.interceptors.response.use(
   (response) => response,
-  (error) => {  
-    // Handle common errors like 401 Unauthorized
-    if (error.response && error.response.status === 401) {
-      // Clear token and redirect to login
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
@@ -36,43 +35,33 @@ API.interceptors.response.use(
   }
 );
 
-// Auth endpoints
+// Auth API calls
 export const login = (credentials) => API.post('/auth/login', credentials);
 export const signup = (userData) => API.post('/auth/signup', userData);
-export const logout = () => API.post('/auth/logout');
+export const logout = () => {
+  localStorage.removeItem('token');
+  return API.post('/auth/logout');
+};
 export const getCurrentUser = () => API.get('/auth/me');
 
-// Publisher endpoints
+// Publisher API calls
 export const getPublisherMagazines = () => API.get('/publisher/magazines');
-export const addPublisherMagazine = (magazineData) => API.post('/publisher/magazines', magazineData);
-export const updatePublisherMagazine = (magazineId, magazineData) => 
-  API.put(`/publisher/magazines/${magazineId}`, magazineData);
-export const deletePublisherMagazine = (magazineId) => 
-  API.delete(`/publisher/magazines/${magazineId}`);
+export const createMagazine = (magazineData) => API.post('/publisher/magazines', magazineData);
+export const updateMagazine = (id, magazineData) => API.put(`/publisher/magazines/${id}`, magazineData);
+export const deleteMagazine = (id) => API.delete(`/publisher/magazines/${id}`);
+export const getPublisherOrders = () => API.get('/publisher/orders');
 
-// Retailer endpoints
-export const getRetailerInventory = () => API.get('/retailer/inventory');
-export const addRetailerInventory = (inventoryData) => API.post('/retailer/inventory', inventoryData);
-export const updateRetailerInventory = (inventoryId, inventoryData) => 
-  API.put(`/retailer/inventory/${inventoryId}`, inventoryData);
-export const deleteRetailerInventory = (inventoryId) => 
-  API.delete(`/retailer/inventory/${inventoryId}`);
-
-export const checkHealth = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/health`);
-    return {
-      status: 'connected',
-      data: response.data
-    };
-  } catch (error) {
-    return {
-      status: 'error',
-      error: error.message,
-      response: error.response?.data
-    };
-  }
+// Retailer API calls
+export const getAvailableMagazines = (params = {}) => {
+  const queryString = new URLSearchParams(params).toString();
+  return API.get(`/retailer/magazines${queryString ? `?${queryString}` : ''}`);
 };
+export const getRetailerOrders = () => API.get('/retailer/orders');
+export const createOrder = (orderData) => API.post('/retailer/orders', orderData);
+export const cancelOrder = (id) => API.put(`/retailer/orders/${id}`, { status: 'cancelled' });
+export const getRetailerInventory = () => API.get('/retailer/inventory');
 
-console.log('API:', import.meta.env.VITE_API_URL);
+// Health check
+export const healthCheck = () => API.get('/health');
+
 export default API;

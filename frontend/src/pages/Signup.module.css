@@ -44,7 +44,7 @@
 }
 
 .loginText a {
-  color: #1b752f;
+  color: var(--primary-purple);
   font-weight: 500;
 }
 

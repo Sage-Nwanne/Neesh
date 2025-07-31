@@ -1,0 +1,120 @@
+/* Shared styles for all dashboard pages */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--phantom);
+  margin: 0;
+}
+
+.addButton, .exportBtn, .generateBtn {
+  background: var(--primary-purple);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.addButton:hover, .exportBtn:hover, .generateBtn:hover {
+  background: var(--primary-navy);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status.active, .status.ready {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.status.processing {
+  background: rgba(251, 191, 36, 0.1);
+  color: #d97706;
+}
+
+.status.draft, .status.inactive {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
+.tableHeader {
+  display: grid;
+  background: var(--primary-purple);
+  color: white;
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 12px 12px 0 0;
+}
+
+.tableRow {
+  display: grid;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--smoke);
+  align-items: center;
+  transition: background 0.2s ease;
+  background: white;
+}
+
+.tableRow:hover {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.viewBtn, .editBtn, .contactBtn, .downloadBtn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewBtn {
+  background: var(--cloud);
+  color: var(--steel);
+}
+
+.editBtn {
+  background: var(--primary-purple);
+  color: white;
+}
+
+.contactBtn, .downloadBtn {
+  background: var(--primary-navy);
+  color: white;
+}
+
+.viewBtn:hover, .editBtn:hover, .contactBtn:hover, .downloadBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}

@@ -1,0 +1,13 @@
+.notifications {
+  padding: 2rem 0;
+}
+
+.notificationList {
+  margin-top: 1rem;
+}
+
+.notificationList p {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}

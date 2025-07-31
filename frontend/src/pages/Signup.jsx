@@ -1,30 +1,27 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { signup } from '../api';
 import styles from './Signup.module.css';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import Input from '../components/common/Input';
-import Select from '../components/common/Select';
-import { signup } from '../api';
 
 const Signup = ({ setUser }) => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'Retailer'
+    role: 'retailer'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -38,7 +35,7 @@ const Signup = ({ setUser }) => {
     }
     
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Password must be at least 6 characters long');
       return;
     }
     
@@ -74,92 +71,101 @@ const Signup = ({ setUser }) => {
       } else {
         navigate('/'); // Fallback
       }
-    } catch (err) {
-      console.error('Signup error:', err);
-      
-      // Handle different error scenarios
-      if (err.response) {
-        // Server responded with an error
-        setError(err.response.data.message || 'Error creating account');
-      } else if (err.request) {
-        // No response received
-        setError('Server not responding. Please try again later.');
-      } else {
-        // Something else went wrong
-        setError('An error occurred. Please try again.');
-      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      setError(error.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={styles.signupPage}>
+    <div className={styles.signupContainer}>
       <Card className={styles.signupCard}>
-        <h1>Join Neesh</h1>
-        <p className={styles.subheading}>Create your account to get started</p>
+        <h2>Join NEESH</h2>
         
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <div className={styles.error}>{error}</div>}
         
         <form onSubmit={handleSubmit} className={styles.form}>
-          <Input
-            label="Username"
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            placeholder="Your username"
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              placeholder="Choose a username"
+            />
+          </div>
           
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="your@email.com"
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
           
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Create a password"
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Create a password (min 6 characters)"
+            />
+          </div>
           
-          <Input
-            label="Confirm Password"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            placeholder="Confirm your password"
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              placeholder="Confirm your password"
+            />
+          </div>
           
-          <Select
-            label="I am a"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            options={[
-              { value: 'Retailer', label: 'Retailer' },
-              { value: 'Publisher', label: 'Publisher' }
-            ]}
-          />
+          <div className={styles.formGroup}>
+            <label htmlFor="role">I am a:</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              required
+            >
+              <option value="retailer">Retailer</option>
+              <option value="publisher">Publisher</option>
+            </select>
+          </div>
           
-          <Button type="submit" disabled={loading} className={styles.signupButton}>
-            {loading ? 'Creating account...' : 'Create Account'}
+          <Button 
+            type="submit" 
+            size="large" 
+            variant="primary" 
+            disabled={loading}
+            className={styles.submitButton}
+          >
+            {loading ? 'Creating Account...' : 'Create Account'}
           </Button>
         </form>
         
-        <p className={styles.loginText}>
-          Already have an account? <Link to="/login">Login</Link>
+        <p className={styles.loginLink}>
+          Already have an account? <Link to="/login">Login here</Link>
         </p>
       </Card>
     </div>
