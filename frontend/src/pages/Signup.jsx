@@ -67,10 +67,12 @@ const Signup = ({ setUser }) => {
       localStorage.setItem('user', JSON.stringify(newUser));
       
       // Redirect based on user role
-      if (newUser.role === 'Publisher') {
+      if (newUser.role === 'publisher') {
         navigate('/publisher-dashboard');
-      } else {
+      } else if (newUser.role === 'retailer') {
         navigate('/retailer-dashboard');
+      } else {
+        navigate('/'); // Fallback
       }
     } catch (err) {
       console.error('Signup error:', err);

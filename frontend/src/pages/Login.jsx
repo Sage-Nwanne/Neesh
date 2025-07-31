@@ -45,8 +45,10 @@ const Login = ({ setUser }) => {
       // Redirect based on user role
       if (userData.role === 'publisher') {
         navigate('/publisher-dashboard');
-      } else {
+      } else if (userData.role === 'retailer') {
         navigate('/retailer-dashboard');
+      } else {
+        navigate('/'); // Fallback
       }
     } catch (err) {
       console.error('Login error:', err);

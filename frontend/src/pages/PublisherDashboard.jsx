@@ -14,11 +14,15 @@ const PublisherDashboard = ({ user }) => {
   useEffect(() => {
     // Redirect if not logged in or not a publisher
     if (!user) {
+      console.log('No user found, redirecting to login');
       navigate('/login');
       return;
     }
     
+    console.log('User role:', user.role); // Debug log
+    
     if (user.role !== 'publisher') {
+      console.log('User is not a publisher, redirecting to home');
       navigate('/');
       return;
     }

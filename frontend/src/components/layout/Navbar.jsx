@@ -46,7 +46,7 @@ const Navbar = ({ user, setUser }) => {
             </>
           ) : (
             <>
-              {user.role === 'Publisher' ? (
+              {user.role === 'publisher' ? (
                 <Link to="/publisher-dashboard" className={styles.navLink}>Dashboard</Link>
               ) : (
                 <Link to="/retailer-dashboard" className={styles.navLink}>Dashboard</Link>

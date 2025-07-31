@@ -70,6 +70,13 @@ function App() {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      console.log('Current user in App:', user);
+      console.log('User role:', user.role);
+    }
+  }, [user]);
+
   if (loading) {
     // You could add a loading spinner here
     return <div className="loading">Loading... Backend status: {backendStatus}</div>;

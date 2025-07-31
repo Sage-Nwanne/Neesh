@@ -15,11 +15,15 @@ const RetailerDashboard = ({ user }) => {
   useEffect(() => {
     // Redirect if not logged in or not a retailer
     if (!user) {
+      console.log('No user found, redirecting to login');
       navigate('/login');
       return;
     }
     
+    console.log('User role:', user.role); // Debug log
+    
     if (user.role !== 'retailer') {
+      console.log('User is not a retailer, redirecting to home');
       navigate('/');
       return;
     }
