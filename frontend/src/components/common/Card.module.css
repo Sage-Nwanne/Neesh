@@ -1,0 +1,129 @@
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid var(--smoke);
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+}
+
+/* Card Variants */
+.elevated {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.elevated:hover {
+  box-shadow: 0 16px 48px rgba(139, 92, 246, 0.2);
+}
+
+.flat {
+  box-shadow: none;
+  border: 2px solid var(--smoke);
+}
+
+.flat:hover {
+  border-color: var(--primary-purple);
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+}
+
+/* Card with gradient border */
+.gradient {
+  position: relative;
+  background: white;
+  border: none;
+}
+
+.gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #8B5CF6, #F97316);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+}
+
+/* Card Padding Variants */
+.compact {
+  padding: 16px;
+}
+
+.comfortable {
+  padding: 24px;
+}
+
+.spacious {
+  padding: 32px;
+}
+
+/* Interactive Card */
+.interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.interactive:active {
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.cardHeader {
+  padding: 24px 24px 0;
+  border-bottom: 1px solid var(--smoke);
+  margin-bottom: 24px;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--phantom);
+  margin-bottom: 8px;
+}
+
+.cardSubtitle {
+  font-size: 0.875rem;
+  color: var(--steel);
+}
+
+/* Card Body */
+.cardBody {
+  padding: 0 24px 24px;
+}
+
+/* Card Footer */
+.cardFooter {
+  padding: 16px 24px;
+  background: var(--cloud);
+  border-top: 1px solid var(--smoke);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    border-radius: 12px;
+  }
+  
+  .cardHeader,
+  .cardBody {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  .cardFooter {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+}

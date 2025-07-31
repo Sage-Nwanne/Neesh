@@ -1,16 +1,15 @@
-// src/api.js
 import axios from 'axios';
 
-// const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const API_URL = import.meta.env.VITE_API_URL || 'https://neesh-backend-8378fc8ecdf9.herokuapp.com/api';
-
+// For development, use localhost:5000 directly
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const API = axios.create({
   baseURL: API_URL,
-  withCredentials: true // For cookie/session support
+  withCredentials: true,
+  timeout: 10000 // 10 second timeout
 });
 
-// Add a request interceptor to include auth token
+// Add request interceptor
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,13 +18,10 @@ API.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-
-// Add a response interceptor to handle common errors
+// Add response interceptor
 API.interceptors.response.use(
   (response) => response,
   (error) => {  
@@ -78,4 +74,5 @@ export const checkHealth = async () => {
   }
 };
 
+console.log('API:', import.meta.env.VITE_API_URL);
 export default API;
