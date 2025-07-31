@@ -1,61 +1,63 @@
+
 import { useState, useEffect } from 'react';
 import { getAvailableMagazines, getRetailerOrders, createOrder, getRetailerInventory } from '../api';
+import { retailerOrdersData, retailerInventoryData, availableMagazinesData } from '../data/dummyData';
 import styles from './RetailerDashboard.module.css';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
 const RetailerDashboard = ({ user }) => {
-  const [magazines, setMagazines] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [inventory, setInventory] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [magazines, setMagazines] = useState(availableMagazinesData);
+  const [orders, setOrders] = useState(retailerOrdersData);
+  const [inventory, setInventory] = useState(retailerInventoryData);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchData();
+    // Use dummy data instead of API calls for now
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    fetchMagazines();
+    filterMagazines();
   }, [selectedCategory, searchTerm]);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const [ordersRes, inventoryRes] = await Promise.all([
-        getRetailerOrders(),
-        getRetailerInventory()
-      ]);
-      
-      setOrders(ordersRes.data || []);
-      setInventory(inventoryRes.data || []);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('Failed to load dashboard data');
-    } finally {
-      setLoading(false);
+  const filterMagazines = () => {
+    let filtered = availableMagazinesData;
+    
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(mag => mag.category === selectedCategory);
     }
-  };
-
-  const fetchMagazines = async () => {
-    try {
-      const params = {};
-      if (selectedCategory !== 'all') params.category = selectedCategory;
-      if (searchTerm) params.search = searchTerm;
-      
-      const response = await getAvailableMagazines(params);
-      setMagazines(response.data || []);
-    } catch (error) {
-      console.error('Error fetching magazines:', error);
+    
+    if (searchTerm) {
+      filtered = filtered.filter(mag => 
+        mag.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        mag.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
+    
+    setMagazines(filtered);
   };
 
   const handleOrder = async (magazineId, quantity = 1) => {
     try {
-      await createOrder({ magazine_id: magazineId, quantity });
-      fetchData(); // Refresh orders
+      const magazine = availableMagazinesData.find(m => m.id === magazineId);
+      const newOrder = {
+        id: `ord_${Date.now()}`,
+        magazine_id: magazineId,
+        magazines: {
+          title: magazine.title,
+          cover_image_url: magazine.cover_image_url
+        },
+        quantity,
+        total_price: (magazine.price * quantity).toFixed(2),
+        status: 'pending',
+        created_at: new Date().toISOString()
+      };
+      
+      setOrders([newOrder, ...orders]);
       alert('Order placed successfully!');
     } catch (error) {
       console.error('Error placing order:', error);

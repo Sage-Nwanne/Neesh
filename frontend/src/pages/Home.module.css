@@ -5,42 +5,46 @@
 /* Hero Section - "The OS for Indie Print" */
 .heroSection {
   background: #f8f9fa;
-  padding: 80px 0;
-  min-height: 70vh;
+  padding: 120px 0;
+  min-height: 80vh;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .heroContent {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 120px;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  text-align: center;
 }
 
 .heroText h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(3.5rem, 7vw, 6rem);
   font-weight: 700;
   color: var(--phantom);
-  margin-bottom: 32px;
+  margin-bottom: 48px;
   line-height: 1.1;
 }
 
 .heroButtons {
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 24px;
+  margin-bottom: 32px;
+  justify-content: center;
 }
 
 .heroButtons button {
-  padding: 12px 24px;
+  padding: 18px 36px;
   border: 2px solid var(--steel);
   background: white;
   color: var(--steel);
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 1.125rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -52,7 +56,7 @@
 
 .heroText p {
   color: var(--steel);
-  font-size: 1rem;
+  font-size: 1.25rem;
   cursor: pointer;
 }
 
@@ -62,16 +66,16 @@
 
 .heroImage img {
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   height: auto;
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-  margin-bottom: 16px;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  margin-bottom: 24px;
 }
 
 .heroImage p {
   color: var(--steel);
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   font-weight: 500;
 }
 

@@ -317,3 +317,189 @@ export const publisherSales = [
     status: "processing"
   }
 ];
+
+// Retailer-specific data
+export const retailerOrdersData = [
+  {
+    id: "ord_001",
+    magazine_id: 1,
+    magazines: {
+      title: "Modern Living",
+      cover_image_url: "https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    },
+    quantity: 25,
+    total_price: "224.75",
+    status: "delivered",
+    created_at: "2023-06-15T10:30:00Z"
+  },
+  {
+    id: "ord_002", 
+    magazine_id: 2,
+    magazines: {
+      title: "Home Design Quarterly",
+      cover_image_url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    },
+    quantity: 15,
+    total_price: "149.85",
+    status: "pending",
+    created_at: "2023-06-20T14:15:00Z"
+  },
+  {
+    id: "ord_003",
+    magazine_id: 3,
+    magazines: {
+      title: "Outdoor Living",
+      cover_image_url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    },
+    quantity: 30,
+    total_price: "239.70",
+    status: "processing",
+    created_at: "2023-06-18T09:45:00Z"
+  },
+  {
+    id: "ord_004",
+    magazine_id: 4,
+    magazines: {
+      title: "Tech Today",
+      cover_image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    },
+    quantity: 20,
+    total_price: "179.80",
+    status: "delivered",
+    created_at: "2023-06-12T16:20:00Z"
+  },
+  {
+    id: "ord_005",
+    magazine_id: 5,
+    magazines: {
+      title: "Health & Wellness",
+      cover_image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    },
+    quantity: 12,
+    total_price: "107.88",
+    status: "delivered",
+    created_at: "2023-06-08T11:30:00Z"
+  }
+];
+
+export const retailerInventoryData = [
+  {
+    id: 1,
+    magazine_id: 1,
+    quantity: 18,
+    status: "in_stock",
+    magazine: {
+      title: "Modern Living",
+      category: "lifestyle",
+      cover_image_url: "https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    }
+  },
+  {
+    id: 2,
+    magazine_id: 4,
+    quantity: 15,
+    status: "in_stock", 
+    magazine: {
+      title: "Tech Today",
+      category: "technology",
+      cover_image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    }
+  },
+  {
+    id: 3,
+    magazine_id: 5,
+    quantity: 8,
+    status: "low_stock",
+    magazine: {
+      title: "Health & Wellness", 
+      category: "health",
+      cover_image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    }
+  },
+  {
+    id: 4,
+    magazine_id: 6,
+    quantity: 22,
+    status: "in_stock",
+    magazine: {
+      title: "Travel Explorer",
+      category: "travel",
+      cover_image_url: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+    }
+  }
+];
+
+export const availableMagazinesData = [
+  {
+    id: 1,
+    title: "Modern Living",
+    price: 8.99,
+    category: "lifestyle",
+    description: "A contemporary lifestyle magazine focusing on modern home design and urban living.",
+    cover_image_url: "https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "DesignStudio" }
+  },
+  {
+    id: 2,
+    title: "Home Design Quarterly", 
+    price: 9.99,
+    category: "lifestyle",
+    description: "Quarterly publication featuring the latest trends in interior design and architecture.",
+    cover_image_url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "InteriorMag" }
+  },
+  {
+    id: 3,
+    title: "Outdoor Living",
+    price: 7.99,
+    category: "lifestyle", 
+    description: "Explore outdoor spaces, gardening tips, and sustainable living practices.",
+    cover_image_url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "GreenLife" }
+  },
+  {
+    id: 4,
+    title: "Tech Today",
+    price: 8.99,
+    category: "tech",
+    description: "Latest technology trends, gadget reviews, and digital innovation insights.",
+    cover_image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "TechPress" }
+  },
+  {
+    id: 5,
+    title: "Health & Wellness",
+    price: 8.99,
+    category: "health",
+    description: "Comprehensive guide to healthy living, fitness tips, and mental wellness.",
+    cover_image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "WellnessHub" }
+  },
+  {
+    id: 6,
+    title: "Travel Explorer",
+    price: 10.99,
+    category: "travel",
+    description: "Discover hidden gems, travel tips, and cultural experiences around the world.",
+    cover_image_url: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "Wanderlust" }
+  },
+  {
+    id: 7,
+    title: "Food & Culture",
+    price: 9.49,
+    category: "food",
+    description: "Culinary adventures, recipes, and food culture from around the globe.",
+    cover_image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "CulinaryArts" }
+  },
+  {
+    id: 8,
+    title: "Fashion Forward",
+    price: 11.99,
+    category: "fashion",
+    description: "Latest fashion trends, style guides, and industry insights.",
+    cover_image_url: "https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+    users: { username: "StyleMakers" }
+  }
+];
