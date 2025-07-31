@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
 import Button from '../components/common/Button';
+import heroImage from '../assets/neesh_magazines_heropage.jpeg';
 
 const Home = () => {
   return (
@@ -20,7 +21,15 @@ const Home = () => {
               <p>Explore More →</p>
             </div>
             <div className={styles.heroImage}>
-              <img src="/path-to-magazine-stack.jpg" alt="Stack of magazines" />
+              <img 
+                src={heroImage} 
+                alt="Stack of magazines"
+                onError={(e) => {
+                  console.error('Image failed to load:', e.target.src);
+                  e.target.style.border = '2px solid red';
+                }}
+                onLoad={() => console.log('Image loaded successfully')}
+              />
               <p>Quality Over Quantity</p>
             </div>
           </div>
