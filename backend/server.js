@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.js';
 import publisherRoutes from './routes/publisher.js';
 import retailerRoutes from './routes/retailer.js';
 import healthRoutes from './routes/health.js';
+import paymentRoutes from './routes/payments.js';
 
 // Import Supabase connection
 import { supabase } from './config/supabase.js';
@@ -57,6 +58,7 @@ app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/publisher', publisherRoutes);
 app.use('/api/retailer', retailerRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

@@ -1,80 +1,57 @@
-# NEESH - Magazine Marketplace Monorepo
+# NEESH — The OS for Indie Print
 
-A full-stack magazine marketplace application with React frontend and Node.js backend.
+> **NEESH** is *The OS for Indie Print*: a B2B marketplace + operations layer that connects independent magazine **publishers** with boutique **retailers**. We streamline discovery, ordering, fulfillment, and payouts so indie print can scale without losing its soul.
 
-## Project Structure
+---
 
-```
-neesh-monorepo/
-├── frontend/          # React frontend application
-├── backend/           # Node.js/Express backend API
-├── package.json       # Root package.json for monorepo scripts
-└── README.md         # This file
-```
+## 🧭 Intro
+NEESH bridges the gap between creators of high‑quality indie magazines and the retailers who want to stock them. The platform is designed to:
+- Help **retailers** discover and source better
+- Help **publishers** distribute more efficiently
+- Reduce friction across ordering, inventory, returns, and payouts
 
-## Quick Start
+**Mission:** Uplift the independent print community with modern software that feels intuitive for creative teams and resilient for operations.
 
-1. **Install all dependencies:**
-   ```bash
-   npm run install:all
-   ```
+---
 
-2. **Start development servers:**
-   ```bash
-   npm run dev
-   ```
-   This starts both frontend (port 3000) and backend (port 5000) concurrently.
+## 🏪 Retailer View
+- Browse & discover curated indie titles
+- Order from multiple publishers with one cart
+- Track fulfillment status and order history
+- Manage inventory
+- Receive insights based on store type, audience, and location
 
-3. **Build for production:**
-   ```bash
-   npm run build
-   ```
+---
 
-## Development
+## 📰 Publisher View
+- List & manage magazine titles (CRUD)
+- Receive & manage retailer orders
+- Set wholesale pricing and ship‑from details
+- View analytics (top stores, repeat customers, geographic reach)
+- Communicate with high‑performing retailers
 
-### Frontend Development
-```bash
-cd frontend
-npm run dev
-```
+---
 
-### Backend Development
-```bash
-cd backend
-npm run dev
-```
+## 🧑‍💻 Developer / Platform Overview
+**Tech**
+- Frontend: React (Vite)
+- Backend: Node.js + Express
+- Database: MongoDB (Mongoose)
+- Auth: JWT
+- HTTP: Axios
+- Hosting: Vercel (frontend & API), optional Firebase Hosting (frontend)
 
-### Environment Variables
+**Monorepo**
+- `frontend/` - React frontend application
+- `backend/` - Node.js/Express backend API
+- `package.json` - Root package.json for monorepo scripts
+- `README.md` - This file
 
-Copy `backend/.env.example` to `backend/.env` and configure your environment variables.
+**Quick Start**
+1. Install all dependencies: `npm run install:all`
+2. Start development servers: `npm run dev`
+3. Build for production: `npm run build`
 
-## Deployment
-
-The application is configured for deployment on platforms like Heroku, Vercel, or Railway.
-
-### Frontend Deployment
-- Build output: `frontend/dist`
-- Environment variables: Set `VITE_API_URL` to your backend URL
-
-### Backend Deployment
-- Entry point: `backend/server.js`
-- Environment variables: Configure all variables from `.env.example`
-
-## API Documentation
-
-The backend API is available at `/api` with the following endpoints:
-
-- `GET /api/health` - Health check
-- `POST /api/auth/login` - User login
-- `POST /api/auth/signup` - User registration
-- `GET /api/auth/me` - Get current user
-- `GET /api/publisher/magazines` - Get publisher magazines
-- `GET /api/retailer/inventory` - Get retailer inventory
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+**Deployment**
+- Frontend: Vercel (or Firebase Hosting)
+- Backend: Vercel (or Firebase Functions, Heroku, etc.)

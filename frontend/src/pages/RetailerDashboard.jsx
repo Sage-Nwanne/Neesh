@@ -1,15 +1,22 @@
 
 import { useState, useEffect } from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { getAvailableMagazines, getRetailerOrders, createOrder, getRetailerInventory } from '../api';
 import { retailerOrdersData, retailerInventoryData, availableMagazinesData } from '../data/dummyData';
+import CheckoutForm from '../components/checkout/CheckoutForm';
 import styles from './RetailerDashboard.module.css';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const RetailerDashboard = ({ user }) => {
   const [magazines, setMagazines] = useState(availableMagazinesData);
   const [orders, setOrders] = useState(retailerOrdersData);
   const [inventory, setInventory] = useState(retailerInventoryData);
+  const [cart, setCart] = useState([]);
+  const [showCheckout, setShowCheckout] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -41,33 +48,74 @@ const RetailerDashboard = ({ user }) => {
     setMagazines(filtered);
   };
 
-  const handleOrder = async (magazineId, quantity = 1) => {
-    try {
-      const magazine = availableMagazinesData.find(m => m.id === magazineId);
-      const newOrder = {
-        id: `ord_${Date.now()}`,
-        magazine_id: magazineId,
-        magazines: {
-          title: magazine.title,
-          cover_image_url: magazine.cover_image_url
-        },
-        quantity,
-        total_price: (magazine.price * quantity).toFixed(2),
-        status: 'pending',
-        created_at: new Date().toISOString()
-      };
-      
-      setOrders([newOrder, ...orders]);
-      alert('Order placed successfully!');
-    } catch (error) {
-      console.error('Error placing order:', error);
-      setError('Failed to place order');
+  const addToCart = (magazine, quantity = 1) => {
+    const existingItem = cart.find(item => item.id === magazine.id);
+    
+    if (existingItem) {
+      setCart(cart.map(item => 
+        item.id === magazine.id 
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      ));
+    } else {
+      setCart([...cart, {
+        id: magazine.id,
+        name: magazine.title,
+        price: magazine.price,
+        quantity: quantity,
+        description: magazine.description,
+        images: [magazine.cover_image_url]
+      }]);
     }
+    
+    alert(`${magazine.title} added to cart!`);
   };
 
-  const totalSpent = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
-  const totalOrders = orders.length;
-  const totalInventory = inventory.reduce((sum, item) => sum + item.quantity, 0);
+  const removeFromCart = (magazineId) => {
+    setCart(cart.filter(item => item.id !== magazineId));
+  };
+
+  const updateCartQuantity = (magazineId, quantity) => {
+    if (quantity <= 0) {
+      removeFromCart(magazineId);
+      return;
+    }
+    
+    setCart(cart.map(item => 
+      item.id === magazineId 
+        ? { ...item, quantity }
+        : item
+    ));
+  };
+
+  const handleCheckoutSuccess = (session) => {
+    // Clear cart and add orders
+    const newOrders = cart.map(item => ({
+      id: `ord_${Date.now()}_${item.id}`,
+      magazine_id: item.id,
+      magazines: {
+        title: item.name,
+        cover_image_url: item.images[0]
+      },
+      quantity: item.quantity,
+      total_price: (item.price * item.quantity).toFixed(2),
+      status: 'completed',
+      created_at: new Date().toISOString(),
+      stripe_session_id: session.id
+    }));
+    
+    setOrders([...newOrders, ...orders]);
+    setCart([]);
+    setShowCheckout(false);
+    alert('Order completed successfully!');
+  };
+
+  const handleCheckoutError = (error) => {
+    console.error('Checkout error:', error);
+    setError('Payment failed. Please try again.');
+  };
+
+  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   if (loading) {
     return <div className={styles.loading}>Loading dashboard...</div>;
@@ -78,6 +126,15 @@ const RetailerDashboard = ({ user }) => {
       <div className={styles.header}>
         <h1>Retailer Dashboard</h1>
         <p>Welcome back, {user?.username || 'Retailer'}!</p>
+        
+        {cart.length > 0 && (
+          <div className={styles.cartSummary}>
+            <span>{cart.length} items in cart - ${cartTotal.toFixed(2)}</span>
+            <Button onClick={() => setShowCheckout(true)} variant="primary">
+              Checkout
+            </Button>
+          </div>
+        )}
       </div>
       
       {error && <div className={styles.error}>{error}</div>}
@@ -85,17 +142,17 @@ const RetailerDashboard = ({ user }) => {
       <div className={styles.stats}>
         <Card className={styles.statCard}>
           <h3>Total Orders</h3>
-          <p className={styles.statValue}>{totalOrders}</p>
+          <p className={styles.statValue}>{orders.length}</p>
         </Card>
         
         <Card className={styles.statCard}>
           <h3>Total Spent</h3>
-          <p className={styles.statValue}>${totalSpent.toFixed(2)}</p>
+          <p className={styles.statValue}>${orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0).toFixed(2)}</p>
         </Card>
         
         <Card className={styles.statCard}>
           <h3>Inventory Items</h3>
-          <p className={styles.statValue}>{totalInventory}</p>
+          <p className={styles.statValue}>{inventory.reduce((sum, item) => sum + item.quantity, 0)}</p>
         </Card>
         
         <Card className={styles.statCard}>
@@ -150,17 +207,81 @@ const RetailerDashboard = ({ user }) => {
                 by {magazine.users?.username || 'Unknown Publisher'}
               </p>
               <p className={styles.description}>{magazine.description}</p>
-              <Button 
-                onClick={() => handleOrder(magazine.id)}
-                variant="primary"
-                size="small"
-              >
-                Order Now
-              </Button>
+              
+              <div className={styles.cardActions}>
+                <Button 
+                  onClick={() => addToCart(magazine)}
+                  variant="primary"
+                  size="small"
+                >
+                  Add to Cart
+                </Button>
+                <Button 
+                  onClick={() => addToCart(magazine, 5)}
+                  variant="secondary"
+                  size="small"
+                >
+                  Bulk Order (5)
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
       </div>
+
+      {/* Shopping Cart */}
+      {cart.length > 0 && (
+        <div className={styles.section}>
+          <h2>Shopping Cart</h2>
+          <div className={styles.cartItems}>
+            {cart.map(item => (
+              <div key={item.id} className={styles.cartItem}>
+                <span className={styles.itemName}>{item.name}</span>
+                <div className={styles.quantityControls}>
+                  <button onClick={() => updateCartQuantity(item.id, item.quantity - 1)}>-</button>
+                  <span>{item.quantity}</span>
+                  <button onClick={() => updateCartQuantity(item.id, item.quantity + 1)}>+</button>
+                </div>
+                <span className={styles.itemTotal}>${(item.price * item.quantity).toFixed(2)}</span>
+                <button 
+                  onClick={() => removeFromCart(item.id)}
+                  className={styles.removeBtn}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <div className={styles.cartTotal}>
+              <strong>Total: ${cartTotal.toFixed(2)}</strong>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Checkout Modal */}
+      {showCheckout && (
+        <div className={styles.checkoutModal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2>Checkout</h2>
+              <button 
+                onClick={() => setShowCheckout(false)}
+                className={styles.closeBtn}
+              >
+                ×
+              </button>
+            </div>
+            
+            <Elements stripe={stripePromise}>
+              <CheckoutForm
+                items={cart}
+                onSuccess={handleCheckoutSuccess}
+                onError={handleCheckoutError}
+              />
+            </Elements>
+          </div>
+        </div>
+      )}
 
       <div className={styles.section}>
         <h2>My Orders</h2>
