@@ -4,7 +4,7 @@
 
 ---
 
-## 🧭 Intro
+##  Intro
 NEESH bridges the gap between creators of high‑quality indie magazines and the retailers who want to stock them. The platform is designed to:
 - Help **retailers** discover and source better
 - Help **publishers** distribute more efficiently
@@ -14,7 +14,7 @@ NEESH bridges the gap between creators of high‑quality indie magazines and the
 
 ---
 
-## 🏪 Retailer View
+## Retailer View
 - Browse & discover curated indie titles
 - Order from multiple publishers with one cart
 - Track fulfillment status and order history
@@ -23,7 +23,7 @@ NEESH bridges the gap between creators of high‑quality indie magazines and the
 
 ---
 
-## 📰 Publisher View
+##  Publisher View
 - List & manage magazine titles (CRUD)
 - Receive & manage retailer orders
 - Set wholesale pricing and ship‑from details
@@ -32,7 +32,7 @@ NEESH bridges the gap between creators of high‑quality indie magazines and the
 
 ---
 
-## 🧑‍💻 Developer / Platform Overview
+##  Developer / Platform Overview
 **Tech**
 - Frontend: React (Vite)
 - Backend: Node.js + Express
