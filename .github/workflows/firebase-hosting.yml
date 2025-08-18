@@ -27,9 +27,8 @@ jobs:
         working-directory: ./frontend
 
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: deploy --only hosting
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEESHAPP2025 }}
-          PROJECT_ID: neeshapp2025
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEESHAPP2025 }}'
+          projectId: neeshapp2025
