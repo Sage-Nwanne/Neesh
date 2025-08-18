@@ -1,54 +1,88 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import IntroPage from '../components/IntroPage';
 import styles from './Home.module.css';
-import Button from '../components/common/Button';
-import heroImage from '../assets/neesh_magazines_heropage.jpeg';
 
 const Home = () => {
+  const [showIntro, setShowIntro] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleIntroComplete = () => {
+    setShowIntro(false);
+  };
+
+  if (showIntro) {
+    return <IntroPage onComplete={handleIntroComplete} />;
+  }
+
   return (
-    <div className={styles.home}>
-      {/* Hero Section - "The OS for Indie Print" */}
-      <section className={styles.heroSection}>
-        <div className="container">
-          <div className={styles.heroContent}>
-            <div className={styles.heroText}>
-              <h1>The OS for Indie Print</h1>
-              <div className={styles.heroButtons}>
-                <Button variant="outline">Get</Button>
-                <Button variant="outline">Sell</Button>
-                <Button variant="outline">Ship</Button>
-              </div>
-              <p>Explore More →</p>
+    <div className={styles.landingPage}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className={styles.container}>
+          <div className={styles.logo}>NEESH</div>
+          <button 
+            className={styles.hamburger}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            ☰
+          </button>
+          {mobileMenuOpen && (
+            <div className={styles.mobileMenu}>
+              <Link to="/auth" className={styles.mobileLink}>Sign In</Link>
+              <Link to="/auth" className={styles.mobileLink}>Get Started</Link>
+              <span className={styles.mobileLink}>FAQ</span>
+              <Link to="/admin" className={styles.mobileLink}>Admin Panel</Link>
+              <button 
+                className={styles.closeMenu}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                ✕
+              </button>
             </div>
-            <div className={styles.heroImage}>
-              <img 
-                src={heroImage} 
-                alt="Stack of magazines"
-                onError={(e) => {
-                  console.error('Image failed to load:', e.target.src);
-                  e.target.style.border = '2px solid red';
-                }}
-                onLoad={() => console.log('Image loaded successfully')}
-              />
-              <p>Quality Over Quantity</p>
+          )}
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className={styles.container}>
+          <div className={styles.heroGrid}>
+            <div className={styles.heroContent}>
+              <h1>The OS for Indie Print</h1>
+              <p>Built for publishers. Trusted by shops.<br />Designed to move magazines.</p>
+              <button className={styles.exploreBtn}>Explore</button>
+            </div>
+            <div className={styles.heroVisual}>
+              <div className={styles.gridLines}></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Value Propositions */}
+      {/* Value Props Section */}
       <section className={styles.valueProps}>
-        <div className="container">
+        <div className={styles.container}>
           <div className={styles.propGrid}>
-            <div className={styles.prop}>
-              <h3>Get stocked. Get paid. Stay independent.</h3>
-              <p>Connect with retailers who value independent publishing and get fair compensation for your work.</p>
-              <Link to="/signup">Join Us as Publisher →</Link>
+            <div className={styles.propCard}>
+              <div className={styles.propIcon}>📦</div>
+              <h3>For Publishers</h3>
+              <h2>Get stocked. Get paid. Stay independent.</h2>
+              <p>Upload your catalog, set pricing, and start fulfilling real orders.</p>
+              <p className={styles.subText}>Neesh handles discovery, transactions, returns, and payouts—so you can focus on the next issue.</p>
+              <Link to="/publisher-application" className={styles.propLink}>
+                Apply to List Your Magazine
+              </Link>
             </div>
-            <div className={styles.prop}>
-              <h3>Curated print. Clear terms. No risk.</h3>
-              <p>Access carefully curated independent publications with transparent pricing and no upfront costs.</p>
-              <Link to="/marketplace">Browse Catalog →</Link>
+            <div className={styles.propCard}>
+              <div className={styles.propIcon}>🏪</div>
+              <h3>For Retailers</h3>
+              <h2>Curated print. Clear terms. No risk.</h2>
+              <p>Browse new and essential titles. Order in small batches. Return what doesn't move.</p>
+              <p className={styles.subText}>Neesh helps you stock smarter and connect directly with publishers.</p>
+              <Link to="/auth" className={styles.propLink}>
+                Request Access for Your Shop
+              </Link>
             </div>
           </div>
         </div>
@@ -56,28 +90,32 @@ const Home = () => {
 
       {/* Pipeline Section */}
       <section className={styles.pipeline}>
-        <div className="container">
+        <div className={styles.container}>
           <h2>A clean pipeline from studio to shop.</h2>
           <div className={styles.pipelineSteps}>
             <div className={styles.step}>
-              <div className={styles.stepIcon}>📝</div>
-              <h4>Apply</h4>
-              <p>Publishers apply and submit their work for curation</p>
+              <div className={styles.stepIcon}>📦</div>
+              <h4>Step 1</h4>
+              <p>Publishers upload titles, inventory, and pricing.</p>
+              <span className={styles.stepSubtext}>Complete catalog management in one place.</span>
             </div>
             <div className={styles.step}>
-              <div className={styles.stepIcon}>✅</div>
-              <h4>Curate</h4>
-              <p>We review and select quality independent publications</p>
+              <div className={styles.stepIcon}>📦</div>
+              <h4>Step 2</h4>
+              <p>Retailers browse and order via flexible wholesale terms.</p>
+              <span className={styles.stepSubtext}>Discover and stock with confidence.</span>
             </div>
             <div className={styles.step}>
-              <div className={styles.stepIcon}>🚚</div>
-              <h4>Ship</h4>
-              <p>Automated fulfillment and logistics through trusted partners</p>
+              <div className={styles.stepIcon}>📦</div>
+              <h4>Step 3</h4>
+              <p>Fulfillment and returns are managed through Neesh.</p>
+              <span className={styles.stepSubtext}>Seamless logistics and transparent terms.</span>
             </div>
             <div className={styles.step}>
-              <div className={styles.stepIcon}>💰</div>
-              <h4>Get Paid</h4>
-              <p>Fast payments with transparent terms and fair pricing</p>
+              <div className={styles.stepIcon}>📦</div>
+              <h4>Step 4</h4>
+              <p>Everyone gets insights—what moved, where, and when.</p>
+              <span className={styles.stepSubtext}>Real data to guide decisions.</span>
             </div>
           </div>
         </div>
@@ -85,20 +123,27 @@ const Home = () => {
 
       {/* Problems Section */}
       <section className={styles.problems}>
-        <div className="container">
-          <h2>Because what exists doesn't work.</h2>
-          <div className={styles.problemGrid}>
-            <div className={styles.problem}>
-              <h4>Distributors</h4>
-              <p>High fees, complex terms, slow payments</p>
+        <div className={styles.container}>
+          <div className={styles.problemsGrid}>
+            <div className={styles.problemsContent}>
+              <h2>Because what exists doesn't work.</h2>
+              <p>Most print distribution platforms are made for scale. Neesh is made for care.</p>
+              
+              <div className={styles.principles}>
+                <h4>Key Principles:</h4>
+                <ul>
+                  <li>No open marketplace—every title is curated</li>
+                  <li>No print-on-demand—only real inventory</li>
+                  <li>No algorithm spam—human filters and taste</li>
+                  <li>No corporate lock-in—this is infrastructure, not control</li>
+                </ul>
+              </div>
             </div>
-            <div className={styles.problem}>
-              <h4>Direct Sales</h4>
-              <p>Limited reach, high shipping costs, time consuming</p>
-            </div>
-            <div className={styles.problem}>
-              <h4>Consignment</h4>
-              <p>Unpredictable income, inventory risk, poor tracking</p>
+            <div className={styles.problemsRight}>
+              <div className={styles.videoPlaceholder}>
+                <p>**Insert video content here**</p>
+              </div>
+              <p className={styles.problemsSubtext}>Just a system that works—for the kind of people actually making and selling independent magazines.</p>
             </div>
           </div>
         </div>
@@ -106,11 +151,26 @@ const Home = () => {
 
       {/* CTA Section */}
       <section className={styles.cta}>
-        <div className="container">
-          <h2>We built the tool we needed. Now it's yours.</h2>
-          <div className={styles.ctaButtons}>
-            <Button size="large">Join as Publisher</Button>
-            <Button variant="outline" size="large">Request Retailer Access</Button>
+        <div className={styles.container}>
+          <h2 className={styles.ctaTitle}>We built the tool we needed. Now it's yours.</h2>
+          <div className={styles.ctaGrid}>
+            <div className={styles.ctaImage}>
+              <img src="/api/placeholder/400/500" alt="Stack of magazines" />
+            </div>
+            <div className={styles.ctaContent}>
+              <div className={styles.ctaButtons}>
+                <Link to="/publisher-application" className={styles.primaryBtn}>
+                  Apply as a Publisher
+                </Link>
+                <Link to="/auth" className={styles.secondaryBtn}>
+                  Request Retailer Access
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className={styles.ctaFooter}>
+            <p>Have questions?</p>
+            <a href="#" className={styles.teamLink}>Talk to the Team</a>
           </div>
         </div>
       </section>

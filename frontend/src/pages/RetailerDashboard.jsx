@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { getAvailableMagazines, getRetailerOrders, createOrder, getRetailerInventory } from '../api';
-import { retailerOrdersData, retailerInventoryData, availableMagazinesData } from '../data/dummyData';
+import { retailerOrdersData, retailerInventoryData, availableMagazinesData } from '../data/dummyData.jsx';
 import CheckoutForm from '../components/checkout/CheckoutForm';
 import styles from './RetailerDashboard.module.css';
 import Button from '../components/common/Button';

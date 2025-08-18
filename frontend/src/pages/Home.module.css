@@ -1,308 +1,514 @@
-.home {
-  width: 100%;
+.landingPage {
+  min-height: 100vh;
+  background: white;
+  font-family: 'Manrope', sans-serif;
 }
 
-/* Hero Section - "The OS for Indie Print" */
-.heroSection {
-  background: #f8f9fa;
-  padding: 120px 0;
-  min-height: 80vh;
+/* Header */
+.header {
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.hamburger {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100vh;
+  background: #f5f5f5;
+  padding: 60px 20px 20px;
+  z-index: 1000;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+}
+
+.mobileLink {
+  display: block;
+  padding: 12px 0;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.closeMenu {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+  padding: 60px 0;
+  background: white;
+  position: relative;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
 }
 
 .heroContent {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 120px;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 
-.heroText h1 {
-  font-size: clamp(3.5rem, 7vw, 6rem);
+.heroContent h1 {
+  font-size: 2.8rem;
   font-weight: 700;
-  color: var(--phantom);
-  margin-bottom: 48px;
+  margin-bottom: 1rem;
+  color: #000;
   line-height: 1.1;
 }
 
-.heroButtons {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 32px;
-  justify-content: center;
+.heroContent p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.5;
 }
 
-.heroButtons button {
-  padding: 18px 36px;
-  border: 2px solid var(--steel);
-  background: white;
-  color: var(--steel);
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1.125rem;
+.exploreBtn {
+  background: #000;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.heroButtons button:hover {
-  border-color: var(--primary-purple);
-  color: var(--primary-purple);
+.exploreBtn:hover {
+  opacity: 0.8;
 }
 
-.heroText p {
-  color: var(--steel);
-  font-size: 1.25rem;
-  cursor: pointer;
+.heroVisual {
+  position: relative;
+  height: 250px;
+  background: #e8e9f0;
+  border: 1px solid #d0d0d0;
 }
 
-.heroImage {
-  text-align: center;
+.gridLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-.heroImage img {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  border-radius: 16px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-  margin-bottom: 24px;
-}
-
-.heroImage p {
-  color: var(--steel);
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-
-/* Value Propositions */
+/* Value Props */
 .valueProps {
-  padding: 80px 0;
-  background: white;
+  padding: 60px 0;
+  background: linear-gradient(135deg, #f8f6f3 0%, #e8e6e3 100%);
+  position: relative;
 }
 
 .propGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  max-width: 1000px;
-  margin: 0 auto;
+  gap: 60px;
+  align-items: start;
+  position: relative;
 }
 
-.prop {
-  text-align: left;
+.propGrid::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 4px, transparent 4px);
+  background-size: 1px 20px;
+  transform: translateX(-50%);
 }
 
-.prop h3 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--phantom);
-  margin-bottom: 16px;
-  line-height: 1.3;
+.propCard {
+  padding: 0;
 }
 
-.prop p {
-  color: var(--steel);
-  font-size: 1.125rem;
-  line-height: 1.6;
-  margin-bottom: 24px;
+.propIcon {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.prop a {
-  color: var(--primary-purple);
-  text-decoration: none;
+.propCard h3 {
+  color: #666;
+  font-size: 0.8rem;
   font-weight: 600;
-  font-size: 1rem;
-  transition: color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
 }
 
-.prop a:hover {
-  color: var(--primary-navy);
+.propCard h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000;
+  line-height: 1.2;
 }
 
-/* Pipeline Section */
+.propCard p {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.subText {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+
+.propLink {
+  display: inline-block;
+  color: #000;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.propLink:hover {
+  opacity: 0.7;
+}
+
+/* Pipeline */
 .pipeline {
   padding: 80px 0;
-  background: var(--cloud);
+  background: white;
+  position: relative;
+}
+
+.pipeline .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: block;
 }
 
 .pipeline h2 {
   text-align: center;
   font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--phantom);
-  margin-bottom: 64px;
+  font-weight: 400;
+  margin-bottom: 4rem;
+  color: #000;
+  line-height: 1.2;
 }
 
 .pipelineSteps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 48px;
-  max-width: 1000px;
-  margin: 0 auto;
+  gap: 40px;
 }
 
 .step {
-  text-align: center;
+  text-align: left;
+  padding: 0;
 }
 
 .stepIcon {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
-  display: block;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #000;
 }
 
 .step h4 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--phantom);
-  margin-bottom: 12px;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
 }
 
 .step p {
-  color: var(--steel);
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
-/* Problems Section */
+.stepSubtext {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Problems */
 .problems {
   padding: 80px 0;
-  background: white;
+  background: #e8e9f0;
+  position: relative;
 }
 
-.problems h2 {
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--phantom);
-  margin-bottom: 64px;
+.problems::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 4px, transparent 4px);
+  background-size: 1px 20px;
+  transform: translateX(-50%);
 }
 
-.problemGrid {
+.problemsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 48px;
-  max-width: 800px;
-  margin: 0 auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
 }
 
-.problem {
-  text-align: center;
-  padding: 32px 24px;
-  background: var(--cloud);
-  border-radius: 12px;
+.problemsContent h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  color: #000;
+  line-height: 1.2;
 }
 
-.problem h4 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--phantom);
-  margin-bottom: 12px;
-}
-
-.problem p {
-  color: var(--steel);
-  font-size: 0.875rem;
+.problemsContent > p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
   line-height: 1.5;
 }
 
-/* CTA Section */
-.cta {
-  padding: 80px 0;
-  background: var(--primary-navy);
-  color: white;
-  text-align: center;
+.principles {
+  background: transparent;
+  padding: 0;
 }
 
-.cta h2 {
+.principles h4 {
+  color: #000;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.principles ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.principles li {
+  padding: 8px 0;
+  color: #000;
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.principles li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #000;
+  font-weight: bold;
+}
+
+.problemsRight {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.videoPlaceholder {
+  background: #c0c0c0;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.problemsSubtext {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* CTA */
+.cta {
+  padding: 80px 0;
+  background: #e8e9f0;
+  position: relative;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 4px, transparent 4px);
+  background-size: 1px 20px;
+  transform: translateX(-50%);
+}
+
+.ctaTitle {
   font-size: 2.5rem;
+  color: #000;
+  margin-bottom: 3rem;
   font-weight: 700;
-  margin-bottom: 48px;
-  color: white;
+  line-height: 1.2;
+  text-align: center;
+  width: 100%;
+}
+
+.ctaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.ctaImage img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.ctaContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ctaButtons {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
 }
 
-.ctaButtons button {
-  padding: 16px 32px;
-  font-size: 1.125rem;
-  font-weight: 600;
-  border-radius: 12px;
+.primaryBtn, .secondaryBtn {
+  padding: 16px 24px;
+  font-size: 1rem;
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.ctaButtons button:first-child {
-  background: var(--primary-purple);
-  color: white;
+  text-decoration: none;
+  display: inline-block;
   border: none;
-}
-
-.ctaButtons button:last-child {
   background: transparent;
-  color: white;
-  border: 2px solid white;
+  color: #000;
+  text-align: center;
 }
 
-.ctaButtons button:hover {
-  transform: translateY(-2px);
+.primaryBtn:hover, .secondaryBtn:hover {
+  opacity: 0.7;
 }
 
-/* Responsive Design */
+.ctaFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+
+.ctaFooter p {
+  color: #666;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.teamLink {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .heroContent {
-    grid-template-columns: 1fr;
-    gap: 48px;
-    text-align: center;
+  .container {
+    padding: 0 20px;
   }
   
-  .propGrid {
+  .heroGrid,
+  .propGrid,
+  .problemsGrid,
+  .ctaGrid {
     grid-template-columns: 1fr;
-    gap: 48px;
+    gap: 30px;
   }
   
   .pipelineSteps {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
-  
-  .problemGrid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 25px;
   }
   
-  .ctaButtons {
-    flex-direction: column;
-    align-items: center;
+  .heroContent h1 {
+    font-size: 2.2rem;
   }
   
-  .heroButtons {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .pipelineSteps {
+  .principles ul {
     grid-template-columns: 1fr;
   }
   
-  .heroSection {
-    padding: 60px 0;
-  }
-  
-  .pipeline,
-  .valueProps,
-  .problems,
-  .cta {
-    padding: 60px 0;
+  .propGrid::before {
+    display: none;
   }
 }

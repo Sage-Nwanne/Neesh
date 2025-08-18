@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { analyticsData } from '../../data/dummyData';
+import { analyticsData } from '../../data/dummyData.jsx';
 import styles from './Analytics.module.css';
 
 const Analytics = ({ user }) => {

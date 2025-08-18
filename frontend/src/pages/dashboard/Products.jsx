@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { productsData } from '../../data/dummyData';
+import { productsData } from '../../data/dummyData.jsx';
 import styles from './Products.module.css';
 
 const Products = ({ user }) => {

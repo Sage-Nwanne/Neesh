@@ -8,6 +8,7 @@ const HealthStatus = () => {
   const [status, setStatus] = useState('checking');
   const [details, setDetails] = useState(null);
   const [lastChecked, setLastChecked] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const checkBackendHealth = async () => {
     setStatus('checking');
@@ -29,39 +30,51 @@ const HealthStatus = () => {
   };
 
   useEffect(() => {
-    checkBackendHealth();
-    // Check health every minute
-    const interval = setInterval(checkBackendHealth, 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
+    if (isVisible) {
+      checkBackendHealth();
+      const interval = setInterval(checkBackendHealth, 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isVisible]);
 
   return (
-    <div className={styles.healthStatus}>
-      <div className={`${styles.indicator} ${styles[status]}`}></div>
-      <div className={styles.details}>
-        <span className={styles.label}>Backend:</span>
-        <span className={styles.value}>
-          {status === 'checking' ? 'Checking...' : 
-           status === 'connected' ? 'Connected' : 'Disconnected'}
-        </span>
-        {details && details.timestamp && (
-          <span className={styles.timestamp}>
-            Server time: {new Date(details.timestamp).toLocaleTimeString()}
-          </span>
-        )}
-        {lastChecked && (
-          <span className={styles.timestamp}>
-            Checked: {lastChecked.toLocaleTimeString()}
-          </span>
-        )}
-        <button 
-          className={styles.refreshButton} 
-          onClick={checkBackendHealth}
-          disabled={status === 'checking'}
-        >
-          Refresh
-        </button>
-      </div>
+    <div className={styles.healthContainer}>
+      <button 
+        className={styles.toggleButton}
+        onClick={() => setIsVisible(!isVisible)}
+      >
+        Health Check
+      </button>
+      
+      {isVisible && (
+        <div className={styles.healthStatus}>
+          <div className={`${styles.indicator} ${styles[status]}`}></div>
+          <div className={styles.details}>
+            <span className={styles.label}>Backend:</span>
+            <span className={styles.value}>
+              {status === 'checking' ? 'Checking...' : 
+               status === 'connected' ? 'Connected' : 'Disconnected'}
+            </span>
+            {details && details.timestamp && (
+              <span className={styles.timestamp}>
+                Server time: {new Date(details.timestamp).toLocaleTimeString()}
+              </span>
+            )}
+            {lastChecked && (
+              <span className={styles.timestamp}>
+                Checked: {lastChecked.toLocaleTimeString()}
+              </span>
+            )}
+            <button 
+              className={styles.refreshButton} 
+              onClick={checkBackendHealth}
+              disabled={status === 'checking'}
+            >
+              Refresh
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,12 +3,8 @@ import { useState, useEffect } from 'react';
 
 // Pages
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
 import PublisherDashboard from './pages/PublisherDashboard';
 import RetailerDashboard from './pages/RetailerDashboard';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
 import HealthStatus from './components/common/HealthStatus';
 import Messages from './pages/Messages';
 import Partners from './pages/Partners';
@@ -16,6 +12,7 @@ import Orders from './pages/Orders';
 import Marketplace from './pages/Marketplace';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
+import AdminPanel from './pages/AdminPanel';
 
 // Dashboard Pages
 import Products from './pages/dashboard/Products';
@@ -31,13 +28,12 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <HealthStatus />
-        <Navbar user={user} setUser={setUser} />
         
-        <main className="container">
+        <main>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login setUser={setUser} />} />
-            <Route path="/signup" element={<Signup setUser={setUser} />} />
+            <Route path="/auth" element={<div>Auth page coming soon</div>} />
+            <Route path="/publisher-application" element={<div>Publisher application coming soon</div>} />
             <Route path="/publisher-dashboard" element={<PublisherDashboard user={user} />} />
             <Route path="/retailer-dashboard" element={<RetailerDashboard user={user} />} />
             <Route path="/messages" element={<Messages />} />
@@ -53,9 +49,9 @@ function App() {
             <Route path="/analytics" element={<Analytics user={user} />} />
             <Route path="/widgets" element={<Widgets user={user} />} />
             <Route path="/reports" element={<Reports user={user} />} />
+            <Route path="/admin" element={<AdminPanel user={user} />} />
           </Routes>
         </main>
-        <Footer />
       </div>
     </BrowserRouter>
   );
