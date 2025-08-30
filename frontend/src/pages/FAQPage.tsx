@@ -8,7 +8,9 @@ const FAQPage: React.FC = () => {
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.container}>
-          <div className={styles.logo}>NEESH</div>
+          <div className={styles.logo}>
+            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
+          </div>
           <nav className={styles.nav}>
             <Link to="/publisher-application" className={styles.navLink}>Apply to List a Magazine</Link>
             <Link to="/auth" className={styles.navLink}>Request Access for Your Shop</Link>
@@ -49,17 +51,21 @@ const FAQPage: React.FC = () => {
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.container}>
-          <div className={styles.footerContent}>
-            <div className={styles.footerLogo}>NEESH</div>
-            <div className={styles.socialLinks}>
-              <a href="https://www.instagram.com/neeshprint?igsh=M2o0MmpxY3hnejZ2" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                Instagram
-              </a>
-              <a href="mailto:hi@neesh.art" className={styles.socialLink}>
-                Contact
-              </a>
-            </div>
+          <div className={styles.footerLogo}>
+            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.footerLogoImage} />
           </div>
+        </div>
+        <div className={styles.socialLinks}>
+          <a href="https://www.instagram.com/neeshprint?igsh=M2o0MmpxY3hnejZ2" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+            Instagram
+          </a>
+          <a href="mailto:hi@neesh.art" className={styles.socialLink}>
+            Contact
+          </a>
+          <a href="https://casesensitive.co.uk" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+            <img src="/casesensitive favicon.webp" alt="Casesensitive" className={styles.faviconIcon} />
+            Casesensitive
+          </a>
         </div>
       </footer>
     </div>

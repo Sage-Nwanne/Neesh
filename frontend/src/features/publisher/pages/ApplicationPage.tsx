@@ -97,7 +97,9 @@ const ApplicationPage: React.FC = () => {
       {/* Header - Styled exactly like home page */}
       <header style={headerStyles}>
         <div style={containerStyles}>
-          <div style={logoStyles}>NEESH</div>
+          <div style={logoStyles}>
+            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" style={{ height: '32px', width: 'auto' }} />
+          </div>
 
           {/* Desktop Navigation */}
           <nav style={desktopNavStyles}>

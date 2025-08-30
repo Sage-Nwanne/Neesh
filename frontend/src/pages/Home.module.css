@@ -29,6 +29,11 @@
   color: #000;
 }
 
+.logoImage {
+  height: 32px;
+  width: auto;
+}
+
 .nav {
   display: flex;
   align-items: center;
@@ -123,9 +128,7 @@
     display: block !important;
   }
 
-  .gridLines {
-    background-size: 15px 15px !important;
-  }
+
 
   .heroGrid {
     grid-template-columns: 1fr !important;
@@ -172,9 +175,7 @@
     display: block !important;
   }
 
-  .gridLines {
-    background-size: 12px 12px !important;
-  }
+
 
   .ctaTitle {
     font-size: 1.6rem !important;
@@ -242,21 +243,16 @@
 .heroVisual {
   position: relative;
   height: 250px;
-  background: #e8e9f0;
-  border: 1px solid #d0d0d0;
   left: 80px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.gridLines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 /* Value Props */
@@ -763,22 +759,31 @@
   margin-top: 4rem;
 }
 
-.footerContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .footerLogo {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #000;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .socialLinks {
   display: flex;
+  justify-content: center;
   gap: 2rem;
+  padding: 0 40px;
 }
+
+.footerLogoImage {
+  height: 28px;
+  width: auto;
+}
+
+.faviconIcon {
+  height: 16px;
+  width: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+
 
 .socialLink {
   text-decoration: none;
@@ -793,13 +798,8 @@
 }
 
 @media (max-width: 640px) {
-  .footer .footerContent {
-    flex-direction: column;
+  .socialLinks {
     gap: 1rem;
-    text-align: center;
-  }
-
-  .footer .socialLinks {
-    gap: 1rem;
+    padding: 0 20px;
   }
 }

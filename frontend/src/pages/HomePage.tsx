@@ -34,7 +34,9 @@ const Home = () => {
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.container}>
-          <div className={styles.logo}>NEESH</div>
+          <div className={styles.logo}>
+            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className={styles.nav}>
@@ -79,7 +81,7 @@ const Home = () => {
               <button className={styles.exploreBtn} onClick={scrollToPipeline}>Explore</button>
             </div>
             <div className={styles.heroVisual}>
-              <div className={styles.gridLines}></div>
+              <img src="/magazine-photo-yellow.jpg" alt="Magazine" className={styles.heroImage} />
             </div>
           </div>
         </div>
@@ -200,17 +202,21 @@ const Home = () => {
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.container}>
-          <div className={styles.footerContent}>
-            <div className={styles.footerLogo}>NEESH</div>
-            <div className={styles.socialLinks}>
-              <a href="https://www.instagram.com/neeshprint?igsh=M2o0MmpxY3hnejZ2" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                Instagram
-              </a>
-              <a href="mailto:hi@neesh.art" className={styles.socialLink}>
-                Contact
-              </a>
-            </div>
+          <div className={styles.footerLogo}>
+            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.footerLogoImage} />
           </div>
+        </div>
+        <div className={styles.socialLinks}>
+          <a href="https://www.instagram.com/neeshprint?igsh=M2o0MmpxY3hnejZ2" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+            Instagram
+          </a>
+          <a href="mailto:hi@neesh.art" className={styles.socialLink}>
+            Contact
+          </a>
+          <a href="https://casesensitive.co.uk" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+            <img src="/casesensitive favicon.webp" alt="Casesensitive" className={styles.faviconIcon} />
+            Casesensitive
+          </a>
         </div>
       </footer>
     </div>
