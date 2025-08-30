@@ -5,9 +5,14 @@ import styles from './Home.module.css';
 
 const Home = () => {
   const [showIntro, setShowIntro] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleIntroComplete = () => {
     setShowIntro(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   const scrollToPipeline = () => {
@@ -30,14 +35,38 @@ const Home = () => {
       <header className={styles.header}>
         <div className={styles.container}>
           <div className={styles.logo}>NEESH</div>
+
+          {/* Desktop Navigation */}
           <nav className={styles.nav}>
             <Link to="/publisher-application" className={styles.navLink}>Apply to List a Magazine</Link>
             <Link to="/auth" className={styles.navLink}>Request Access for Your Shop</Link>
             <Link to="/faq" className={styles.navLink}>FAQ</Link>
             <a href="mailto:hi@neesh.art" className={styles.navLink}>Talk to the Team</a>
-            <Link to="/auth" className={styles.navLink}>Sign In</Link>
+            <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link>
           </nav>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            className={styles.mobileMenuBtn}
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            <span className={styles.hamburger}></span>
+            <span className={styles.hamburger}></span>
+            <span className={styles.hamburger}></span>
+          </button>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className={styles.mobileMenu}>
+            <Link to="/publisher-application" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Apply to List a Magazine</Link>
+            <Link to="/auth" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
+            <Link to="/faq" className={styles.mobileNavLink} onClick={toggleMobileMenu}>FAQ</Link>
+            <a href="mailto:hi@neesh.art" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Talk to the Team</a>
+            <Link to="/why-neesh" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Why Neesh</Link>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -146,7 +175,7 @@ const Home = () => {
             </div>
             <div className={styles.problemsRight}>
               <div className={styles.videoPlaceholder}>
-                <p>**Insert video content here**</p>
+                <p>Video coming soon...</p>
               </div>
               <p className={styles.problemsSubtext}>Just a system that works—for the kind of people actually making and selling independent magazines.</p>
             </div>

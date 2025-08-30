@@ -48,30 +48,143 @@
   color: #000;
 }
 
+/* Mobile Menu Button */
+.mobileMenuBtn {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  gap: 4px;
+}
+
+.hamburger {
+  width: 20px;
+  height: 2px;
+  background: #000;
+  transition: all 0.3s ease;
+}
+
+/* Mobile Menu */
+.mobileMenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 99;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+.mobileNavLink:hover {
+  background-color: #f8f8f8;
+  color: #000;
+}
+
+.mobileNavLink:last-child {
+  border-bottom: none;
+}
+
 /* Responsive navigation */
 @media (max-width: 768px) {
   .nav {
-    gap: 1rem;
+    display: none !important;
   }
 
-  .navLink {
-    font-size: 0.8rem;
+  .mobileMenuBtn {
+    display: flex !important;
+  }
+
+  .mobileMenu {
+    display: block !important;
+  }
+
+  .heroVisual {
+    position: static !important;
+    left: auto !important;
+    transform: none !important;
+    width: 280px !important;
+    height: 200px !important;
+    margin: 2rem auto !important;
+    display: block !important;
+  }
+
+  .gridLines {
+    background-size: 15px 15px !important;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    text-align: center !important;
+  }
+
+  .heroContent {
+    text-align: center !important;
+  }
+
+  .heroContent h1 {
+    font-size: 2.2rem !important;
+    text-align: center !important;
   }
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: 0 20px;
+    padding: 0 20px !important;
   }
 
   .nav {
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    display: none !important;
   }
 
-  .navLink {
-    font-size: 0.75rem;
-    padding: 0.25rem;
+  .mobileMenuBtn {
+    display: flex !important;
+  }
+
+  .heroContent h1 {
+    font-size: 2rem !important;
+    line-height: 1.1 !important;
+    text-align: center !important;
+  }
+
+  .heroVisual {
+    position: static !important;
+    left: auto !important;
+    transform: none !important;
+    width: 250px !important;
+    height: 150px !important;
+    margin: 1rem auto !important;
+    display: block !important;
+  }
+
+  .gridLines {
+    background-size: 12px 12px !important;
+  }
+
+  .ctaTitle {
+    font-size: 1.6rem !important;
+    max-width: 250px !important;
+    line-height: 1.1 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .magOnBench {
+    margin: 0 auto 1.5rem auto !important;
   }
 }
 
@@ -435,7 +548,7 @@
 }
 
 .videoPlaceholder {
-  background: #c0c0c0;
+  background: #150530;
   height: 300px;
   display: flex;
   align-items: center;
@@ -572,9 +685,54 @@
   }
 
   .cta {
-    height: auto;
-    min-height: 800px;
-    padding: 60px 20px;
+    height: auto !important;
+    min-height: 600px !important;
+    padding: 40px 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    position: relative !important;
+  }
+
+  .ctaTitle {
+    position: static !important;
+    transform: none !important;
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 2rem !important;
+    max-width: 280px !important;
+    z-index: 10 !important;
+    background: transparent !important;
+    order: 1 !important;
+  }
+
+  .magOnBench {
+    position: static !important;
+    transform: none !important;
+    width: 200px !important;
+    margin: 0 auto 2rem auto !important;
+    display: block !important;
+    order: 2 !important;
+  }
+
+  .publisherBtn, .retailerBtn {
+    position: static !important;
+    transform: none !important;
+    display: block !important;
+    margin: 0.5rem auto !important;
+    text-align: center !important;
+    width: 200px !important;
+    order: 3 !important;
+  }
+
+  .questionsText, .teamLink {
+    position: static !important;
+    transform: none !important;
+    text-align: center !important;
+    margin: 1rem auto !important;
+    display: block !important;
+    order: 4 !important;
   }
 
   .hero,
@@ -583,38 +741,9 @@
     min-height: 600px;
   }
 
-  .magOnBench {
-    position: static;
-    transform: none;
-    width: 200px;
-    margin: 2rem auto;
-    display: block;
-  }
-
-  .publisherBtn, .retailerBtn {
-    position: static;
-    transform: none;
-    display: block;
-    margin: 1rem auto;
-    text-align: center;
-    width: 200px;
-  }
-
-  .questionsText, .teamLink {
-    position: static;
-    transform: none;
-    text-align: center;
-    margin: 1rem auto;
-    display: block;
-  }
-
   .pipelineSteps {
     grid-template-columns: 1fr;
     gap: 25px;
-  }
-
-  .heroContent h1 {
-    font-size: 2.2rem;
   }
 
   .principles ul {

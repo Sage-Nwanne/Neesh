@@ -14,7 +14,7 @@ const FAQPage: React.FC = () => {
             <Link to="/auth" className={styles.navLink}>Request Access for Your Shop</Link>
             <Link to="/faq" className={styles.navLink}>FAQ</Link>
             <a href="mailto:hi@neesh.art" className={styles.navLink}>Talk to the Team</a>
-            <Link to="/auth" className={styles.navLink}>Sign In</Link>
+            <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link>
           </nav>
         </div>
       </header>
