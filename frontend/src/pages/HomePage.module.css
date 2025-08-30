@@ -1,0 +1,521 @@
+.landingPage {
+  min-height: 100vh;
+  background: white;
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Header */
+.header {
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.hamburger {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100vh;
+  background: #f5f5f5;
+  padding: 60px 20px 20px;
+  z-index: 1000;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+}
+
+.mobileLink {
+  display: block;
+  padding: 12px 0;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.closeMenu {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+  padding: 60px 0;
+  background: white;
+  position: relative;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.heroContent {
+  text-align: left;
+}
+
+.heroContent h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000;
+  line-height: 1.1;
+}
+
+.heroContent p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.exploreBtn {
+  background: #000;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.exploreBtn:hover {
+  opacity: 0.8;
+}
+
+.heroVisual {
+  position: relative;
+  height: 250px;
+  background: #e8e9f0;
+  border: 1px solid #d0d0d0;
+  
+}
+
+.gridLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Value Props */
+.valueProps {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #f8f6f3 0%, #e8e6e3 100%);
+  position: relative;
+}
+
+.propGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  position: relative;
+}
+
+.propGrid::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 4px, transparent 4px);
+  background-size: 1px 20px;
+  transform: translateX(-50%);
+}
+
+.propCard {
+  padding: 0;
+}
+
+.propIcon {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.propCard h3 {
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.propCard h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #000;
+  line-height: 1.2;
+}
+
+.propCard p {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.subText {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+
+.propLink {
+  display: inline-block;
+  color: #000;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.propLink:hover {
+  opacity: 0.7;
+}
+
+/* Pipeline */
+.pipeline {
+  padding: 80px 0;
+  background: white;
+  position: relative;
+}
+
+.pipeline .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: block;
+}
+
+.pipeline h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 4rem;
+  color: #000;
+  line-height: 1.2;
+}
+
+.pipelineSteps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.step {
+  text-align: left;
+  padding: 0;
+}
+
+.stepIcon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.step h4 {
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.step p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.stepSubtext {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Problems */
+.problems {
+  padding: 80px 0;
+  background: #e8e9f041;
+  position: relative;
+}
+
+.problems::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.1) 4px, transparent 4px);
+  background-size: 1px 20px;
+  transform: translateX(-50%);
+}
+
+.problemsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.problemsContent h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  color: #000;
+  line-height: 1.2;
+}
+
+.problemsContent > p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+}
+
+.principles {
+  background: transparent;
+  padding: 0;
+}
+
+.principles h4 {
+  color: #000;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.principles ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.principles li {
+  padding: 8px 0;
+  color: #000;
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.principles li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #000;
+  font-weight: bold;
+}
+
+.problemsRight {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.videoPlaceholder {
+  background: #c0c0c0;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.problemsSubtext {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* CTA */
+.cta {
+  padding: 80px 0;
+  background: #ffffff;
+  position: relative;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.1) 4px, transparent 4px);
+  background-size: 1px 20px;
+  transform: translateX(-50%);
+}
+
+.ctaTitle {
+  font-size: 2.5rem;
+  color: #000;
+  margin-bottom: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center !important;
+  width: 100%;
+}
+
+.ctaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.ctaImage img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.magOnBench {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.ctaContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ctaButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
+}
+
+.primaryBtn, .secondaryBtn {
+  padding: 16px 24px;
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  background: transparent;
+  color: #000;
+  text-align: center;
+}
+
+.primaryBtn:hover, .secondaryBtn:hover {
+  opacity: 0.7;
+}
+
+.ctaFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+
+.ctaFooter p {
+  color: #666;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.teamLink {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .heroGrid,
+  .propGrid,
+  .problemsGrid,
+  .ctaGrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .pipelineSteps {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .heroContent h1 {
+    font-size: 2.2rem;
+  }
+
+  .principles ul {
+    grid-template-columns: 1fr;
+  }
+
+  .propGrid::before {
+    display: none;
+  }
+}
