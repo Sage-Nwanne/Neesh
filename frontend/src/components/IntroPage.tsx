@@ -17,7 +17,9 @@ const IntroPage: React.FC<IntroPageProps> = ({ onComplete }) => {
   return (
     <div className={styles.introPage}>
       <div className={styles.logoContainer}>
-        <div className={styles.logo}>NEESH</div>
+        <div className={styles.logo}>
+          <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
+        </div>
       </div>
     </div>
   );

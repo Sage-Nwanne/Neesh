@@ -25,6 +25,12 @@
   animation: fadeIn 0.8s ease-in-out;
 }
 
+.logoImage {
+  height: 80px;
+  width: auto;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
