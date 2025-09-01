@@ -134,42 +134,59 @@ export default function CaseSensitiveCard({
               </button>
 
               <div className={`text-sm ${muted} mb-1`}>Presented by Neesh</div>
-              <h3 className={`text-xl font-semibold leading-tight ${ink}`}>Case Sensitive — NYC • Sep 13</h3>
-              <p className={`mt-2 text-sm leading-snug text-white`} style={{ color: 'white' }}>
-                A new conference shaping the future of print magazines. Panels, workshops, demos, and more.
+              <h3 className={`text-xl font-semibold leading-tight ${ink}`} style={{ color: '#201510' }}> Case Sensitive — NYC • Sep 13</h3>
+              <p className={`mt-2 text-sm leading-snug text-white`} style={{ color: 'white', padding: 15 }}>
+                A new conference shaping the future of print magazines. Panels, workshops, demos, and more.  
               </p>
-              <div className="mt-4 flex items-center gap-3">
+              <div className="mt-4 flex items-center" style={{ justifyContent: 'space-around' }}>
                 <a
                   href={`${TICKETS_URL}${UTM}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition text-white border border-white/20 hover:bg-white/10"
                   style={{
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
-                    padding: '.5rem 2.5rem',
+                    background: '#000',
+                    color: 'white',
                     border: 'none',
+                    padding: '12px 24px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                    borderRadius: '10px'
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                 >
                   Buy Tickets
                 </a>
                 <a
-                
                   href={`${LEARN_URL}${UTM}` }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition text-white border border-white/20 hover:bg-white/10"
                   style={{
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
-                    padding: '.5rem 2rem',
+                    background: '#000',
+                    color: 'white',
                     border: 'none',
+                    padding: '12px 24px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                    borderRadius: '10px'
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                 >
                   Learn More
                 </a>
               </div>
 
               {/* Footnote */}
-              <div className={`mt-3 text-xs ${muted}`}>
+              <div className={`mt-3 text-xs ${muted}`} style={{ padding: '10px' }}>
                 At WSA, 161 Water St, NYC. Powered by The Logical Choice.
               </div>
             </div>

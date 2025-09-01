@@ -35,7 +35,9 @@ const Home = () => {
       <header className={styles.header}>
         <div className={styles.container}>
           <div className={styles.logo}>
-            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
+            <Link to="https://neesh.art">
+              <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -44,7 +46,7 @@ const Home = () => {
             <Link to="/auth" className={styles.navLink}>Request Access for Your Shop</Link>
             <Link to="/faq" className={styles.navLink}>FAQ</Link>
             <a href="mailto:hi@neesh.art" className={styles.navLink}>Talk to the Team</a>
-            <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link>
+            {/* <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link> */}
           </nav>
 
           {/* Mobile Hamburger Button */}
@@ -66,7 +68,7 @@ const Home = () => {
             <Link to="/auth" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
             <Link to="/faq" className={styles.mobileNavLink} onClick={toggleMobileMenu}>FAQ</Link>
             <a href="mailto:hi@neesh.art" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Talk to the Team</a>
-            <Link to="/why-neesh" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Why Neesh</Link>
+            {/* <Link to="/why-neesh" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Why Neesh</Link> */}
           </div>
         )}
       </header>
@@ -81,7 +83,7 @@ const Home = () => {
               <button className={styles.exploreBtn} onClick={scrollToPipeline}>Explore</button>
             </div>
             <div className={styles.heroVisual}>
-              <img src="/magazine-photo-yellow.jpg" alt="Magazine" className={styles.heroImage} />
+              <img src="/magazine-photo-red.jpg" alt="Magazine" className={styles.heroImage} />
             </div>
           </div>
         </div>
@@ -213,7 +215,7 @@ const Home = () => {
           <a href="mailto:hi@neesh.art" className={styles.socialLink}>
             Contact
           </a>
-          <a href="https://casesensitive.co.uk" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+          <a href="https://casesensitive.show" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
             <img src="/casesensitive favicon.webp" alt="Casesensitive" className={styles.faviconIcon} />
             Casesensitive
           </a>

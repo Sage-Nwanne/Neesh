@@ -106,7 +106,7 @@ const ApplicationPage: React.FC = () => {
             <Link to="/" style={navLinkStyles}>Home</Link>
             <Link to="/faq" style={navLinkStyles}>FAQ</Link>
             <a href="mailto:hi@neesh.art" style={navLinkStyles}>Talk to the Team</a>
-            <Link to="/why-neesh" style={navLinkStyles}>Why Neesh</Link>
+            {/* <Link to="/why-neesh" style={navLinkStyles}>Why Neesh</Link> */}
           </nav>
 
           {/* Mobile Hamburger Button */}

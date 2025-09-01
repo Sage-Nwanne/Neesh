@@ -141,7 +141,7 @@
   }
 
   .heroContent h1 {
-    font-size: 2.2rem !important;
+    font-size: 5.8rem !important;
     text-align: center !important;
   }
 }
@@ -160,7 +160,7 @@
   }
 
   .heroContent h1 {
-    font-size: 2rem !important;
+    font-size: 5.8rem !important;
     line-height: 1.1 !important;
     text-align: center !important;
   }
@@ -194,7 +194,7 @@
   padding: 60px 0;
   background: white;
   position: relative;
-  min-height: 800px;
+  min-height: 600px;
   display: flex;
   align-items: center;
 }
@@ -211,7 +211,7 @@
 }
 
 .heroContent h1 {
-  font-size: 2.8rem;
+  font-size: 5.8rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: #000;
