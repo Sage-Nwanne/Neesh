@@ -33,36 +33,42 @@ export const useAdminAuth = () => {
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simple hardcoded authentication for now
-    // In production, this should call a secure API endpoint
-    const validCredentials = [
-      { email: 'admin@neesh.art', password: 'neeshis@dmin', role: 'admin' as const, name: 'NEESH Admin' },
-      { email: 'owner@neesh.art', password: 'neesh2024owner', role: 'owner' as const, name: 'Owner' }
-    ];
+    try {
+      // For now, use simple hardcoded authentication
+      // In production, this should call a secure API endpoint
+      const validCredentials = [
+        { email: 'admin@neesh.art', password: 'neeshis@dmin', role: 'admin' as const, name: 'NEESH Admin' },
+        { email: 'owner@neesh.art', password: 'neesh2024owner', role: 'owner' as const, name: 'Owner' }
+      ];
 
-    const user = validCredentials.find(
-      cred => cred.email === email && cred.password === password
-    );
+      const user = validCredentials.find(
+        cred => cred.email === email && cred.password === password
+      );
 
-    if (user) {
-      const adminUser: AdminUser = {
-        id: '1',
-        email: user.email,
-        role: user.role,
-        name: user.name
-      };
+      if (user) {
+        const adminUser: AdminUser = {
+          id: '1',
+          email: user.email,
+          role: user.role,
+          name: user.name
+        };
 
-      setAdminUser(adminUser);
-      setIsAuthenticated(true);
-      
-      // Store in localStorage (in production, use secure tokens)
-      localStorage.setItem('admin_token', 'admin_token_' + Date.now());
-      localStorage.setItem('admin_user', JSON.stringify(adminUser));
-      
-      return true;
+        setAdminUser(adminUser);
+        setIsAuthenticated(true);
+
+        // Store a simple token for API calls (in production, use secure JWT)
+        const simpleToken = btoa(JSON.stringify({ email: user.email, role: user.role, userId: '1' }));
+        localStorage.setItem('admin_token', simpleToken);
+        localStorage.setItem('admin_user', JSON.stringify(adminUser));
+
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-
-    return false;
   };
 
   const logout = () => {

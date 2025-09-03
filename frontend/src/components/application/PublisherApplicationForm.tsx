@@ -5,9 +5,10 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
 
-import { Palette, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Palette, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { config } from '@/lib/config';
 import styles from './PublisherApplicationForm.module.css';
 
 // Stock Images Import Section - Using actual cover template images
@@ -185,6 +186,7 @@ const PublisherApplicationForm: React.FC = () => {
   const [formData, setFormData] = useState<ApplicationData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
 
   // State for carousel navigation - tracks current image index for each category
   const [currentImageIndex, setCurrentImageIndex] = useState<{[key: string]: number}>({
@@ -230,7 +232,32 @@ const PublisherApplicationForm: React.FC = () => {
 
   // Selection Handler Function
   const useStockImage = (stockImageSrc: string) => {
+    console.log('Selecting stock image:', stockImageSrc);
+
+    // Check if user has uploaded a custom image
+    const hasCustomImage = formData.cover_image_url &&
+      !Object.values(stockImages).some(category =>
+        category.images.includes(formData.cover_image_url)
+      );
+
+    if (hasCustomImage) {
+      const confirmReplace = window.confirm(
+        'You have uploaded a custom image. Do you want to replace it with this stock template?'
+      );
+      if (!confirmReplace) {
+        return;
+      }
+    }
+
     updateFormData('cover_image_url', stockImageSrc);
+    console.log('Updated formData.cover_image_url to stock image:', stockImageSrc);
+  };
+
+  // Remove selected cover image
+  const removeCoverImage = () => {
+    updateFormData('cover_image_url', '');
+    setUploadedImageUrl(''); // Clear local state too
+    console.log('Removed cover image selection');
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -304,8 +331,8 @@ const PublisherApplicationForm: React.FC = () => {
         .from('product-images')
         .getPublicUrl(fileName);
 
-      console.log('Public URL:', urlData.publicUrl);
       updateFormData('cover_image_url', urlData.publicUrl);
+      setUploadedImageUrl(urlData.publicUrl); // Set local state immediately
 
       toast({
         title: "Image uploaded successfully",
@@ -357,10 +384,42 @@ const PublisherApplicationForm: React.FC = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setCurrentStep(7); // Go to confirmation
-    setIsSubmitting(false);
+
+    try {
+      const apiBaseUrl = config.api.baseUrl;
+
+      const response = await fetch(`${apiBaseUrl}/publisher/application`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit application');
+      }
+
+      const result = await response.json();
+      console.log('Application submitted successfully:', result);
+
+      // Show success and go to confirmation
+      toast({
+        title: "Application Submitted!",
+        description: "Your publisher application has been submitted successfully. We'll review it and get back to you soon.",
+      });
+
+      setCurrentStep(7); // Go to confirmation
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your application. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStep = () => {
@@ -732,11 +791,51 @@ const PublisherApplicationForm: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    {formData.cover_image_url && !Object.values(stockImages).some(category =>
-                      category.images.includes(formData.cover_image_url)
-                    ) && (
-                      <div className="flex items-center gap-2 text-sm text-green-600">
-                        <span>✓ Custom image uploaded</span>
+
+                    {(formData.cover_image_url || uploadedImageUrl) && (
+                      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-semibold text-blue-800">Selected Cover Image:</h4>
+                          <button
+                            type="button"
+                            onClick={removeCoverImage}
+                            className={styles.removeCoverButton}
+                            title="Remove selected cover image"
+                          >
+                            <X className={styles.removeCoverIcon} />
+                            Remove
+                          </button>
+                        </div>
+                        {(() => {
+                          const currentImageUrl = formData.cover_image_url || uploadedImageUrl;
+                          const isStockImage = Object.values(stockImages).some(category =>
+                            category.images.includes(currentImageUrl)
+                          );
+
+                          return (
+                            <>
+                              {isStockImage ? (
+                                <div className="flex items-center gap-2 text-sm text-blue-600">
+                                  <span>✓ Stock template selected</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2 text-sm text-green-600">
+                                  <span>✓ Custom image uploaded</span>
+                                </div>
+                              )}
+                              <div className="mt-2">
+                                <img
+                                  src={currentImageUrl}
+                                  alt="Selected cover"
+                                  className="w-20 h-28 object-cover border rounded"
+                                />
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1 break-all">
+                                {currentImageUrl}
+                              </p>
+                            </>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>
@@ -915,7 +1014,17 @@ const PublisherApplicationForm: React.FC = () => {
                         width: 'auto',
                         height: 'auto'
                       }}
+                      onError={(e) => {
+                        console.error('Image failed to load:', formData.cover_image_url);
+                        console.error('Error event:', e);
+                      }}
+                      onLoad={() => {
+                        console.log('Image loaded successfully:', formData.cover_image_url);
+                      }}
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      URL: {formData.cover_image_url}
+                    </p>
                   </div>
                 </div>
               )}

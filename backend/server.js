@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.js';
 import publisherRoutes from './routes/publisher.js';
 import retailerRoutes from './routes/retailer.js';
+import adminRoutes from './routes/admin.js';
 import healthRoutes from './routes/health.js';
 import paymentRoutes from './routes/payments.js';
 
@@ -58,6 +59,7 @@ app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/publisher', publisherRoutes);
 app.use('/api/retailer', retailerRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
 
 // Error handling

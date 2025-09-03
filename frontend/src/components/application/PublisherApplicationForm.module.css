@@ -254,10 +254,16 @@
 }
 
 .uploadButton input[type="file"]::file-selector-button:hover {
-  background-color: #636161;
+  background-color: #4a4a4a;
   color: white;
   transform: scale(1.02);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.uploadButton input[type="file"]::file-selector-button:active {
+  background-color: #2d2d2d;
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Stock image carousel styling */
@@ -313,6 +319,37 @@
   color: #666;
   text-align: center;
   margin-top: 2px;
+}
+
+/* Remove cover image button */
+.removeCoverButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.removeCoverButton:hover {
+  background-color: #fecaca;
+  border-color: #f87171;
+  transform: scale(1.02);
+}
+
+.removeCoverButton:active {
+  transform: scale(0.98);
+}
+
+.removeCoverIcon {
+  width: 12px;
+  height: 12px;
 }
 
 /* Responsive Design */

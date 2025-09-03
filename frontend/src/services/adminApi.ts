@@ -46,55 +46,26 @@ export interface AdminStats {
   pendingReplyMessages: number;
 }
 
+import { config } from '@/lib/config';
+
 class AdminApiService {
-  private baseUrl = '/api/admin'; // This would be your actual API base URL
+  private baseUrl = config.api.baseUrl;
 
   // Applications Management
   async getApplications(): Promise<Application[]> {
     try {
-      // Mock data for now - replace with actual API call
-      return [
-        {
-          id: '1',
-          type: 'publisher',
-          applicantName: 'John Smith',
-          businessName: 'Artisan Quarterly',
-          email: 'john@artisanquarterly.com',
-          status: 'pending',
-          submittedAt: '2024-01-15T10:30:00Z',
-          magazineTitle: 'Artisan Quarterly Magazine'
-        },
-        {
-          id: '2',
-          type: 'retailer',
-          applicantName: 'Sarah Johnson',
-          businessName: 'Downtown Books',
-          email: 'sarah@downtownbooks.com',
-          status: 'pending',
-          submittedAt: '2024-01-14T14:20:00Z',
-          storeLocation: 'New York, NY'
-        },
-        {
-          id: '3',
-          type: 'publisher',
-          applicantName: 'Mike Chen',
-          businessName: 'Tech Today',
-          email: 'mike@techtoday.com',
-          status: 'approved',
-          submittedAt: '2024-01-13T09:15:00Z',
-          magazineTitle: 'Tech Today Weekly'
-        },
-        {
-          id: '4',
-          type: 'retailer',
-          applicantName: 'Emma Wilson',
-          businessName: 'Corner Bookshop',
-          email: 'emma@cornerbookshop.com',
-          status: 'denied',
-          submittedAt: '2024-01-12T16:45:00Z',
-          storeLocation: 'Los Angeles, CA'
+      const response = await fetch(`${this.baseUrl}/admin/applications`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+          'Content-Type': 'application/json'
         }
-      ];
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch applications');
+      }
+
+      return await response.json();
     } catch (error) {
       console.error('Error fetching applications:', error);
       throw error;
@@ -103,8 +74,18 @@ class AdminApiService {
 
   async approveApplication(applicationId: string): Promise<boolean> {
     try {
-      // Mock API call - replace with actual implementation
-      console.log(`Approving application ${applicationId}`);
+      const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/approve`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to approve application');
+      }
+
       return true;
     } catch (error) {
       console.error('Error approving application:', error);
@@ -114,8 +95,19 @@ class AdminApiService {
 
   async denyApplication(applicationId: string, reason?: string): Promise<boolean> {
     try {
-      // Mock API call - replace with actual implementation
-      console.log(`Denying application ${applicationId}`, reason);
+      const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/deny`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reason })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to deny application');
+      }
+
       return true;
     } catch (error) {
       console.error('Error denying application:', error);

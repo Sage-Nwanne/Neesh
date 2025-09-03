@@ -4,6 +4,102 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// POST /api/publisher/application - Submit publisher application
+router.post('/application', async (req, res) => {
+  try {
+    const applicationData = req.body;
+
+    // Insert application into Supabase (matching existing table structure)
+    const insertData = {
+      email: applicationData.email,
+      first_name: applicationData.first_name,
+      last_name: applicationData.last_name,
+      business_name: applicationData.business_name,
+      magazine_title: applicationData.magazine_title,
+      description: applicationData.description,
+      status: 'pending'
+    };
+
+    // Add optional fields only if they exist in the form data
+    if (applicationData.publication_type) insertData.publication_type = applicationData.publication_type;
+    if (applicationData.issue_number) insertData.issue_number = applicationData.issue_number;
+    if (applicationData.issue_frequency) insertData.issue_frequency = applicationData.issue_frequency;
+    if (applicationData.social_website_link) insertData.social_website_link = applicationData.social_website_link;
+    if (applicationData.print_run) insertData.print_run = parseInt(applicationData.print_run);
+    if (applicationData.available_quantity) insertData.available_quantity = parseInt(applicationData.available_quantity);
+    if (applicationData.wholesale_price) insertData.wholesale_price = parseFloat(applicationData.wholesale_price);
+    if (applicationData.suggested_retail_price) insertData.suggested_retail_price = parseFloat(applicationData.suggested_retail_price);
+    if (applicationData.specs) insertData.specs = applicationData.specs;
+    if (applicationData.volume_pricing) insertData.volume_pricing_tiers = applicationData.volume_pricing;
+    if (applicationData.cover_image_url) insertData.cover_image_url = applicationData.cover_image_url;
+    if (applicationData.has_sold_before) insertData.has_sold_before = applicationData.has_sold_before === 'yes';
+    if (applicationData.distribution_channels) insertData.distribution_channels = applicationData.distribution_channels;
+    if (applicationData.estimated_copies_sold) insertData.copies_sold_estimate = parseInt(applicationData.estimated_copies_sold);
+    if (applicationData.sales_feedback) insertData.quotes_feedback = applicationData.sales_feedback;
+    if (applicationData.fulfillment_method) insertData.fulfillment_method = applicationData.fulfillment_method;
+    if (applicationData.shipping_city) insertData.shipping_city = applicationData.shipping_city;
+    if (applicationData.shipping_state) insertData.shipping_state = applicationData.shipping_state;
+    if (applicationData.shipping_country) insertData.shipping_country = applicationData.shipping_country;
+    if (applicationData.return_policy) insertData.accepts_returns = applicationData.return_policy;
+
+    const { data: application, error } = await supabase
+      .from('publisher_applications')
+      .insert([insertData])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error submitting application:', error);
+      return res.status(500).json({ message: 'Failed to submit application' });
+    }
+
+    res.status(201).json({
+      applicationId: application.id,
+      message: 'Application submitted successfully'
+    });
+  } catch (error) {
+    console.error('Submit application error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/publisher/application/status - Get application status (for applicants)
+router.get('/application/status', async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const { data: application, error } = await supabase
+      .from('publisher_applications')
+      .select('id, status, submitted_at')
+      .eq('email', email)
+      .order('submitted_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+      console.error('Error fetching application status:', error);
+      return res.status(500).json({ message: 'Failed to fetch application status' });
+    }
+
+    if (!application) {
+      return res.status(404).json({ message: 'No application found' });
+    }
+
+    res.json({
+      applicationId: application.id,
+      status: application.status,
+      submittedAt: application.submitted_at
+    });
+  } catch (error) {
+    console.error('Application status error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // GET /api/publisher/magazines - Get publisher's magazines
 router.get('/magazines', authenticateToken, async (req, res) => {
   try {
