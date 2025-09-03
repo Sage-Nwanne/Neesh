@@ -1,25 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Navbar from '../components/shared/Navbar';
+import Footer from '../components/shared/Footer';
 import styles from './Home.module.css';
 
 const WhyNeeshPage: React.FC = () => {
   return (
     <div className={styles.landingPage}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.container}>
-          <div className={styles.logo}>
-            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
-          </div>
-          <nav className={styles.nav}>
-            <Link to="/publisher-application" className={styles.navLink}>Apply to List a Magazine</Link>
-            <Link to="/auth" className={styles.navLink}>Request Access for Your Shop</Link>
-            <Link to="/faq" className={styles.navLink}>FAQ</Link>
-            <a href="mailto:hi@neesh.art" className={styles.navLink}>Talk to the Team</a>
-            <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link>
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Why Neesh Content */}
       <section className={styles.hero}>
@@ -49,25 +37,7 @@ const WhyNeeshPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.container}>
-          <div className={styles.footerLogo}>
-            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.footerLogoImage} />
-          </div>
-        </div>
-        <div className={styles.socialLinks}>
-          <a href="https://www.instagram.com/neeshprint?igsh=M2o0MmpxY3hnejZ2" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-            Instagram
-          </a>
-          <a href="mailto:hi@neesh.art" className={styles.socialLink}>
-            Contact
-          </a>
-          <a href="https://casesensitive.co.uk" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-            <img src="/casesensitive favicon.webp" alt="Casesensitive" className={styles.faviconIcon} />
-            Casesensitive
-          </a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

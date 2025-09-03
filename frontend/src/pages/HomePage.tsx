@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import IntroPage from '../components/IntroPage';
+import Navbar from '../components/shared/Navbar';
+import Footer from '../components/shared/Footer';
 import styles from './Home.module.css';
 
 const Home = () => {
   const [showIntro, setShowIntro] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleIntroComplete = () => {
     setShowIntro(false);
-  };
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   const scrollToPipeline = () => {
@@ -31,47 +28,7 @@ const Home = () => {
 
   return (
     <div className={styles.landingPage}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.container}>
-          <div className={styles.logo}>
-            <Link to="https://neesh.art">
-              <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.logoImage} />
-            </Link>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className={styles.nav}>
-            <Link to="/publisher-application" className={styles.navLink}>Apply to List a Magazine</Link>
-            <Link to="/auth" className={styles.navLink}>Request Access for Your Shop</Link>
-            <Link to="/faq" className={styles.navLink}>FAQ</Link>
-            <a href="mailto:hi@neesh.art" className={styles.navLink}>Talk to the Team</a>
-            {/* <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link> */}
-          </nav>
-
-          {/* Mobile Hamburger Button */}
-          <button
-            className={styles.mobileMenuBtn}
-            onClick={toggleMobileMenu}
-            aria-label="Toggle mobile menu"
-          >
-            <span className={styles.hamburger}></span>
-            <span className={styles.hamburger}></span>
-            <span className={styles.hamburger}></span>
-          </button>
-        </div>
-
-        {/* Mobile Navigation Menu */}
-        {mobileMenuOpen && (
-          <div className={styles.mobileMenu}>
-            <Link to="/publisher-application" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Apply to List a Magazine</Link>
-            <Link to="/auth" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
-            <Link to="/faq" className={styles.mobileNavLink} onClick={toggleMobileMenu}>FAQ</Link>
-            <a href="mailto:hi@neesh.art" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Talk to the Team</a>
-            {/* <Link to="/why-neesh" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Why Neesh</Link> */}
-          </div>
-        )}
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <section className={styles.hero}>
@@ -79,11 +36,11 @@ const Home = () => {
           <div className={styles.heroGrid}>
             <div className={styles.heroContent}>
               <h1>The OS for Indie Print</h1>
-              <p>Built for publishers. Trusted by shops.<br />Designed to move magazines.</p>
+              <p>A marketplace for indie print. Curated titles, risk-fre orders, faster payouts.</p>
               <button className={styles.exploreBtn} onClick={scrollToPipeline}>Explore</button>
             </div>
             <div className={styles.heroVisual}>
-              <img src="/magazine-photo-red.jpg" alt="Magazine" className={styles.heroImage} />
+              <img src="/haleybuschphoto_herosection.jpg" alt="hero image" className={styles.heroImage} />
             </div>
           </div>
         </div>
@@ -98,8 +55,8 @@ const Home = () => {
               <div className={styles.propIcon}><img src="/Mag-Upload-Icon-3.svg" alt="Publisher icon" style={{ width: '75px', height: '75px' }} /></div>
               <h3>For Publishers</h3>
               <h2>Get stocked. Get paid. Stay independent.</h2>
-              <p>Upload your catalog, set pricing, and start fulfilling real orders.</p>
-              <p className={styles.subText}>Neesh handles discovery, transactions, returns, and payouts—so you can focus on the next issue.</p>
+              <p>The hardest shelves to reach are often the most valuable. Neesh opens access to retailers that traditional distributors overlook and makes every transaction clean and direct. </p>
+              <p className={styles.subText}>Upload your catalog once, and we put your work in front of the shops that matter. Orders, returns, and payouts flow through us, so you get paid fast and can keep creating.</p>
               <Link to="/publisher-application" className={styles.propLink}>
                 Apply to List Your Magazine
               </Link>
@@ -108,8 +65,9 @@ const Home = () => {
               <div className={styles.propIcon}><img src="/Retailer-Icon.svg" alt="Retailer icon" style={{ width: '75px', height: '75px' }} /></div>
               <h3>For Retailers</h3>
               <h2>Curated print. Clear terms. No risk.</h2>
-              <p>Browse new and essential titles. Order in small batches. Return what doesn't move.</p>
-              <p className={styles.subText}>Neesh helps you stock smarter and connect directly with publishers.</p>
+              <p>Magazines give a shop character. They spark conversations, set the vibe, and make customers linger. But clunky portals and risky bets have made them  a nightmare to stock. Neesh fixes that. 
+</p>
+              <p className={styles.subText}>Browse curated titles, see clear margins upfront, and place small trial orders. Give your shoppers the culture they love while keeping business healthy.</p>
               <Link to="/auth" className={styles.propLink}>
                 Request Access for Your Shop
               </Link>
@@ -129,15 +87,15 @@ const Home = () => {
               </div>
               <h4>Step 1</h4>
               <p>Publishers upload titles, inventory, and pricing.</p>
-              <span className={styles.stepSubtext}>Complete catalog management in one place.</span>
+              <span className={styles.stepSubtext}>Shops see trusted titles with real pricing and margins upfront</span>
             </div>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
                 <img src="/Search-Icon-02.svg" alt="Search icon" style={{ width: '75px', height: '75px' }} />
               </div>
               <h4>Step 2</h4>
-              <p>Retailers browse and order via flexible wholesale terms.</p>
-              <span className={styles.stepSubtext}>Discover and stock with confidence.</span>
+              <p>Retailers explore collections and place small trial orders.</p>
+              <span className={styles.stepSubtext}>Get clear margins upfront and test new titles without financial risk.</span>
             </div>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
@@ -145,7 +103,7 @@ const Home = () => {
               </div>
               <h4>Step 3</h4>
               <p>Fulfillment and returns are managed through Neesh.</p>
-              <span className={styles.stepSubtext}>Seamless logistics and transparent terms.</span>
+              <span className={styles.stepSubtext}>Prepaid labels and fast processing keeps logistics painless for shops and publishers.</span>
             </div>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
@@ -153,7 +111,7 @@ const Home = () => {
               </div>
               <h4>Step 4</h4>
               <p>Everyone gets insights—what moved, where, and when.</p>
-              <span className={styles.stepSubtext}>Real data to guide decisions.</span>
+              <span className={styles.stepSubtext}>Shops curate smarter, publishers plan better, and the industry grows faster.</span>
             </div>
           </div>
         </div>
@@ -164,24 +122,50 @@ const Home = () => {
         <div className={styles.container}>
           <div className={styles.problemsGrid}>
             <div className={styles.problemsContent}>
-              <h2>Because what exists doesn't work.</h2>
-              <p>Most print distribution platforms are made for scale. Neesh is made for care.</p>
+              <h2>Print is alive. Neesh makes it work.</h2>
+              <p>Magazines are thriving again, carrying culture into shops and building loyal audiences. Neesh gives retailers and publishers the system to keep that momentum.</p>
 
               <div className={styles.principles}>
-                <h4>Key Principles:</h4>
+                <h4>Built for Indie Print:</h4>
                 <ul>
-                  <li>No open marketplace—every title is curated</li>
-                  <li>No print-on-demand—only real inventory</li>
-                  <li>No algorithm spam—human filters and taste</li>
-                  <li>No corporate lock-in—this is infrastructure, not control</li>
+                  <li>Filters, categories and tastefully curated titles</li>
+                  <li>Faster payouts for independent publishers</li>
+                  <li>Clear margins and risk free trial orders</li>
+                  <li>Access to retailers that shape culture</li>
                 </ul>
               </div>
             </div>
             <div className={styles.problemsRight}>
-              <div className={styles.videoPlaceholder}>
-                <p>Video coming soon...</p>
-              </div>
-              <p className={styles.problemsSubtext}>Just a system that works—for the kind of people actually making and selling independent magazines.</p>
+              <video
+                className={styles.brandVideo}
+                controls
+                muted
+                playsInline
+                onEnded={() => {
+                  const video = document.querySelector(`.${styles.brandVideo}`) as HTMLVideoElement;
+                  if (video) {
+                    setTimeout(() => {
+                      video.play();
+                    }, 4000);
+                  }
+                }}
+                onClick={(e) => {
+                  const video = e.target as HTMLVideoElement;
+                  if (video.paused) {
+                    video.play();
+                  }
+                }}
+                onMouseEnter={(e) => {
+                  const video = e.target as HTMLVideoElement;
+                  if (video.paused && video.currentTime === 0) {
+                    video.play();
+                  }
+                }}
+              >
+                <source src="/Neesh_Brand_Video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <p className={styles.problemsSubtext}>Make independent print sustainable,visible,scalable.</p>
             </div>
           </div>
         </div>
@@ -189,8 +173,9 @@ const Home = () => {
 
       {/* CTA Section */}
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>We built the tool we needed.<br />Now it's yours.</h2>
-        <img src="/magazines-on-bench.svg" alt="Magazines on bench" className={styles.magOnBench} />
+        <img src="/haleybuschphoto_flowersCTAsection.jpg" alt="flowers in CTA section" className={styles.flowersCTAsection} />
+        <h2 className={styles.ctaTitle}>Find your Neesh.<br />Keep indie print moving forward.</h2>
+        <img src="/haleybuschphoto_couch_upsidedown.jpg" alt="Upside down on magazine" className={styles.couchUpsideDown} />
         <Link to="/publisher-application" className={styles.publisherBtn}>
           Apply as a Publisher
         </Link>
@@ -201,26 +186,7 @@ const Home = () => {
         <a href="mailto:hi@neesh.art" className={styles.teamLink}>Talk to the Team</a>
       </section>
 
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.container}>
-          <div className={styles.footerLogo}>
-            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" className={styles.footerLogoImage} />
-          </div>
-        </div>
-        <div className={styles.socialLinks}>
-          <a href="https://www.instagram.com/neeshprint?igsh=M2o0MmpxY3hnejZ2" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-            Instagram
-          </a>
-          <a href="mailto:hi@neesh.art" className={styles.socialLink}>
-            Contact
-          </a>
-          <a href="https://casesensitive.show" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-            <img src="/casesensitive favicon.webp" alt="Casesensitive" className={styles.faviconIcon} />
-            Casesensitive
-          </a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

@@ -41,9 +41,9 @@ const ApplicationPage: React.FC = () => {
 
   const navLinkStyles = {
     textDecoration: 'none',
-    color: '#333',
+    color: '#515050',
     fontSize: '0.9rem',
-    fontWeight: 500,
+    fontWeight: 900,
     transition: 'color 0.3s ease',
     whiteSpace: 'nowrap' as const
   };
@@ -99,16 +99,45 @@ const ApplicationPage: React.FC = () => {
       <header style={headerStyles}>
         <div style={containerStyles}>
           <div style={logoStyles}>
-            <Link to="https://neesh.art">
+            <Link to="/">
               <img src="/NEESH-logo-transparent.png.png" alt="NEESH" style={{ height: '32px', width: 'auto' }} />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav style={desktopNavStyles}>
-            <Link to="/" style={navLinkStyles}>Home</Link>
-            <Link to="/faq" style={navLinkStyles}>FAQ</Link>
-            <a href="mailto:hi@neesh.art" style={navLinkStyles}>Talk to the Team</a>
+            <Link
+              to="/publisher-application"
+              style={navLinkStyles}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
+            >
+              Apply to List a Magazine
+            </Link>
+            <Link
+              to="/auth"
+              style={navLinkStyles}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
+            >
+              Request Access for Your Shop
+            </Link>
+            <Link
+              to="/faq"
+              style={navLinkStyles}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
+            >
+              FAQ
+            </Link>
+            <a
+              href="mailto:hi@neesh.art"
+              style={navLinkStyles}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
+            >
+              Talk to the Team
+            </a>
           </nav>
 
           {/* Mobile Hamburger Button */}
@@ -125,10 +154,10 @@ const ApplicationPage: React.FC = () => {
 
         {/* Mobile Navigation Menu */}
         <div style={mobileMenuStyles}>
-          <Link to="/" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Home</Link>
+          <Link to="/publisher-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Apply to List a Magazine</Link>
+          <Link to="/auth" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
           <Link to="/faq" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>FAQ</Link>
           <a href="mailto:hi@neesh.art" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Talk to the Team</a>
-          <Link to="/why-neesh" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Why Neesh</Link>
         </div>
       </header>
 
