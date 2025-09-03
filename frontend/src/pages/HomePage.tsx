@@ -95,7 +95,7 @@ const Home = () => {
         <div className={styles.container}>
           <div className={styles.propGrid}>
             <div className={styles.propCard}>
-              <div className={styles.propIcon}><img src="/box-icon.svg" alt="Box icon" style={{ width: '25px', height: '25px', }} /></div>
+              <div className={styles.propIcon}><img src="/Mag-Upload-Icon-3.svg" alt="Publisher icon" style={{ width: '75px', height: '75px' }} /></div>
               <h3>For Publishers</h3>
               <h2>Get stocked. Get paid. Stay independent.</h2>
               <p>Upload your catalog, set pricing, and start fulfilling real orders.</p>
@@ -105,7 +105,7 @@ const Home = () => {
               </Link>
             </div>
             <div className={styles.propCard}>
-              <div className={styles.propIcon}>🏪</div>
+              <div className={styles.propIcon}><img src="/Retailer-Icon.svg" alt="Retailer icon" style={{ width: '75px', height: '75px' }} /></div>
               <h3>For Retailers</h3>
               <h2>Curated print. Clear terms. No risk.</h2>
               <p>Browse new and essential titles. Order in small batches. Return what doesn't move.</p>
@@ -125,7 +125,7 @@ const Home = () => {
           <div className={styles.pipelineSteps}>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
-                <img src="/box-icon.svg" alt="Box icon" />
+                <img src="/Mag-Upload-Icon-02.svg" alt="Magazine upload icon" style={{ width: '75px', height: '75px' }} />
               </div>
               <h4>Step 1</h4>
               <p>Publishers upload titles, inventory, and pricing.</p>
@@ -133,7 +133,7 @@ const Home = () => {
             </div>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
-                <img src="/box-icon.svg" alt="Box icon" />
+                <img src="/Search-Icon-02.svg" alt="Search icon" style={{ width: '75px', height: '75px' }} />
               </div>
               <h4>Step 2</h4>
               <p>Retailers browse and order via flexible wholesale terms.</p>
@@ -141,7 +141,7 @@ const Home = () => {
             </div>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
-                <img src="/box-icon.svg" alt="Box icon" />
+                <img src="/Fulfillment-Icon.svg" alt="Fulfillment icon" style={{ width: '75px', height: '75px' }} />
               </div>
               <h4>Step 3</h4>
               <p>Fulfillment and returns are managed through Neesh.</p>
@@ -149,7 +149,7 @@ const Home = () => {
             </div>
             <div className={styles.step}>
               <div className={styles.stepIcon}>
-                <img src="/box-icon.svg" alt="Box icon" />
+                <img src="/Insights-Icon-01.svg" alt="Insights icon" style={{ width: '75px', height: '75px' }} />
               </div>
               <h4>Step 4</h4>
               <p>Everyone gets insights—what moved, where, and when.</p>

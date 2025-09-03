@@ -38,15 +38,17 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  
 }
 
 .navLink {
   text-decoration: none;
-  color: #333;
+  color: #515050;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 900;
   transition: color 0.3s ease;
   white-space: nowrap;
+  
 }
 
 .navLink:hover {
@@ -211,26 +213,31 @@
 }
 
 .heroContent h1 {
+  position: relative;
+  bottom:50px;
+  font-family: 'Manrope', extra-bold;
   font-size: 5.8rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1rem;
   color: #000;
   line-height: 1.1;
 }
 
 .heroContent p {
-  font-size: 1rem;
+  font-family: 'Manrope', medium;
+  font-size: 1.7rem;
   color: #666;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   line-height: 1.5;
 }
 
 .exploreBtn {
+  font-family: 'Manrope', medium;
   background: #000;
   color: white;
   border: none;
   padding: 12px 24px;
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -241,9 +248,10 @@
 }
 
 .heroVisual {
+  width:600px;
   position: relative;
-  height: 250px;
-  left: 80px;
+  height: 357px;
+  left: 55px;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -329,6 +337,8 @@
 }
 
 .propIcon {
+  position: relative;
+  right: 22px;
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -422,6 +432,8 @@
 }
 
 .stepIcon img {
+  position: relative;
+  right: 18px;
   width: 32px;
   height: 32px;
   object-fit: contain;
@@ -566,7 +578,7 @@
   padding: 100px 0;
   background: #ffffff;
   position: relative;
-  height: 800px;
+  height: 700px;
   overflow: hidden;
 }
 
@@ -617,10 +629,12 @@
   font-weight: 500;
   text-decoration: none;
   border: none;
-  background: transparent;
-  color: #000;
+  background: #000;
+  color: white;
   z-index: 2;
   transition: all 0.3s ease;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
 }
 
 .retailerBtn {
@@ -633,15 +647,18 @@
   font-weight: 500;
   text-decoration: none;
   border: none;
-  background: transparent;
-  color: #000;
+  background: #000;
+  color: white;
   z-index: 2;
   transition: all 0.3s ease;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
 }
 
 .publisherBtn:hover, .retailerBtn:hover {
-  background: #000;
-  color: #fff;
+  opacity: 0.8 !important;
+  background: #000 !important;
+  color: white !important;
 }
 
 .questionsText {

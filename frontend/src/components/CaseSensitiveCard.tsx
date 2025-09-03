@@ -133,8 +133,14 @@ export default function CaseSensitiveCard({
                 ✕
               </button>
 
-              <div className={`text-sm ${muted} mb-1`}>Presented by Neesh</div>
-              <h3 className={`text-xl font-semibold leading-tight ${ink}`} style={{ color: '#201510' }}> Case Sensitive — NYC • Sep 13</h3>
+              <div className={`text-sm ${muted} mb-1`} style={{fontSize:'12px', }}>Presented by Neesh</div>
+              <img
+                style={{ width: '325px', height: 'auto' }}
+                src="/CaseSensitive-Primary-W_cropped-removebg-preview.png"
+                alt="Case Sensitive"
+                className="h-12 w-auto mb-2"
+              />
+              <h3 className={`text-lg font-medium ${ink}`} style={{ color: '#201510', position: 'relative', top: '2px', left: '80px', fontSize:'25px' }}>NYC • Sept 13</h3>
               <p className={`mt-2 text-sm leading-snug text-white`} style={{ color: 'white', padding: 15 }}>
                 A new conference shaping the future of print magazines. Panels, workshops, demos, and more.  
               </p>

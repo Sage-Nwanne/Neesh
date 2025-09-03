@@ -88,21 +88,25 @@
 }
 
 .heroContent h1 {
+  font-family: 'Manrope', sans-serif;
   font-size: 5.8rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1rem;
   color: #000;
   line-height: 1.1;
 }
 
 .heroContent p {
-  font-size: 1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
   color: #666;
   margin-bottom: 2rem;
   line-height: 1.5;
 }
 
 .exploreBtn {
+  font-family: 'Manrope', sans-serif;
   background: #000;
   color: white;
   border: none;
@@ -173,6 +177,16 @@
 .propIcon {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  display: block;
+  margin-left: 0;
+  padding-left: 0;
+  text-align: left;
+}
+
+.propIcon img {
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
 .propCard h3 {
@@ -467,6 +481,25 @@
   opacity: 0.7;
 }
 
+.publisherBtn, .retailerBtn {
+  font-family: 'Manrope', sans-serif;
+  background: #000;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.publisherBtn:hover, .retailerBtn:hover {
+  opacity: 0.8;
+}
+
 .ctaFooter {
   display: flex;
   flex-direction: column;
@@ -486,6 +519,56 @@
   text-decoration: underline;
   font-weight: 400;
   font-size: 1rem;
+}
+
+/* Footer Styles */
+.footer {
+  padding: 40px 0 20px 0; /* Reduced bottom padding by 30px (was 50px) */
+  background: #f8f8f8;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.footerLogo {
+  flex: 0 0 auto;
+}
+
+.footerLogoImage {
+  height: 40px;
+  width: auto;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.socialLink {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.socialLink:hover {
+  color: #000;
+}
+
+.faviconIcon {
+  height: 16px;
+  width: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* Responsive */
@@ -517,5 +600,17 @@
 
   .propGrid::before {
     display: none;
+  }
+
+  .footerContent {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .socialLinks {
+    position: static;
+    transform: none;
+    justify-content: center;
   }
 }
