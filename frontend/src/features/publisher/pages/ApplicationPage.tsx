@@ -8,6 +8,7 @@ const ApplicationPage: React.FC = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
   const headerStyles = {
     background: 'white',
     position: 'sticky' as const,
@@ -94,11 +95,13 @@ const ApplicationPage: React.FC = () => {
 
   return (
     <div>
-      {/* Header - Styled exactly like home page */}
+      {/* Header */}
       <header style={headerStyles}>
         <div style={containerStyles}>
           <div style={logoStyles}>
-            <img src="/NEESH-logo-transparent.png.png" alt="NEESH" style={{ height: '32px', width: 'auto' }} />
+            <Link to="https://neesh.art">
+              <img src="/NEESH-logo-transparent.png.png" alt="NEESH" style={{ height: '32px', width: 'auto' }} />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -106,7 +109,6 @@ const ApplicationPage: React.FC = () => {
             <Link to="/" style={navLinkStyles}>Home</Link>
             <Link to="/faq" style={navLinkStyles}>FAQ</Link>
             <a href="mailto:hi@neesh.art" style={navLinkStyles}>Talk to the Team</a>
-            {/* <Link to="/why-neesh" style={navLinkStyles}>Why Neesh</Link> */}
           </nav>
 
           {/* Mobile Hamburger Button */}

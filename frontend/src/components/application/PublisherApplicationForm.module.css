@@ -62,13 +62,16 @@
 }
 
 .textColumn p {
-  color: #666;
+  color: #000000;
   font-size: 1rem;
   line-height: 1.6;
   margin: 0;
+  font-family: 'Manrope', sans-serif;
 }
 
 .timeEstimate {
+  position: relative;
+  top: 40px;
   color: #666;
   font-size: 1rem;
   line-height: 1.6;
@@ -76,6 +79,9 @@
 }
 
 .buttonContainer {
+  position:relative;
+  left: 0px;
+  top: 70px;
   display: flex;
   gap: 20px;
 }
@@ -84,10 +90,10 @@
   background: #000;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 24px;
   font-size: 0.9rem;
   font-weight: 500;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
@@ -97,13 +103,14 @@
 }
 
 .cancelButton {
+
   background: white;
   color: #000;
-  border: 1px solid #ddd;
-  padding: 12px 24px;
+  border: 2px solid #000000;
+  padding: 10px 60px;
   font-size: 0.9rem;
   font-weight: 500;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
@@ -113,6 +120,8 @@
 }
 
 .alreadyAppliedText {
+  position: relative;
+  left: 615px;
   color: #999;
   font-size: 0.9rem;
   line-height: 1.6;
@@ -126,8 +135,10 @@
 }
 
 .magazineImage {
+  position: relative;
+  bottom: 35px;
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
   height: auto;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
@@ -171,6 +182,137 @@
 .continueButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Input field styling */
+.applicationContainer input[type="text"],
+.applicationContainer input[type="email"],
+.applicationContainer input[type="password"],
+.applicationContainer input[type="number"],
+.applicationContainer input[type="url"],
+.applicationContainer textarea,
+.applicationContainer select {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+/* Step 3 specific input styling */
+.applicationContainer .step-3-inputs input[type="text"],
+.applicationContainer .step-3-inputs input[type="number"],
+.applicationContainer .step-3-inputs input[type="url"],
+.applicationContainer .step-3-inputs textarea,
+.applicationContainer .step-3-inputs select {
+  padding-left: 10px !important;
+}
+
+/* Upload button styling */
+.uploadButton {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
+
+.uploadButton input[type="file"] {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.uploadButton input[type="file"]::-webkit-file-upload-button {
+  background-color: #d3d3d3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.uploadButton input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #636161;
+  color: white;
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.uploadButton:hover {
+  transform: scale(1.02);
+}
+
+/* Firefox file upload button */
+.uploadButton input[type="file"]::file-selector-button {
+  background-color: #d3d3d3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.uploadButton input[type="file"]::file-selector-button:hover {
+  background-color: #636161;
+  color: white;
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Stock image carousel styling */
+.stockImageCarousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.carouselNavigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.stockImageCarousel:hover .carouselNavigation {
+  opacity: 1;
+}
+
+.carouselButton {
+  padding: 4px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carouselButton:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+.carouselButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.imageCounter {
+  font-size: 10px;
+  color: #666;
+  text-align: center;
+  margin-top: 2px;
 }
 
 /* Responsive Design */

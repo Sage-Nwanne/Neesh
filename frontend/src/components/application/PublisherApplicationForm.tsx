@@ -4,7 +4,13 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
+
+import { Palette, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import styles from './PublisherApplicationForm.module.css';
+
+// Stock Images Import Section - Using actual cover template images
 
 // Data structure interface
 interface ApplicationData {
@@ -79,16 +85,242 @@ const initialData: ApplicationData = {
   return_policy: ''
 };
 
+// Stock Images Array Definition with multiple images per category
+const stockImages = {
+  'art': {
+    name: 'Art & Design',
+    images: [
+      '/cover-templates/Art-and-Design-Image1.avif',
+      '/cover-templates/Art-and-Design-Image2.avif',
+      '/cover-templates/Art-and-Design-Image3.avif',
+      '/cover-templates/Art-and-Design-Image4.avif'
+    ]
+  },
+  'fashion': {
+    name: 'Fashion',
+    images: [
+      '/cover-templates/Fashion-Image-1.avif',
+      '/cover-templates/Fashion-Image-2.avif',
+      '/cover-templates/Fashion-Image-3.avif',
+      '/cover-templates/Fashion-Image-4.avif'
+    ]
+  },
+  'photography': {
+    name: 'Photography',
+    images: [
+      '/cover-templates/Photography-Image-1.avif',
+      '/cover-templates/Photography-Image-2.avif',
+      '/cover-templates/Photography-Image-3.avif',
+      '/cover-templates/Photography-Image-4.avif'
+    ]
+  },
+  'culture': {
+    name: 'Culture',
+    images: [
+      '/cover-templates/Culture-Image-1.avif',
+      '/cover-templates/Culture-Image-2.avif',
+      '/cover-templates/Culture-Image-3.avif',
+      '/cover-templates/Culture-Image-4.avif',
+      '/cover-templates/Culture-Image-5.avif'
+    ]
+  },
+  'science': {
+    name: 'Science',
+    images: [
+      '/cover-templates/Science-Image-1.avif',
+      '/cover-templates/Science-Image-2.avif',
+      '/cover-templates/Science-Image-3.avif',
+      '/cover-templates/Science-Image-4.avif'
+    ]
+  },
+  'lifestyle': {
+    name: 'Lifestyle',
+    images: [
+      '/cover-templates/Lifestyle-Image-1.avif',
+      '/cover-templates/Lifestye-Image-2.avif',
+      '/cover-templates/Lifestye-Image-3.avif',
+      '/cover-templates/Lifestye-Image-4.avif'
+    ]
+  },
+  'books': {
+    name: 'Books',
+    images: [
+      '/cover-templates/Books-Image-1.avif',
+      '/cover-templates/Books-Image-2.avif',
+      '/cover-templates/Books-Image-3.avif',
+      '/cover-templates/Books-Image-4.avif'
+    ]
+  },
+  'music': {
+    name: 'Music',
+    images: [
+      '/cover-templates/Music-Image-1.avif',
+      '/cover-templates/Music-Image-2.avif',
+      '/cover-templates/Music-Image-3.avif',
+      '/cover-templates/Music-Image-4.avif'
+    ]
+  },
+  'travel': {
+    name: 'Travel',
+    images: [
+      '/cover-templates/Travel-Image-1.avif',
+      '/cover-templates/Travel-Image-2.avif',
+      '/cover-templates/Travel-Image-3.avif',
+      '/cover-templates/Travel-Image-4.avif'
+    ]
+  },
+  'food': {
+    name: 'Food',
+    images: [
+      '/cover-templates/Food-Image-1.avif',
+      '/cover-templates/Food-Image-2.avif',
+      '/cover-templates/Food-Image-3.avif',
+      '/cover-templates/Food-Image-4.avif'
+    ]
+  }
+};
+
 const PublisherApplicationForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ApplicationData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // State for carousel navigation - tracks current image index for each category
+  const [currentImageIndex, setCurrentImageIndex] = useState<{[key: string]: number}>({
+    art: 0,
+    fashion: 0,
+    photography: 0,
+    culture: 0,
+    science: 0,
+    lifestyle: 0,
+    books: 0,
+    music: 0,
+    travel: 0,
+    food: 0
+  });
 
   const totalSteps = 8;
   const progress = (currentStep / totalSteps) * 100;
 
   const updateFormData = (field: keyof ApplicationData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Carousel navigation functions
+  const navigateImage = (category: string, direction: 'prev' | 'next') => {
+    const categoryImages = stockImages[category as keyof typeof stockImages];
+    if (!categoryImages) return;
+
+    const currentIndex = currentImageIndex[category];
+    const maxIndex = categoryImages.images.length - 1;
+
+    let newIndex = currentIndex;
+    if (direction === 'next' && currentIndex < maxIndex) {
+      newIndex = currentIndex + 1;
+    } else if (direction === 'prev' && currentIndex > 0) {
+      newIndex = currentIndex - 1;
+    }
+
+    setCurrentImageIndex(prev => ({
+      ...prev,
+      [category]: newIndex
+    }));
+  };
+
+  // Selection Handler Function
+  const useStockImage = (stockImageSrc: string) => {
+    updateFormData('cover_image_url', stockImageSrc);
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload an image file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check image dimensions
+    const img = new Image();
+    img.onload = async () => {
+      if (img.width < 500 || img.height < 889) {
+        toast({
+          title: "Image too small",
+          description: "Cover image must be at least 500px × 889px. Current size: " + img.width + "px × " + img.height + "px",
+          variant: "destructive"
+        });
+        // Clear the input
+        event.target.value = '';
+        return;
+      }
+
+      // If dimensions are valid, proceed with upload
+      await processImageUpload(file);
+    };
+
+    img.onerror = () => {
+      toast({
+        title: "Invalid image",
+        description: "Could not read image file.",
+        variant: "destructive"
+      });
+      event.target.value = '';
+    };
+
+    img.src = URL.createObjectURL(file);
+  };
+
+  const processImageUpload = async (file: File) => {
+
+    setIsUploading(true);
+
+    try {
+      console.log('Starting upload process for unauthenticated user...');
+
+      // Create simple filename without folder structure for now
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      console.log('Upload filename:', fileName);
+
+      console.log('Attempting upload to product-images bucket...');
+      const { data, error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, file);
+
+      console.log('Upload result:', { data, uploadError });
+
+      if (uploadError) {
+        console.error('Upload error details:', uploadError);
+        throw uploadError;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
+      console.log('Public URL:', urlData.publicUrl);
+      updateFormData('cover_image_url', urlData.publicUrl);
+
+      toast({
+        title: "Image uploaded successfully",
+        description: "Your cover image has been uploaded.",
+      });
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Upload failed",
+        description: `There was an error uploading your image: ${error.message}`,
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const validateStep = (step: number): boolean => {
@@ -137,22 +369,25 @@ const PublisherApplicationForm: React.FC = () => {
         return (
           <div className={styles.startingPageContainer}>
             <div className={styles.startingPageText}>
-              <div className={styles.textColumns}>
-                <div className={styles.textColumn}>
-                  <p>
-                    We're building tools to make indie distribution less painful and more sustainable. If you're printing physical copies and ready to sell to shops, you're in the right place.
-                  </p>
-                </div>
-                <div className={styles.textColumn}>
-                  <p>
-                    Most of the publishers on Neesh print between 500 and 10,000 copies per issue. We review every application based on quality, operational readiness, and fit.
-                  </p>
-                </div>
+              <div className="max-w-2xl mx-auto text-left">
+                <p className="text-lg font-medium text-gray-800 mb-4">
+                  We're building tools to make indie distribution less painful and more
+                  sustainable. If you're printing physical copies and ready to sell to shops,
+                  you're in the right place.
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6" 
+                style={{ fontSize: '15px' , position: 'relative', top: '40px' }}>
+                  <li>
+                    Most publishers on Neesh print between <strong>500–10,000 copies</strong> per issue.
+                  </li>
+                  <li>
+                    We review every application based on <strong>quality, operational readiness, and fit</strong>.
+                  </li>
+                  <li>
+                    Filling this out takes about <strong>10–15 minutes</strong>.
+                  </li>
+                </ul>
               </div>
-
-              <p className={styles.timeEstimate}>
-                Filling this out takes about 10–15 minutes.
-              </p>
 
               <div className={styles.buttonContainer}>
                 <Button
@@ -258,7 +493,7 @@ const PublisherApplicationForm: React.FC = () => {
             </div>
             <div>
               <Label>Publication Type *</Label>
-              <div className="flex gap-4 mt-2">
+              <div className="flex mt-2" style={{ gap: '10px' }}>
                 <label className="flex items-center">
                   <input
                     type="radio"
@@ -289,6 +524,8 @@ const PublisherApplicationForm: React.FC = () => {
                   <Label htmlFor="issue_number">Issue Number</Label>
                   <Input
                     id="issue_number"
+                    type="number"
+                    min="1"
                     value={formData.issue_number}
                     onChange={(e) => updateFormData('issue_number', e.target.value)}
                   />
@@ -335,7 +572,7 @@ const PublisherApplicationForm: React.FC = () => {
 
       case 3:
         return (
-          <div className="space-y-6" style={{ padding: '25px' }}>
+          <div className="space-y-6 step-3-inputs" style={{ padding: '25px' }}>
             <h3 className="text-2xl font-semibold" style={{ padding: '0px 0px 16px 0px' }}>Print Run & Pricing</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -403,8 +640,108 @@ const PublisherApplicationForm: React.FC = () => {
             </div>
             <div>
               <Label>Cover Image</Label>
-              <div className="mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-                <p className="text-gray-500">Stock image selection and custom upload will be implemented here</p>
+              <div className="mt-4 space-y-6">
+                {/* Stock Images Section */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Palette className="h-4 w-4 text-primary" />
+                    <Label>Choose from Stock Covers</Label>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    {Object.entries(stockImages).map(([categoryKey, category]) => {
+                      const currentIndex = currentImageIndex[categoryKey];
+                      const currentImage = category.images[currentIndex];
+                      const isSelected = formData.cover_image_url === currentImage;
+
+                      return (
+                        <div
+                          key={categoryKey}
+                          className={`cursor-pointer transition-all border rounded-lg ${
+                            isSelected
+                              ? 'ring-2 ring-primary bg-primary/5'
+                              : 'hover:ring-2 hover:ring-primary/50'
+                          }`}
+                          onClick={() => useStockImage(currentImage)}
+                        >
+                          <div className={`p-2 ${styles.stockImageCarousel}`}>
+                            {/* Navigation arrows */}
+                            <div className={styles.carouselNavigation}>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigateImage(categoryKey, 'prev');
+                                }}
+                                disabled={currentIndex === 0}
+                                className={styles.carouselButton}
+                              >
+                                <ChevronLeft className="h-3 w-3" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigateImage(categoryKey, 'next');
+                                }}
+                                disabled={currentIndex === category.images.length - 1}
+                                className={styles.carouselButton}
+                              >
+                                <ChevronRight className="h-3 w-3" />
+                              </button>
+                            </div>
+
+                            <img
+                              src={currentImage}
+                              alt={category.name}
+                              className="w-full h-16 object-cover rounded"
+                              style={{ maxHeight: '200px' }}
+                            />
+                            <p className="text-xs text-center mt-1 text-muted-foreground">
+                              {category.name}
+                            </p>
+                            <p className={styles.imageCounter}>
+                              {currentIndex + 1} / {category.images.length}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Custom Upload Section */}
+                <div className="space-y-2">
+                  <Label htmlFor="cover_image">Or upload your own cover image</Label>
+                  <p className="text-sm text-gray-600">
+                    Minimum size: 500px × 889px. Recommended formats: JPG, PNG, AVIF
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="uploadContainer">
+                      <Input
+                        
+                        id="cover_image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={isUploading}
+                        className="uploadButton"
+                      />
+                      {isUploading && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        </div>
+                      )}
+                    </div>
+                    {formData.cover_image_url && !Object.values(stockImages).some(category =>
+                      category.images.includes(formData.cover_image_url)
+                    ) && (
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <span>✓ Custom image uploaded</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Front cover only, for now</p>
+                </div>
               </div>
             </div>
           </div>
@@ -416,7 +753,7 @@ const PublisherApplicationForm: React.FC = () => {
             <h3 className="text-2xl font-semibold" style={{ padding: '0px 0px 16px 0px' }}>Sales Experience</h3>
             <div>
               <Label>Have you sold this issue before? *</Label>
-              <div className="flex gap-4 mt-2">
+              <div className="flex mt-2" style={{ gap: '10px' }}>
                 <label className="flex items-center">
                   <input
                     type="radio"
@@ -445,7 +782,7 @@ const PublisherApplicationForm: React.FC = () => {
               <>
                 <div>
                   <Label>Distribution Channels</Label>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="grid grid-cols-2 gap-2 mt-2" style={{ marginBottom: '5px' }}>
                     {['Online Direct', 'Local Bookstores', 'Newsstands', 'Subscription', 'Events/Markets', 'Other'].map((channel) => (
                       <label key={channel} className="flex items-center">
                         <input
@@ -564,6 +901,24 @@ const PublisherApplicationForm: React.FC = () => {
                 <p><strong>Type:</strong> {formData.publication_type}</p>
                 <p><strong>Description:</strong> {formData.description}</p>
               </div>
+              {formData.cover_image_url && (
+                <div>
+                  <h4 className="font-semibold">Cover Image</h4>
+                  <div className="mt-2">
+                    <img
+                      src={formData.cover_image_url}
+                      alt="Magazine Cover"
+                      className="border rounded-lg shadow-sm"
+                      style={{
+                        maxWidth: '200px',
+                        maxHeight: '600px',
+                        width: 'auto',
+                        height: 'auto'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
               <div>
                 <h4 className="font-semibold">Pricing</h4>
                 <p><strong>Print Run:</strong> {formData.print_run}</p>
@@ -578,19 +933,21 @@ const PublisherApplicationForm: React.FC = () => {
         return (
           <div className="space-y-8 text-center" style={{ padding: '25px' }}>
             <div className="w-24 h-24 mx-auto bg-green-500 rounded-full flex items-center justify-center">
-              <span className="text-3xl text-white">✓</span>
+              <span className="text-3xl text-white"
+              style={{ position: 'relative', bottom: '20px' }}
+              >✓</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-800">You're all set</h3>
+            <h3 className="text-2xl font-bold text-gray-800" style={{ position: 'relative', bottom: '25px' }}>You're all set</h3>
             <div className="space-y-4 max-w-2xl mx-auto">
-              <p className="text-gray-600">We've received your application.</p>
-              <p className="text-gray-600">
+              <p className="text-gray-600"style={{ position: 'relative', bottom: '20px' }}>We've received your application.</p>
+              <p className="text-gray-600"style={{ position: 'relative', bottom: '20px' }}>
                 You'll hear from us within 5 to 7 business days with next steps.
                 If we have questions, we'll reach out directly.
               </p>
-              <p className="text-gray-600">In the meantime, keep an eye on your inbox.</p>
+              <p className="text-gray-600" style={{ position: 'relative', bottom: '11px' }}>In the meantime, keep an eye on your inbox.</p>
             </div>
             <Button
-              onClick={() => window.location.href = '/publisher-dashboard'}
+              onClick={() => window.location.href = '/dashboard-coming-soon'}
               style={{
                 background: '#000',
                 color: 'white',
@@ -629,7 +986,7 @@ const PublisherApplicationForm: React.FC = () => {
           <div className={styles.progressContainer}>
             <div className="flex justify-between text-gray-600 mb-3">
               <span className="text-sm font-medium">Step {currentStep} of {totalSteps - 1}</span>
-              <span className="text-sm font-medium">{Math.round(progress)}% Complete</span>
+              <span className="text-sm font-medium">{currentStep === 7 ? 'Completed' : `${Math.round(progress)}% Complete`}</span>
             </div>
             <Progress value={progress} className="h-2 bg-gray-700" />
           </div>

@@ -774,6 +774,7 @@
   border-top: 1px solid #e8e6e3;
   padding: 2rem 0;
   margin-top: 4rem;
+  max-height: 95px;
 }
 
 .footerLogo {
@@ -786,6 +787,8 @@
   justify-content: center;
   gap: 2rem;
   padding: 0 40px;
+  position: relative;
+  bottom: 50px;
 }
 
 .footerLogoImage {
@@ -818,5 +821,11 @@
   .socialLinks {
     gap: 1rem;
     padding: 0 20px;
+  }
+}
+
+@media (max-width: 540px) {
+  .socialLinks {
+    bottom: 10px;
   }
 }

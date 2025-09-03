@@ -9,10 +9,11 @@ const PublisherApplicationPage = React.lazy(() => import('@/features/publisher/p
 const PublisherDashboardPage = React.lazy(() => import('@/features/publisher/pages/DashboardPage'));
 const RetailerDashboardPage = React.lazy(() => import('@/features/retailer/pages/DashboardPage'));
 const MarketplacePage = React.lazy(() => import('@/features/marketplace/pages/MarketplacePage'));
-const AdminPanelPage = React.lazy(() => import('@/features/admin/pages/AdminPanelPage'));
+const AdminPanelPage = React.lazy(() => import('@/pages/AdminPanel'));
 const ProfilePage = React.lazy(() => import('@/pages/ProfilePage'));
 const FAQPage = React.lazy(() => import('@/pages/FAQPage'));
 const WhyNeeshPage = React.lazy(() => import('@/pages/WhyNeeshPage'));
+const DashboardComingSoonPage = React.lazy(() => import('@/pages/DashboardComingSoonPage'));
 const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
 
 // Loading component
@@ -57,6 +58,10 @@ export const AppRouter: React.FC = () => {
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/why-neesh" element={<WhyNeeshPage />} />
+        <Route path="/dashboard-coming-soon" element={<DashboardComingSoonPage />} />
+
+        {/* Temporary public admin panel for testing */}
+        <Route path="/admin-panel" element={<AdminPanelPage />} />
 
         {/* Protected routes */}
         <Route
@@ -88,15 +93,17 @@ export const AppRouter: React.FC = () => {
           }
         />
 
-        {/* Admin routes */}
+        {/* Admin routes - Protected version (commented out for testing) */}
+        {/*
         <Route
-          path="/admin"
+          path="/admin-panel-protected"
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminPanelPage />
             </ProtectedRoute>
           }
         />
+        */}
 
         {/* Catch all route */}
         <Route path="*" element={<NotFoundPage />} />

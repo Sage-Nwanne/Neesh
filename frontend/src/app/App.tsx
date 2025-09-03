@@ -4,6 +4,7 @@ import { AppRouter } from './router';
 import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import CaseSensitiveCard from '@/components/CaseSensitiveCard';
+import { Toaster } from 'sonner';
 import '../index.css';
 
 function App(): JSX.Element {
@@ -20,6 +21,7 @@ function App(): JSX.Element {
               triggerOnScroll={false}
               scrollThreshold={20}
             />
+            <Toaster />
           </div>
         </AuthProvider>
       </BrowserRouter>

@@ -551,6 +551,8 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  position: relative;
+  bottom: 50px;
 }
 
 .socialLink {
@@ -612,5 +614,11 @@
     position: static;
     transform: none;
     justify-content: center;
+  }
+}
+
+@media (max-width: 540px) {
+  .socialLinks {
+    bottom: 10px;
   }
 }
