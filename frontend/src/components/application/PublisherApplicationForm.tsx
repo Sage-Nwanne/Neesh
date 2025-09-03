@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence, px } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
+import styles from './PublisherApplicationForm.module.css';
 
 // Data structure interface
 interface ApplicationData {
@@ -135,53 +135,53 @@ const PublisherApplicationForm: React.FC = () => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-6 text-center py-8" style={{ padding: 25 }}>
-            <h2 className="text-3xl font-bold text-gray-800" style={{ padding: '0px 0px 16px 0px' }}>Apply to list your magazine on Neesh</h2>
-            <div className="space-y-4 text-left max-w-2xl mx-auto">
-              <p className="text-gray-600 leading-relaxed">
-                We're building tools to make indie distribution less painful and more sustainable. 
-                If you're printing physical copies and ready to sell to shops, you're in the right place.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
-                Most of the publishers on Neesh print between 500 and 10,000 copies per issue. 
-                We review every application based on quality, operational readiness, and fit.
-              </p>
-              <p className="text-gray-600 leading-relaxed">
+          <div className={styles.startingPageContainer}>
+            <div className={styles.startingPageText}>
+              <div className={styles.textColumns}>
+                <div className={styles.textColumn}>
+                  <p>
+                    We're building tools to make indie distribution less painful and more sustainable. If you're printing physical copies and ready to sell to shops, you're in the right place.
+                  </p>
+                </div>
+                <div className={styles.textColumn}>
+                  <p>
+                    Most of the publishers on Neesh print between 500 and 10,000 copies per issue. We review every application based on quality, operational readiness, and fit.
+                  </p>
+                </div>
+              </div>
+
+              <p className={styles.timeEstimate}>
                 Filling this out takes about 10–15 minutes.
               </p>
-              <p className="text-gray-600 leading-relaxed">
+
+              <div className={styles.buttonContainer}>
+                <Button
+                  onClick={nextStep}
+                  className={styles.startButton}
+                >
+                  Start Application
+                </Button>
+
+                <Button
+                  onClick={() => window.location.href = '/'}
+                  className={styles.cancelButton}
+                >
+                  Cancel
+                </Button>
+              </div>
+
+              <p className={styles.alreadyAppliedText}>
                 Already applied? You can submit new issues using the same process.
               </p>
             </div>
-            <Button
-              onClick={nextStep}
-              className="mt-8"
-              style={{
-                background: '#000',
-                color: 'white',
-                border: 'none',
-                padding: '7px 8px 9px 9px',
-                fontSize: '0.9rem',
-                fontWeight: '500'
-              }}
-            >
-              Start Application
-            </Button>
-            
-            <Button
-              onClick={() => window.location.href = '/'}
-              className="mt-8"
-              style={{
-                background: '#ffffff',
-                color: 'black',
-                border: 'none',
-                padding: '12px 24px',
-                fontSize: '0.9rem',
-                fontWeight: '500'
-              }}
-            >
-              Cancel
-            </Button>
+
+            <div className={styles.magazineImageContainer}>
+              <img
+                src="/magazine-photo-yellow.jpg"
+                alt="Magazine"
+                className={styles.magazineImage}
+              />
+            </div>
           </div>
         );
 
@@ -616,72 +616,58 @@ const PublisherApplicationForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, #f8f6f3 0%, #e8e6e3 100%)',
-      paddingLeft: '75px',
-      paddingRight: '75px',
-      paddingTop: '50px',
-      paddingBottom: '50px'
-    }}>
-      <div className="max-w-4xl mx-auto">
-        <Card className="shadow-lg border border-gray-200 bg-white">
-          <CardHeader style={{ background: '#000', color: 'white' }} className="rounded-t-lg">
-            <CardTitle className="text-3xl font-bold text-center" style={{ color: 'white' }}>
-              Apply to list your magazine on Neesh
-            </CardTitle>
-            {currentStep > 0 && (
-              <div className="mt-6">
-                <div className="flex justify-between text-gray-200 mb-3">
-                  <span className="text-sm font-medium">Step {currentStep} of {totalSteps - 1}</span>
-                  <span className="text-sm font-medium">{Math.round(progress)}% Complete</span>
-                </div>
-                <Progress value={progress} className="h-2 bg-gray-700" />
-              </div>
-            )}
-          </CardHeader>
-          <CardContent className="p-8" style={{ backgroundColor: 'white' }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
+    <div className={styles.applicationContainer}>
+      <div className={styles.applicationCard}>
+        {/* Black Header */}
+        <div className={styles.applicationHeader}>
+          <h1 className={styles.applicationTitle}>
+            Apply to list your magazine on Neesh
+          </h1>
+        </div>
+
+        {currentStep > 0 && (
+          <div className={styles.progressContainer}>
+            <div className="flex justify-between text-gray-600 mb-3">
+              <span className="text-sm font-medium">Step {currentStep} of {totalSteps - 1}</span>
+              <span className="text-sm font-medium">{Math.round(progress)}% Complete</span>
+            </div>
+            <Progress value={progress} className="h-2 bg-gray-700" />
+          </div>
+        )}
+
+        <div className={styles.applicationContent}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderStep()}
+            </motion.div>
+          </AnimatePresence>
+
+          {currentStep > 0 && currentStep < 7 && (
+            <div className={styles.navigationContainer}>
+              <Button
+                variant="outline"
+                onClick={prevStep}
+                disabled={currentStep === 0}
+                className={styles.backButton}
               >
-                {renderStep()}
-              </motion.div>
-            </AnimatePresence>
-            
-            {currentStep > 0 && currentStep < 7 && (
-              <div className="flex justify-between mt-8">
-                <Button
-                  variant="outline"
-                  onClick={prevStep}
-                  disabled={currentStep === 0}
-                  style={{
-                    border: '1px solid #666',
-                    color: '#666',
-                    background: 'transparent'
-                  }}
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={currentStep === 6 ? handleSubmit : nextStep}
-                  disabled={currentStep > 0 && !validateStep(currentStep)}
-                  className={isSubmitting ? 'opacity-50' : ''}
-                  style={{
-                    background: '#000',
-                    color: 'white',
-                    border: 'none'
-                  }}
-                >
-                  {isSubmitting ? 'Submitting...' : currentStep === 6 ? 'Submit Application' : 'Continue'}
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                Back
+              </Button>
+              <Button
+                onClick={currentStep === 6 ? handleSubmit : nextStep}
+                disabled={currentStep > 0 && !validateStep(currentStep)}
+                className={`${styles.continueButton} ${isSubmitting ? 'opacity-50' : ''}`}
+              >
+                {isSubmitting ? 'Submitting...' : currentStep === 6 ? 'Submit Application' : 'Continue'}
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

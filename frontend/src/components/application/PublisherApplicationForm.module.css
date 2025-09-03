@@ -1,0 +1,204 @@
+/* Publisher Application Form Styles */
+
+.applicationContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f6f3 0%, #e8e6e3 100%);
+  padding: 75px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.applicationCard {
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e5e5;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.applicationHeader {
+  background: #000;
+  color: white;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.applicationTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.progressContainer {
+  padding: 20px 80px 0 80px;
+}
+
+.applicationContent {
+  background: white;
+  position: relative;
+}
+
+.startingPageContainer {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 60px;
+  padding: 60px 80px;
+  align-items: center;
+}
+
+.startingPageText {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.textColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.textColumn p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.timeEstimate {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.startButton {
+  background: #000;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.startButton:hover {
+  opacity: 0.8;
+}
+
+.cancelButton {
+  background: white;
+  color: #000;
+  border: 1px solid #ddd;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.cancelButton:hover {
+  opacity: 0.8;
+}
+
+.alreadyAppliedText {
+  color: #999;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.magazineImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.magazineImage {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  object-fit: cover;
+}
+
+.navigationContainer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 80px 40px 80px;
+}
+
+.backButton {
+  border: 1px solid #666;
+  color: #666;
+  background: transparent;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.backButton:hover {
+  opacity: 0.8;
+}
+
+.continueButton {
+  background: #000;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.continueButton:hover {
+  opacity: 0.8;
+}
+
+.continueButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .applicationContainer {
+    padding: 20px;
+  }
+  
+  .startingPageContainer {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 40px 20px;
+  }
+  
+  .textColumns {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .progressContainer {
+    padding: 20px;
+  }
+  
+  .navigationContainer {
+    padding: 0 20px 40px 20px;
+  }
+  
+  .applicationTitle {
+    font-size: 2rem;
+  }
+}
