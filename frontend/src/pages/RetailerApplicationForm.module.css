@@ -1,0 +1,35 @@
+/* ---- Select trigger reset (scoped, deterministic) ---- */
+.selectTrigger {
+  /* lock dimensions and layout regardless of other globals */
+  height: 48px !important;
+  padding: 0 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  line-height: 1 !important;
+  background: #fff !important;
+}
+
+/* the Radix/shadcn chevron lives inside the trigger as an <svg> */
+.selectTrigger svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+  opacity: .6;
+}
+
+/* if any global tries to scale icons via font-size on <svg>, neutralize it */
+.selectTrigger svg * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- reserve space while a menu is open (Radix content is portalled) ---- */
+.dropdownSpacer {
+  height: 240px;           /* tune 200–280px depending on item count */
+}
+
+/* ---- safer inner padding on the form card ---- */
+.applicationCard > .p-12,
+.applicationCard > .px-6 {
+  box-sizing: border-box;
+}

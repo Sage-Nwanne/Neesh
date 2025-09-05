@@ -443,7 +443,7 @@ const PublisherApplicationForm: React.FC = () => {
                     We review every application based on <strong>quality, operational readiness, and fit</strong>.
                   </li>
                   <li>
-                    Filling this out takes about <strong>10–15 minutes</strong>.
+                    Filling this out takes about <strong>5-10 minutes</strong>.
                   </li>
                 </ul>
               </div>
@@ -1087,7 +1087,7 @@ const PublisherApplicationForm: React.FC = () => {
         {/* Black Header */}
         <div className={styles.applicationHeader}>
           <h1 className={styles.applicationTitle}>
-            Apply to list your magazine on Neesh
+            Partner with shops that celebrate independent print
           </h1>
         </div>
 

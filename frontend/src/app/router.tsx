@@ -14,6 +14,7 @@ const ProfilePage = React.lazy(() => import('@/pages/ProfilePage'));
 const FAQPage = React.lazy(() => import('@/pages/FAQPage'));
 const WhyNeeshPage = React.lazy(() => import('@/pages/WhyNeeshPage'));
 const DashboardComingSoonPage = React.lazy(() => import('@/pages/DashboardComingSoonPage'));
+const RetailerDashboardComingSoonPage = React.lazy(() => import('@/pages/RetailerDashboardComingSoonPage'));
 const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
 
 // Loading component
@@ -59,6 +60,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/why-neesh" element={<WhyNeeshPage />} />
         <Route path="/dashboard-coming-soon" element={<DashboardComingSoonPage />} />
+        <Route path="/retailer-dashboard-coming-soon" element={<RetailerDashboardComingSoonPage />} />
 
         {/* Temporary public admin panel for testing */}
         <Route path="/admin-panel" element={<AdminPanelPage />} />

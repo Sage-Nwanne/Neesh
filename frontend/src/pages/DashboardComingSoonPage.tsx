@@ -6,11 +6,11 @@ import styles from './Home.module.css';
 
 const DashboardComingSoonPage: React.FC = () => {
   return (
-    <div className={styles.landingPage}>
+    <div className={styles.landingPage} style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
       {/* Dashboard Coming Soon Content */}
-      <section className={styles.hero}>
+      <section className={styles.hero} style={{ flex: '1', display: 'flex', alignItems: 'center' }}>
         <div className={styles.container}>
           <div style={{ textAlign: 'center', padding: '60px 0' }}>
             <h1 style={{ fontSize: '2.8rem', fontWeight: '700', marginBottom: '2rem', color: '#000' }}>
@@ -20,11 +20,11 @@ const DashboardComingSoonPage: React.FC = () => {
               Your application has been submitted successfully!
             </p>
             <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '3rem' }}>
-              We'll review your application and get back to you within <strong>5-7 business days</strong>. 
+              We'll review your application and get back to you within <strong>5-7 business days</strong>.
               In the meantime, keep an eye on your inbox for updates.
             </p>
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               style={{
                 background: '#000',
                 color: 'white',

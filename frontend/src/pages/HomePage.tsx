@@ -36,7 +36,7 @@ const Home = () => {
           <div className={styles.heroGrid}>
             <div className={styles.heroContent}>
               <h1>The OS for Indie Print</h1>
-              <p>A marketplace for indie print. Curated titles, risk-fre orders, faster payouts.</p>
+              <p>A marketplace for indie print. Curated titles, risk-free orders, faster payouts.</p>
               <button className={styles.exploreBtn} onClick={scrollToPipeline}>Explore</button>
             </div>
             <div className={styles.heroVisual}>
@@ -165,7 +165,7 @@ const Home = () => {
                 <source src="/Neesh_Brand_Video.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <p className={styles.problemsSubtext}>Make independent print sustainable,visible,scalable.</p>
+              {/* <p className={styles.problemsSubtext}>Make independent print sustainable,visible,scalable.</p> */}
             </div>
           </div>
         </div>

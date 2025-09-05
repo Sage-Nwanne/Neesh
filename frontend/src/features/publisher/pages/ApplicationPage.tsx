@@ -138,6 +138,14 @@ const ApplicationPage: React.FC = () => {
             >
               Talk to the Team
             </a>
+            <Link
+              to="/why-neesh"
+              style={navLinkStyles}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
+            >
+              Why Neesh
+            </Link>
           </nav>
 
           {/* Mobile Hamburger Button */}
@@ -158,6 +166,7 @@ const ApplicationPage: React.FC = () => {
           <Link to="/auth" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
           <Link to="/faq" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>FAQ</Link>
           <a href="mailto:hi@neesh.art" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Talk to the Team</a>
+          <Link to="/why-neesh" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Why Neesh</Link>
         </div>
       </header>
 
