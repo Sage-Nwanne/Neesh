@@ -249,15 +249,15 @@ const RetailerApplicationForm: React.FC = () => {
           <div className={styles.startingPageContainer}>
             <div className={styles.startingPageText}>
               <p>
-                Stock curated indie magazines with <strong>no upfront costs</strong>, full visibility into
-                <strong> sales performance</strong>, and automatic inventory management. Perfect for bookstores,
-                cafes, galleries, and lifestyle retailers.
+                Neesh makes it simple for bookstores, galleries, cafes, and lifestyle shops to discover and stock independent magazines. Order in small quantities, return what does not sell, and access curated titles that fit your shelves.
+Guaranteed returns on trial issues
               </p>
 
               <ul style={{ margin: '20px 0', paddingLeft: '20px' }}>
-                <li>Stock unique indie magazines with <strong>no upfront costs</strong>.</li>
-                <li>We review based on <strong>store character, customer base, and fit</strong>.</li>
-                <li>Filling this out takes about <strong>5-10 minutes</strong>.</li>
+                <li>Browse by theme, region, or aesthetic to match your store’s character.</li>
+                <li>Recover value by reselling overstock to other retailers.</li>
+                <li>Save time with one platform for orders, payouts, and returns.</li>
+                <li>Filling this out takes about <strong> 5 to 10 minutes </strong>.</li>
               </ul>
 
               {currentStep === 0 && (
@@ -293,7 +293,7 @@ const RetailerApplicationForm: React.FC = () => {
         return (
           <motion.div
             className="space-y-8 step-1-selects"
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 20 }}j
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
@@ -820,7 +820,7 @@ const RetailerApplicationForm: React.FC = () => {
           {/* Header inside the card but without padding */}
           <div className={styles.applicationHeader}>
             <h1 className={styles.applicationTitle}>
-              Stock curated indie magazines with low risk and full visibility into sell-through
+              Stock indie magazines with confidence and clarity
             </h1>
           </div>
 

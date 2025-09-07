@@ -12,182 +12,99 @@ const WhyNeeshPage: React.FC = () => {
       <section style={{ flex: '1', padding: '40px 20px' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: '700', marginBottom: '1rem', color: '#000', textAlign: 'center' }}>
-            Why Neesh Is Building Attribution Infrastructure for Independent Print
+            Why Neesh Exists
           </h1>
 
+          <p style={{ fontSize: '1.3rem', color: '#666', marginBottom: '1rem', textAlign: 'center', fontStyle: 'italic' }}>
+            A Vision for the Future of Independent Magazines
+          </p>
+
           <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '2rem', textAlign: 'center', fontStyle: 'italic' }}>
-            Strategic Memo<br />
-            Gem Nwannem, Founder & CEO, Neesh
+            By Gem Nwannem, Founder & CEO, Neesh
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            The opportunity is real. The infrastructure is not.
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Independent print is growing. Fast. You're seeing a wave of new titles with 1,000 to 10,000 readers doing smart, beautiful work across culture, design, fashion, food, identity. These magazines have influence. They have community. They have staying power. But they have no way to see what's working. No visibility into what's actually selling. No infrastructure to support growth.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Publishers are still using spreadsheets and emails to manage orders. Retailers are still guessing what to buy based on Instagram posts and personal taste. Distributors hold the middle and offer little in the way of tools, transparency or data.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            This entire ecosystem is operating blind.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            And that's a problem, because print advertising still works. A Nielsen study for Meredith found that magazine ads return $7.81 for every $1 spent. That beats digital ad networks by a wide margin. But without data, advertisers can't justify the spend. Publishers can't pitch brand partners with confidence. Retailers can't optimize what's on their shelves. No one can scale.
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            After years of digital fatigue, readers are reaching for objects they can hold, keep, and share. Across culture, design, fashion, food, and identity, small publishers are producing work that is ambitious, beautiful, and deeply rooted in community.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            We thought attribution tools could fix it. We were wrong.
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Our first idea was to build a lightweight attribution layer. We'd give publishers free QR codes, short links, trackable CTAs. When readers engaged, we'd track the behavior and package it up as ROI data for advertisers.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Here's why that didn't work.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            First, publishers didn't want it. QR codes and tracking links felt off-brand. Aesthetic compromises. Workflow changes. No upside for them.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Second, advertisers wouldn't trust it. Link clicks and QR scans are a weak signal. They might show a tiny slice of engagement, but it's sample-biased and hard to prove. Most brands wouldn't move real budget off that kind of data.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Third, the underlying problem never went away. There's still no access to real sales data. Distributors don't share it. Retailers don't track it. Publishers don't have it.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            So even if we nailed the attribution UX, we'd still be guessing. And that's not a business.
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            The influence of these magazines is undeniable. They spark conversation, shape taste, and anchor local scenes. But beneath the surface, the system that moves them is fragile. Publishers manage orders in spreadsheets and email threads. Shops make stocking decisions based on Instagram posts or gut instinct. Distributors do what they can with limited tools, but transparency and data rarely enter the picture.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            None of the other shortcuts work either.
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            We looked at everything.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Payment processors don't give SKU-level data. If someone spends $47 at a boutique, we don't know if they bought a magazine or a candle.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Retailer partnerships would be expensive and slow to scale. Most shops are small and not set up for data sharing. It would take years to piece together even a fraction of the ecosystem.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Data aggregators like IRI and Circana focus on big box CPG. Indie print isn't on their radar and never will be.
+          <p style={{ marginBottom: '1.5rem', color: '#333', fontWeight: '600' }}>
+            It is a market that thrives creatively, but operates blind.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            Which brings us to the real answer.
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2.5rem', marginBottom: '1rem', color: '#000' }}>
+            Everyone's Guessing
           </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            If the data doesn't exist, you have to build the system that creates it.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            We're building the commerce and fulfillment platform that powers independent print. Not as a detour. Not as a side hustle. As the only path forward.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Neesh gives retailers a curated digital platform to order, restock, and discover new magazines. We give publishers a clean interface to track inventory, manage orders, coordinate shipping, and get paid. We handle logistics and payments. In return, we take a cut of every transaction.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            That alone solves real problems. But it also does something more important. It gives us structured, store-level data.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            We'll know which titles are selling, where they're selling, when they get reordered, and how fast they move. We'll know what gets returned and what never even hits the shelf. That data becomes the foundation of a new kind of attribution, one built on actual sell-through, not guesswork.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Once the data flows, we can open the door to advertisers. With real distribution and performance data, we can offer brand partners visibility they've never had. Not just impressions. Not just placement. Proof.
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            This disconnect has consequences. Print advertising, for example, remains one of the most effective media channels; Nielsen found that magazine ads return nearly eight dollars for every dollar spent. Yet without reliable sales data, advertisers struggle to justify investment. Publishers can't pitch brand partners with confidence. Retailers can't analyze what works on their shelves. Growth across the ecosystem stalls.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            This is how we unlock the ad market and build the moat.
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Independent publishers already pay distributors 5 to 10 percent of revenue. We're not introducing a new economic model. We're just building a better one. One that actually helps them sell.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Our business model kicks in immediately:
-          </p>
-          <ul style={{ marginBottom: '1rem', paddingLeft: '2rem', color: '#333' }}>
-            <li>Transaction fees from marketplace sales</li>
-            <li>Brand placements once we have the data</li>
-            <li>Performance reporting</li>
-            <li>Future insights products</li>
-          </ul>
-
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            And it's defensible.
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            When a publisher's entire fulfillment operation runs through Neesh, when all their retailer relationships are managed through our platform, when their revenue flows through our payment rails, they're not switching to save half a percentage point on fees. Every publisher we add makes the platform more valuable for retailers. Every retailer makes it more valuable for publishers. And every transaction makes our data more valuable for advertisers. And the logistics layer, messy as it is, keeps competitors out.
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            For years, workarounds have been attempted. QR codes. Trackable links. Sampling partnerships. None have delivered the kind of trusted, system-wide visibility the industry actually needs. The real problem has always been infrastructure.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            Financially, this adds up.
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2.5rem', marginBottom: '1rem', color: '#000' }}>
+            Build What Doesn't Exist
           </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            The indie print ad market is roughly $500 million. If we capture 20 percent of that, that's $100 million flowing through our platform. With a 20 percent take rate, we're looking at $20 million in annual revenue from ad spend alone.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            That doesn't include marketplace transaction fees or insights products. With software margins and lean ops, this is a high-leverage model.
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            At Neesh, we came to a simple conclusion: if the data doesn't exist, you have to build the system that creates it.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            Why Now: The Market is Ready
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Independent print is having a moment. After years of digital fatigue, consumers are returning to physical media. Publishers are launching new titles. Retailers are expanding their magazine sections. But the infrastructure hasn't evolved since the 1990s.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Meanwhile, digital advertising is getting more expensive and less effective. Privacy changes, ad blockers, and banner blindness are driving advertisers to seek new channels. They need what print offers: engaged audiences, brand safe environments, and premium context. They just need a way to buy it that makes sense.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            We're building that way.
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            That's why we're building a commerce and fulfillment platform designed specifically for independent print. Neesh exists to strengthen the ecosystem; to connect publishers, retailers, and distributors with tools that make the whole system work smarter.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            Where we are now
-          </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            We're onboarding our first wave of publishers and retailers. Our immediate focus:
-          </p>
-          <ul style={{ marginBottom: '1rem', paddingLeft: '2rem', color: '#333' }}>
-            <li>Build a functional, clean ordering experience for stockists</li>
-            <li>Give publishers a fulfillment dashboard that actually helps</li>
-            <li>Track issue-level orders, returns, and reorders by store</li>
-            <li>Start mapping performance patterns across the network</li>
-          </ul>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            This isn't the easy path. Building lightweight analytics tools would have been simpler. But simple solutions don't work in complex markets. Independent publishing needs infrastructure before it needs analytics. It needs commerce before it needs attribution.
-          </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            By building the marketplace first, we're not delaying our advertising ambitions. We're making them possible. We're creating the only attribution platform that will actually work because we're creating the data that powers it.
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            For publishers, Neesh means a clear way to track orders, manage inventory, coordinate shipping, and, most importantly, get paid on time. For retailers, it means a curated marketplace where discovery, ordering, and returns can happen in one place, with far less risk. For distributors, it means modern back-office support without losing the catalogs and relationships they've built over decades.
           </p>
 
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2rem', marginBottom: '1rem', color: '#000' }}>
-            Final word
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            The byproduct of solving these everyday operational challenges is something much larger: structured, store-level data. Which magazines are selling, where they're moving, how fast they turn, and when they're reordered. Information that has never been systematically available in indie print.
+          </p>
+
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2.5rem', marginBottom: '1rem', color: '#000' }}>
+            Data Creates Trust
           </h2>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Independent magazines represent something special in our digital age. They're objects of desire, markers of taste, and gathering points for communities. They deserve infrastructure as thoughtful as their editorial.
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            Once this data flows, a new future opens up. Publishers will finally be able to present advertisers with proof of performance. Retailers will stock smarter, guided by evidence rather than guesswork. Advertisers will gain access to engaged audiences in cultural environments they can trust.
           </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Neesh didn't set out to build a B2B logistics platform. We set out to unlock ad dollars for independent print. But in a market this fragmented, with this much analog pain, you can't separate infrastructure from monetization. Attribution requires data. Data requires systems. So we're building the system.
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            And because the system is collaborative, each transaction strengthening the network, the value compounds. Every new publisher added makes the platform more useful for shops. Every shop makes it more valuable for publishers. Together they generate the insights that unlock new revenue streams for everyone.
           </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            Publishers want to reach readers. Retailers want to stock magazines that sell. Advertisers want to reach engaged audiences. This isn't about doing two (or three) things at once. It's one strategy. One product. Two sides of the same platform.
+
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2.5rem', marginBottom: '1rem', color: '#000' }}>
+            Digital Fatigue, Analog Future
+          </h2>
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            Independent print is resurging just as digital advertising is losing steam. Privacy restrictions, rising costs, and shrinking attention spans have left brands searching for channels that feel tangible, contextual, and premium. Print has always had those qualities. What it hasn't had is the infrastructure to make them legible to buyers.
           </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            By solving real operational problems, we get clean, verified data. That data powers the only attribution model that makes sense in indie print. And that model unlocks spend that's been sitting on the sidelines.
+
+          <p style={{ marginBottom: '1.5rem', color: '#333', fontWeight: '600' }}>
+            Neesh is building that bridge.
           </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            The future of print isn't about competing with digital. It's about offering something digital can't: tangible, beautiful, collectible media that people actually pay for. Our job is to make that market visible, measurable, and scalable.
+
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', marginTop: '2.5rem', marginBottom: '1rem', color: '#000' }}>
+            Make Print Visible
+          </h2>
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            The future of print isn't about competing with digital. It's about offering something digital can't: objects of desire that carry meaning in the hand and in the home. The role of infrastructure is to make those objects visible, measurable, and scalable without diluting their cultural weight.
           </p>
-          <p style={{ marginBottom: '1rem', color: '#333' }}>
-            That starts with commerce. Attribution follows. Advertising scales from there.
+
+          <p style={{ marginBottom: '1.5rem', color: '#333' }}>
+            That's the vision Neesh is committed to. An ecosystem where publishers can thrive, retailers can stock with confidence, and advertisers can see the value that's been there all along.
           </p>
-          <p style={{ fontSize: '1.2rem', fontWeight: '600', marginTop: '2rem', color: '#000' }}>
-            Welcome to Neesh. We're building the operating system for independent print.
-          </p>
-          <p style={{ fontSize: '1rem', color: '#666', marginTop: '1rem' }}>
-            Gem Nwannem<br />
-            Founder & CEO, Neesh
+
+          <p style={{ marginBottom: '2rem', color: '#333', fontWeight: '600' }}>
+            We believe independent magazines deserve systems as thoughtful as their editorial. And building those systems is how we make sure print not only survives this cultural moment, but grows into its next era.
           </p>
         </div>
       </section>
