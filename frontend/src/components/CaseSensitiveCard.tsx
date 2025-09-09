@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence, styleEffect } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   delayMs?: number;            // show after N ms

@@ -72,14 +72,15 @@ class AdminApiService {
     }
   }
 
-  async approveApplication(applicationId: string): Promise<boolean> {
+  async approveApplication(applicationId: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/approve`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ type: applicationType })
       });
 
       if (!response.ok) {
@@ -93,7 +94,7 @@ class AdminApiService {
     }
   }
 
-  async denyApplication(applicationId: string, reason?: string): Promise<boolean> {
+  async denyApplication(applicationId: string, reason?: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/deny`, {
         method: 'PUT',
@@ -101,7 +102,7 @@ class AdminApiService {
           'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ reason })
+        body: JSON.stringify({ reason, type: applicationType })
       });
 
       if (!response.ok) {

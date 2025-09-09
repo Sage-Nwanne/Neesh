@@ -10,6 +10,7 @@ import { Checkbox } from '../ui/checkbox';
 import { Loader2, ChevronLeft, ChevronRight, X, Store, MapPin, Briefcase, Palette } from 'lucide-react';
 import { supabase } from '../../integrations/supabase/client';
 import { toast } from '../../hooks/use-toast';
+import { useFormTracking, useAnalytics } from '@/hooks/useAnalytics';
 import Navbar from '../shared/Navbar';
 import Footer from '../shared/Footer';
 import styles from './RetailerApplicationForm.module.css';
@@ -91,6 +92,10 @@ const RetailerApplicationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [applicationId, setApplicationId] = useState<string>('');
+
+  // Analytics hooks
+  const formTracking = useFormTracking('retailer_application');
+  const { trackApplicationSubmission } = useAnalytics();
   // Simple state to control overlay visibility
   const [showOverlay, setShowOverlay] = useState(false);
   // Track which dropdowns are open for spacing
@@ -162,7 +167,11 @@ const RetailerApplicationForm: React.FC = () => {
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+      const nextStepNumber = Math.min(currentStep + 1, totalSteps);
+      setCurrentStep(nextStepNumber);
+      formTracking.trackFormStep(nextStepNumber, `step_${nextStepNumber}`);
+    } else {
+      formTracking.trackFormError(`Validation failed on step ${currentStep}`);
     }
   };
 
@@ -172,12 +181,15 @@ const RetailerApplicationForm: React.FC = () => {
 
   const startApplication = () => {
     setCurrentStep(1);
+    formTracking.trackFormStart();
   };
 
   const handleSubmit = async () => {
     if (!validateStep(currentStep)) return;
 
     setIsSubmitting(true);
+    formTracking.trackFormSubmit();
+
     try {
       // Prepare data with all fields including arrays
       const submissionData = {
@@ -221,10 +233,14 @@ const RetailerApplicationForm: React.FC = () => {
       // Store the application ID for the confirmation page
       setApplicationId(result.id || 'N/A');
 
+      // Track successful application submission
+      trackApplicationSubmission('retailer', result.id);
+
       // Go to confirmation page (step 6)
       setCurrentStep(6);
     } catch (error: any) {
       console.error('Submission error:', error);
+      formTracking.trackFormError(error.message || 'Submission failed');
       toast.error(`Submission failed: ${error.message || 'An error occurred'}`);
     } finally {
       setIsSubmitting(false);

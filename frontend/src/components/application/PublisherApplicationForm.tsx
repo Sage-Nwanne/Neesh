@@ -7,8 +7,7 @@ import { Progress } from '../ui/progress';
 
 import { Palette, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
-import { config } from '@/lib/config';
+import { useToast } from '@/hooks/use-toast';
 import styles from './PublisherApplicationForm.module.css';
 
 // Stock Images Import Section - Using actual cover template images
@@ -187,6 +186,8 @@ const PublisherApplicationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+
+  const { toast } = useToast();
 
   // State for carousel navigation - tracks current image index for each category
   const [currentImageIndex, setCurrentImageIndex] = useState<{[key: string]: number}>({
@@ -386,37 +387,58 @@ const PublisherApplicationForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const apiBaseUrl = config.api.baseUrl;
+      console.log('📊 Publisher Application - Form Data:', formData);
 
-      const response = await fetch(`${apiBaseUrl}/publisher/application`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+      // Prepare data for Supabase insertion (mapping to actual database column names)
+      const submissionData = {
+        email: formData.email,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        business_name: formData.business_name,
+        magazine_title: formData.magazine_title,
+        publication_type: formData.publication_type,
+        issue_number: formData.issue_number,
+        issue_frequency: formData.issue_frequency,
+        description: formData.description,
+        social_website_link: formData.social_website_link,
+        print_run: formData.print_run ? parseInt(formData.print_run.toString()) : 0,
+        available_quantity: formData.available_quantity ? parseInt(formData.available_quantity.toString()) : 0,
+        wholesale_price: formData.wholesale_price ? parseFloat(formData.wholesale_price.toString()) : 0,
+        suggested_retail_price: formData.suggested_retail_price ? parseFloat(formData.suggested_retail_price.toString()) : 0,
+        specs: formData.specs,
+        volume_pricing_tiers: formData.volume_pricing || [], // Database column name
+        cover_image_url: formData.cover_image_url,
+        has_sold_before: formData.has_sold_before === 'yes', // Convert to boolean
+        distribution_channels: formData.distribution_channels || [],
+        copies_sold_estimate: formData.estimated_copies_sold ? parseInt(formData.estimated_copies_sold.toString()) : 0, // Database column name
+        quotes_feedback: formData.sales_feedback, // Database column name
+        fulfillment_method: formData.fulfillment_method,
+        shipping_city: formData.shipping_city,
+        shipping_state: formData.shipping_state,
+        shipping_country: formData.shipping_country,
+        accepts_returns: formData.return_policy, // Database column name
+        status: 'pending'
+      };
 
-      if (!response.ok) {
-        throw new Error('Failed to submit application');
-      }
+      console.log('Submitting data to Supabase:', submissionData);
 
-      const result = await response.json();
+      const { data: result, error } = await supabase
+        .from('publisher_applications')
+        .insert(submissionData)
+        .select('id, magazine_title')
+        .single();
+
+      if (error) throw error;
+
       console.log('Application submitted successfully:', result);
 
       // Show success and go to confirmation
-      toast({
-        title: "Application Submitted!",
-        description: "Your publisher application has been submitted successfully. We'll review it and get back to you soon.",
-      });
+      toast({ title: "Application submitted successfully! We'll review it and get back to you soon." });
 
       setCurrentStep(7); // Go to confirmation
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast({
-        title: "Submission Failed",
-        description: "There was an error submitting your application. Please try again.",
-        variant: "destructive"
-      });
+      toast({ title: "Submission failed. Please try again.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }

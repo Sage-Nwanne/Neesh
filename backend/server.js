@@ -38,7 +38,13 @@ app.use(helmet({
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -78,7 +84,7 @@ app.use('*', (req, res) => {
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  console.log(`🌐 CORS enabled for: ${corsOptions.origin.join(', ')}`);
   
   // Test database connection
   await testSupabaseConnection();

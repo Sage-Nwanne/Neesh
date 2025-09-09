@@ -3,6 +3,57 @@ import { supabase } from '../config/supabase.js';
 
 const router = express.Router();
 
+// Email service function for sending invitation emails
+const sendRetailerInvitationEmail = async (application) => {
+  try {
+    // Generate a temporary invitation token (in production, use proper JWT)
+    const invitationToken = Buffer.from(JSON.stringify({
+      applicationId: application.id,
+      email: application.buyer_email,
+      shopName: application.shop_name,
+      timestamp: Date.now()
+    })).toString('base64');
+
+    const invitationLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/retailer-setup?token=${invitationToken}`;
+
+    // For now, just log the invitation details
+    // In production, you would send this via email service (Resend, SendGrid, etc.)
+    console.log('=== RETAILER INVITATION EMAIL ===');
+    console.log(`To: ${application.buyer_email}`);
+    console.log(`Shop: ${application.shop_name}`);
+    console.log(`Application ID: ${application.application_number}`);
+    console.log(`Invitation Link: ${invitationLink}`);
+    console.log('================================');
+
+    // TODO: Replace with actual email service
+    // const emailResponse = await fetch('https://api.resend.com/emails', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     from: 'Neesh Team <team@neesh.art>',
+    //     to: [application.buyer_email],
+    //     subject: `Welcome to Neesh! Set up your retailer account for ${application.shop_name}`,
+    //     html: `
+    //       <h2>Congratulations! Your retailer application has been approved.</h2>
+    //       <p>Welcome to the Neesh marketplace, ${application.buyer_name}!</p>
+    //       <p>Your application for <strong>${application.shop_name}</strong> has been approved.</p>
+    //       <p><a href="${invitationLink}" style="background: #000; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Set Up Your Account</a></p>
+    //       <p>This link will allow you to create your login credentials and access your retailer dashboard.</p>
+    //       <p>Application ID: ${application.application_number}</p>
+    //     `
+    //   }),
+    // });
+
+    return true;
+  } catch (error) {
+    console.error('Error sending invitation email:', error);
+    throw error;
+  }
+};
+
 // Simple admin authentication middleware (for development)
 const requireAdmin = (req, res, next) => {
   try {
@@ -32,33 +83,62 @@ const requireAdmin = (req, res, next) => {
   }
 };
 
-// GET /api/admin/applications - Get all publisher applications
+// GET /api/admin/applications - Get all applications (publisher and retailer)
 router.get('/applications', requireAdmin, async (req, res) => {
   try {
-    const { data: applications, error } = await supabase
-      .from('publisher_applications')
-      .select('*')
-      .order('created_at', { ascending: false });
+    // Fetch both publisher and retailer applications
+    const [publisherResult, retailerResult] = await Promise.all([
+      supabase
+        .from('publisher_applications')
+        .select('*')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('retailer_applications')
+        .select('*')
+        .order('created_at', { ascending: false })
+    ]);
 
-    if (error) {
-      console.error('Error fetching applications:', error);
-      return res.status(500).json({ message: 'Failed to fetch applications' });
+    if (publisherResult.error) {
+      console.error('Error fetching publisher applications:', publisherResult.error);
+      return res.status(500).json({ message: 'Failed to fetch publisher applications' });
     }
 
-    // Transform data to match admin panel interface
-    const transformedApplications = applications.map(app => ({
+    if (retailerResult.error) {
+      console.error('Error fetching retailer applications:', retailerResult.error);
+      return res.status(500).json({ message: 'Failed to fetch retailer applications' });
+    }
+
+    // Transform publisher applications
+    const transformedPublisherApps = publisherResult.data.map(app => ({
       id: app.id,
       type: 'publisher',
       applicantName: `${app.first_name || 'Unknown'} ${app.last_name || 'User'}`,
       businessName: app.business_name || 'Unknown Business',
       email: app.email || 'No email',
       status: app.status,
-      submittedAt: app.created_at, // Use created_at instead of submitted_at
+      submittedAt: app.created_at,
       magazineTitle: app.magazine_title,
       applicationData: app
     }));
 
-    res.json(transformedApplications);
+    // Transform retailer applications
+    const transformedRetailerApps = retailerResult.data.map(app => ({
+      id: app.id,
+      type: 'retailer',
+      applicantName: app.buyer_name || 'Unknown Buyer',
+      businessName: app.shop_name || 'Unknown Shop',
+      email: app.buyer_email || 'No email',
+      status: app.status || 'pending',
+      submittedAt: app.created_at,
+      storeLocation: `${app.business_city || ''}, ${app.business_state || ''}`.trim().replace(/^,|,$/, ''),
+      applicationData: app
+    }));
+
+    // Combine and sort by submission date
+    const allApplications = [...transformedPublisherApps, ...transformedRetailerApps]
+      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+    res.json(allApplications);
   } catch (error) {
     console.error('Admin applications error:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -69,17 +149,48 @@ router.get('/applications', requireAdmin, async (req, res) => {
 router.put('/applications/:id/approve', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
+    const { type } = req.body; // 'publisher' or 'retailer'
 
-    const { data: application, error } = await supabase
-      .from('publisher_applications')
-      .update({
-        status: 'approved',
-        reviewed_at: new Date().toISOString()
-        // Skip reviewed_by for now since it expects UUID
-      })
-      .eq('id', id)
-      .select()
-      .single();
+    let application, error;
+
+    if (type === 'retailer') {
+      const result = await supabase
+        .from('retailer_applications')
+        .update({
+          status: 'approved',
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      application = result.data;
+      error = result.error;
+
+      // Send invitation email for approved retailer applications
+      if (!error && application) {
+        try {
+          await sendRetailerInvitationEmail(application);
+        } catch (emailError) {
+          console.error('Failed to send invitation email:', emailError);
+          // Don't fail the approval if email fails
+        }
+      }
+    } else {
+      // Default to publisher for backward compatibility
+      const result = await supabase
+        .from('publisher_applications')
+        .update({
+          status: 'approved',
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      application = result.data;
+      error = result.error;
+    }
 
     if (error) {
       console.error('Error approving application:', error);
@@ -100,19 +211,40 @@ router.put('/applications/:id/approve', requireAdmin, async (req, res) => {
 router.put('/applications/:id/deny', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { reason } = req.body;
+    const { reason, type } = req.body; // 'publisher' or 'retailer'
 
-    const { data: application, error } = await supabase
-      .from('publisher_applications')
-      .update({
-        status: 'denied',
-        reviewer_notes: reason,
-        reviewed_at: new Date().toISOString()
-        // Skip reviewed_by for now since it expects UUID
-      })
-      .eq('id', id)
-      .select()
-      .single();
+    let application, error;
+
+    if (type === 'retailer') {
+      const result = await supabase
+        .from('retailer_applications')
+        .update({
+          status: 'denied',
+          reviewer_notes: reason,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      application = result.data;
+      error = result.error;
+    } else {
+      // Default to publisher for backward compatibility
+      const result = await supabase
+        .from('publisher_applications')
+        .update({
+          status: 'denied',
+          reviewer_notes: reason,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      application = result.data;
+      error = result.error;
+    }
 
     if (error) {
       console.error('Error denying application:', error);
@@ -196,21 +328,33 @@ router.get('/messages', requireAdmin, async (req, res) => {
 // GET /api/admin/stats - Get admin dashboard statistics
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
-    // Get application counts
-    const { data: applications, error: appError } = await supabase
-      .from('publisher_applications')
-      .select('status');
+    // Get application counts from both tables
+    const [publisherResult, retailerResult] = await Promise.all([
+      supabase.from('publisher_applications').select('status'),
+      supabase.from('retailer_applications').select('status')
+    ]);
 
-    if (appError) {
-      console.error('Error fetching application stats:', error);
-      return res.status(500).json({ message: 'Failed to fetch statistics' });
+    if (publisherResult.error) {
+      console.error('Error fetching publisher application stats:', publisherResult.error);
+      return res.status(500).json({ message: 'Failed to fetch publisher statistics' });
     }
 
+    if (retailerResult.error) {
+      console.error('Error fetching retailer application stats:', retailerResult.error);
+      return res.status(500).json({ message: 'Failed to fetch retailer statistics' });
+    }
+
+    // Combine all applications
+    const allApplications = [
+      ...(publisherResult.data || []),
+      ...(retailerResult.data || [])
+    ];
+
     const stats = {
-      totalApplications: applications.length,
-      pendingApplications: applications.filter(app => app.status === 'pending').length,
-      approvedApplications: applications.filter(app => app.status === 'approved').length,
-      deniedApplications: applications.filter(app => app.status === 'denied').length,
+      totalApplications: allApplications.length,
+      pendingApplications: allApplications.filter(app => (app.status || 'pending') === 'pending').length,
+      approvedApplications: allApplications.filter(app => app.status === 'approved').length,
+      deniedApplications: allApplications.filter(app => app.status === 'denied').length,
       totalReports: 2, // Mock for now
       unreadMessages: 1, // Mock for now
       pendingReplyMessages: 2 // Mock for now

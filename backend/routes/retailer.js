@@ -232,4 +232,216 @@ router.get('/inventory', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/retailer/dashboard/analytics - Get retailer dashboard analytics
+router.get('/dashboard/analytics', authenticateToken, async (req, res) => {
+  try {
+    const { userId, role } = req.user;
+
+    if (role !== 'retailer') {
+      return res.status(403).json({ message: 'Access denied. Retailer role required.' });
+    }
+
+    // Get orders for analytics
+    const { data: orders, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        magazines(title, price, category)
+      `)
+      .eq('retailer_id', userId);
+
+    if (error) {
+      console.error('Error fetching analytics data:', error);
+      return res.status(500).json({ message: 'Failed to fetch analytics data' });
+    }
+
+    // Calculate analytics
+    const totalOrders = orders?.length || 0;
+    const totalSales = orders?.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0) || 0;
+    const deliveredOrders = orders?.filter(order => order.status === 'delivered') || [];
+    const pendingOrders = orders?.filter(order => order.status === 'pending') || [];
+    const returnedOrders = orders?.filter(order => order.status === 'returned') || [];
+
+    // Calculate sales by time period (mock data for now)
+    const salesData = [
+      { period: 'D', value: totalSales * 0.1 },
+      { period: 'W', value: totalSales * 0.3 },
+      { period: 'M', value: totalSales * 0.6 },
+      { period: 'Q', value: totalSales * 0.8 },
+      { period: 'YTD', value: totalSales * 0.9 },
+      { period: 'Y', value: totalSales },
+      { period: 'ALL', value: totalSales }
+    ];
+
+    // Calculate growth percentage (mock for now)
+    const growthPercentage = 12.30;
+
+    res.json({
+      totalSales,
+      totalOrders,
+      deliveredCount: deliveredOrders.length,
+      pendingCount: pendingOrders.length,
+      returnedCount: returnedOrders.length,
+      salesData,
+      growthPercentage,
+      orders: orders || []
+    });
+  } catch (error) {
+    console.error('Retailer analytics error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/retailer/dashboard/magazines - Get magazines with inventory data
+router.get('/dashboard/magazines', authenticateToken, async (req, res) => {
+  try {
+    const { userId, role } = req.user;
+
+    if (role !== 'retailer') {
+      return res.status(403).json({ message: 'Access denied. Retailer role required.' });
+    }
+
+    // Get all magazines with inventory data
+    const { data: magazines, error: magazinesError } = await supabase
+      .from('magazines')
+      .select(`
+        *,
+        publishers!inner(company_name, user_id),
+        users!publishers_user_id_fkey(username)
+      `)
+      .eq('is_active', true);
+
+    if (magazinesError) {
+      console.error('Error fetching magazines:', magazinesError);
+      return res.status(500).json({ message: 'Failed to fetch magazines' });
+    }
+
+    // Get inventory data for this retailer
+    const { data: inventory, error: inventoryError } = await supabase
+      .from('orders')
+      .select(`
+        magazine_id,
+        quantity,
+        status
+      `)
+      .eq('retailer_id', userId)
+      .eq('status', 'delivered');
+
+    if (inventoryError) {
+      console.error('Error fetching inventory:', inventoryError);
+      return res.status(500).json({ message: 'Failed to fetch inventory' });
+    }
+
+    // Create inventory map
+    const inventoryMap = {};
+    inventory?.forEach(item => {
+      const magazineId = item.magazine_id;
+      if (inventoryMap[magazineId]) {
+        inventoryMap[magazineId] += item.quantity;
+      } else {
+        inventoryMap[magazineId] = item.quantity;
+      }
+    });
+
+    // Combine magazines with inventory data
+    const magazinesWithInventory = magazines?.map(magazine => ({
+      ...magazine,
+      inventory: inventoryMap[magazine.id] || 0,
+      status: inventoryMap[magazine.id] ? 'in_stock' : 'out_of_stock'
+    })) || [];
+
+    res.json(magazinesWithInventory);
+  } catch (error) {
+    console.error('Retailer magazines error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/retailer/magazine/:id/analytics - Get analytics for specific magazine
+router.get('/magazine/:id/analytics', authenticateToken, async (req, res) => {
+  try {
+    const { userId, role } = req.user;
+    const { id: magazineId } = req.params;
+
+    if (role !== 'retailer') {
+      return res.status(403).json({ message: 'Access denied. Retailer role required.' });
+    }
+
+    // Get magazine details
+    const { data: magazine, error: magazineError } = await supabase
+      .from('magazines')
+      .select(`
+        *,
+        publishers!inner(company_name, user_id),
+        users!publishers_user_id_fkey(username, email)
+      `)
+      .eq('id', magazineId)
+      .eq('is_active', true)
+      .single();
+
+    if (magazineError || !magazine) {
+      return res.status(404).json({ message: 'Magazine not found' });
+    }
+
+    // Get orders for this magazine
+    const { data: orders, error: ordersError } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('retailer_id', userId)
+      .eq('magazine_id', magazineId);
+
+    if (ordersError) {
+      console.error('Error fetching magazine orders:', ordersError);
+      return res.status(500).json({ message: 'Failed to fetch magazine orders' });
+    }
+
+    // Calculate analytics
+    const totalOrders = orders?.length || 0;
+    const totalSales = orders?.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0) || 0;
+    const deliveredOrders = orders?.filter(order => order.status === 'delivered') || [];
+    const returnedOrders = orders?.filter(order => order.status === 'returned') || [];
+    const totalSold = deliveredOrders.reduce((sum, order) => sum + order.quantity, 0);
+    const totalReturned = returnedOrders.reduce((sum, order) => sum + order.quantity, 0);
+
+    // Mock inventory by location
+    const inventoryByLocation = [
+      { location: 'New York', current: Math.floor(totalSold * 0.3), total: Math.floor(totalSold * 0.4) },
+      { location: 'Arizona', current: Math.floor(totalSold * 0.5), total: Math.floor(totalSold * 0.6) }
+    ];
+
+    // Mock sales data over time
+    const salesData = [
+      { period: 'D', value: totalSales * 0.1 },
+      { period: 'W', value: totalSales * 0.3 },
+      { period: 'M', value: totalSales * 0.6 },
+      { period: 'Q', value: totalSales * 0.8 },
+      { period: 'YTD', value: totalSales * 0.9 },
+      { period: 'Y', value: totalSales },
+      { period: 'ALL', value: totalSales }
+    ];
+
+    res.json({
+      magazine,
+      analytics: {
+        totalSales,
+        totalSold,
+        totalReturned,
+        totalOrders,
+        growthPercentage: 12.30, // Mock
+        salesData,
+        inventoryByLocation
+      },
+      orders: orders || [],
+      publisher: {
+        name: magazine.publishers?.company_name,
+        username: magazine.users?.username,
+        email: magazine.users?.email
+      }
+    });
+  } catch (error) {
+    console.error('Magazine analytics error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 export default router;

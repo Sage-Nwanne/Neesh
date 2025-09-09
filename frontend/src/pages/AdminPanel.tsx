@@ -4,6 +4,7 @@ import styles from './AdminPanel.module.css';
 import AdminLogin from '../components/AdminLogin';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import { adminApi, type Application, type ReportedPublisher, type AdminMessage } from '../services/adminApi';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import {
   Users,
   FileText,
@@ -32,12 +33,16 @@ const AdminPanel: React.FC = () => {
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<Array<{type: 'user' | 'bot', message: string}>>([]);
 
+  // Analytics tracking
+  const { trackDashboardView, trackApplicationApproval, trackApplicationDenial } = useAnalytics();
+
   // Load data from API
   useEffect(() => {
     if (isAuthenticated) {
       loadAdminData();
+      trackDashboardView('admin');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, trackDashboardView]);
 
   const loadAdminData = async () => {
     try {
@@ -55,27 +60,33 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  const handleApproveApplication = async (id: string) => {
+  const handleApproveApplication = async (id: string, type: 'publisher' | 'retailer' = 'publisher') => {
     try {
-      await adminApi.approveApplication(id);
+      await adminApi.approveApplication(id, type);
       setApplications(prev =>
         prev.map(app =>
           app.id === id ? { ...app, status: 'approved' as const } : app
         )
       );
+
+      // Track the approval
+      trackApplicationApproval(type, id);
     } catch (error) {
       console.error('Error approving application:', error);
     }
   };
 
-  const handleDenyApplication = async (id: string) => {
+  const handleDenyApplication = async (id: string, type: 'publisher' | 'retailer' = 'publisher') => {
     try {
-      await adminApi.denyApplication(id);
+      await adminApi.denyApplication(id, undefined, type);
       setApplications(prev =>
         prev.map(app =>
           app.id === id ? { ...app, status: 'denied' as const } : app
         )
       );
+
+      // Track the denial
+      trackApplicationDenial(type, id);
     } catch (error) {
       console.error('Error denying application:', error);
     }
@@ -293,16 +304,16 @@ const AdminPanel: React.FC = () => {
 
                   {application.status === 'pending' && (
                     <div className={styles.applicationActions}>
-                      <button 
+                      <button
                         className={styles.approveBtn}
-                        onClick={() => handleApproveApplication(application.id)}
+                        onClick={() => handleApproveApplication(application.id, application.type)}
                       >
                         <CheckCircle className={styles.actionIcon} />
                         Approve
                       </button>
-                      <button 
+                      <button
                         className={styles.denyBtn}
-                        onClick={() => handleDenyApplication(application.id)}
+                        onClick={() => handleDenyApplication(application.id, application.type)}
                       >
                         <XCircle className={styles.actionIcon} />
                         Deny
