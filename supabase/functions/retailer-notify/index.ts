@@ -95,7 +95,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'Neesh Applications <onboarding@resend.dev>',
-        to: ['hi@neesh.art'],
+        to: ['sagenwanne5@gmail.com'], // Use verified email for testing
         subject: subject,
         html: html,
       }),
@@ -114,7 +114,7 @@ serve(async (req) => {
     const confirmationHtml = `
       <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;max-width:600px;margin:0 auto;padding:20px;">
         <div style="text-align:center;margin-bottom:30px;">
-          <h1 style="color:#2563eb;font-size:24px;margin:0;">NEESH</h1>
+          <img src="https://neesh.art/NEESH-logo-transparent.png.png" alt="NEESH Logo" style="height:60px;margin-bottom:10px;" />
           <p style="color:#6b7280;margin:5px 0 0 0;">Independent Magazine Platform</p>
         </div>
 
@@ -161,7 +161,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'Neesh Applications <applications@mail.neesh.art>',
-        to: [r.buyer_email],
+        to: ['sagenwanne5@gmail.com'], // Use verified email for testing
         subject: confirmationSubject,
         html: confirmationHtml,
       }),

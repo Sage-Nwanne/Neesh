@@ -1,0 +1,196 @@
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 320px;
+  max-width: 480px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  transform: translateX(100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.notification.visible {
+  transform: translateX(0);
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 12px;
+}
+
+.iconContainer {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.textContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.message {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.progressBar {
+  height: 3px;
+  background: #f3f4f6;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  width: 100%;
+  transform: translateX(-100%);
+  animation: progress linear forwards;
+}
+
+@keyframes progress {
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Success variant */
+.notification.success {
+  border-left: 4px solid #10b981;
+}
+
+.notification.success .icon {
+  color: #10b981;
+}
+
+.notification.success .progress {
+  background: #10b981;
+}
+
+/* Error variant */
+.notification.error {
+  border-left: 4px solid #ef4444;
+}
+
+.notification.error .icon {
+  color: #ef4444;
+}
+
+.notification.error .progress {
+  background: #ef4444;
+}
+
+/* Warning variant */
+.notification.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.notification.warning .icon {
+  color: #f59e0b;
+}
+
+.notification.warning .progress {
+  background: #f59e0b;
+}
+
+/* Info variant */
+.notification.info {
+  border-left: 4px solid #3b82f6;
+}
+
+.notification.info .icon {
+  color: #3b82f6;
+}
+
+.notification.info .progress {
+  background: #3b82f6;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .notification {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    max-width: none;
+    transform: translateY(-100%);
+    top: 20px;
+  }
+
+  .notification.visible {
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .notification {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .title {
+    color: #f9fafb;
+  }
+
+  .message {
+    color: #d1d5db;
+  }
+
+  .closeButton {
+    color: #9ca3af;
+  }
+
+  .closeButton:hover {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  .progressBar {
+    background: #374151;
+  }
+}

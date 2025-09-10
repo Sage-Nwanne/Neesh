@@ -215,9 +215,43 @@ router.put('/applications/:id/approve', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { type } = req.body; // 'publisher' or 'retailer'
-    const reviewedBy = req.user?.userId || 'admin'; // Get from authenticated user
+    const reviewedBy = req.user?.userId || 'admin';
 
-    // Call the application-decision edge function
+    // Get application data first
+    const tableName = type === 'retailer' ? 'retailer_applications' : 'publisher_applications';
+    const { data: application, error: fetchError } = await supabase
+      .from(tableName)
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    // Update application status
+    const updateData = {
+      status: 'approved',
+      reviewed_at: new Date().toISOString()
+    };
+
+    // Only add reviewed_by if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (uuidRegex.test(reviewedBy)) {
+      updateData.reviewed_by = reviewedBy;
+    }
+
+    const { error: updateError } = await supabase
+      .from(tableName)
+      .update(updateData)
+      .eq('id', id);
+
+    if (updateError) {
+      console.error('Database update error:', updateError);
+      return res.status(500).json({ message: 'Failed to update application status' });
+    }
+
+    // Send approval email using Edge Function
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -235,18 +269,18 @@ router.put('/applications/:id/approve', requireAdmin, async (req, res) => {
       }),
     });
 
-    if (!edgeFunctionResponse.ok) {
+    let emailResult = { success: false, emailId: null };
+    if (edgeFunctionResponse.ok) {
+      emailResult = await edgeFunctionResponse.json();
+    } else {
       const errorText = await edgeFunctionResponse.text();
       console.error('Edge function error:', errorText);
-      return res.status(500).json({ message: 'Failed to process approval' });
     }
-
-    const result = await edgeFunctionResponse.json();
 
     res.json({
       message: 'Application approved successfully',
-      emailSent: result.success,
-      emailId: result.emailId
+      emailSent: emailResult.success,
+      emailId: emailResult.emailId || null
     });
   } catch (error) {
     console.error('Approve application error:', error);

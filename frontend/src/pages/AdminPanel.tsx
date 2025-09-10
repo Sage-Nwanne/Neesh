@@ -6,6 +6,8 @@ import ApplicationDetailModal from '../components/admin/ApplicationDetailModal';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import { adminApi, type Application, type ReportedPublisher, type AdminMessage } from '../services/adminApi';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import Notification from '../components/Notification';
+import { useNotification } from '../hooks/useNotification';
 import {
   Users,
   FileText,
@@ -40,6 +42,9 @@ const AdminPanel: React.FC = () => {
 
   // Analytics tracking
   const { trackDashboardView, trackApplicationApproval, trackApplicationDenial } = useAnalytics();
+
+  // Notification system
+  const { notification, showSuccess, showError, hideNotification } = useNotification();
 
   // Load data from API
   useEffect(() => {
@@ -83,10 +88,16 @@ const AdminPanel: React.FC = () => {
       trackApplicationApproval(type, id);
 
       // Show success message
-      alert(`${type.charAt(0).toUpperCase() + type.slice(1)} application approved successfully! Invitation email sent.`);
+      showSuccess(
+        'Application Approved!',
+        `${type.charAt(0).toUpperCase() + type.slice(1)} application approved successfully. Invitation email sent.`
+      );
     } catch (error) {
       console.error('Error approving application:', error);
-      alert('Failed to approve application. Please try again.');
+      showError(
+        'Approval Failed',
+        'Failed to approve application. Please try again.'
+      );
     }
   };
 
@@ -103,10 +114,16 @@ const AdminPanel: React.FC = () => {
       trackApplicationDenial(type, id);
 
       // Show success message
-      alert(`${type.charAt(0).toUpperCase() + type.slice(1)} application denied successfully. Notification email sent.`);
+      showSuccess(
+        'Application Denied',
+        `${type.charAt(0).toUpperCase() + type.slice(1)} application denied successfully. Notification email sent.`
+      );
     } catch (error) {
       console.error('Error denying application:', error);
-      alert('Failed to deny application. Please try again.');
+      showError(
+        'Denial Failed',
+        'Failed to deny application. Please try again.'
+      );
     }
   };
 
@@ -118,7 +135,10 @@ const AdminPanel: React.FC = () => {
       setShowApplicationDetail(true);
     } catch (error) {
       console.error('Error fetching application details:', error);
-      alert('Failed to load application details. Please try again.');
+      showError(
+        'Loading Failed',
+        'Failed to load application details. Please try again.'
+      );
     }
   };
 
@@ -617,6 +637,15 @@ const AdminPanel: React.FC = () => {
         }}
         onApprove={handleApproveApplication}
         onDeny={handleDenyApplication}
+      />
+
+      {/* Notification */}
+      <Notification
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+        isVisible={notification.isVisible}
+        onClose={hideNotification}
       />
     </div>
   );

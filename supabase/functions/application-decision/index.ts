@@ -47,14 +47,21 @@ serve(async (req) => {
     }
 
     // Update application status
+    const updateData: any = {
+      status: decision,
+      reviewed_at: new Date().toISOString(),
+      ...(denialReason && { denial_reason: denialReason })
+    }
+
+    // Only add reviewed_by if it's a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    if (uuidRegex.test(reviewedBy)) {
+      updateData.reviewed_by = reviewedBy
+    }
+
     const { error: updateError } = await supabaseClient
       .from(tableName)
-      .update({
-        status: decision,
-        reviewed_at: new Date().toISOString(),
-        reviewed_by: reviewedBy,
-        ...(denialReason && { denial_reason: denialReason })
-      })
+      .update(updateData)
       .eq('id', applicationId)
 
     if (updateError) {
@@ -86,10 +93,17 @@ serve(async (req) => {
         html = `
           <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;max-width:600px;margin:0 auto;padding:20px;">
             <div style="text-align:center;margin-bottom:30px;">
-              <h1 style="color:#2563eb;font-size:24px;margin:0;">NEESH</h1>
+              <img src="https://neesh.art/NEESH-logo-transparent.png.png" alt="NEESH Logo" style="height:60px;margin-bottom:10px;" />
               <p style="color:#6b7280;margin:5px 0 0 0;">Independent Magazine Platform</p>
             </div>
-            
+
+            <div style="text-align:center;margin-bottom:30px;">
+              <video width="400" height="225" controls style="border-radius:8px;max-width:100%;">
+                <source src="https://neesh.art/Neesh_Brand_Video.mp4" type="video/mp4">
+                Your email client doesn't support video playback.
+              </video>
+            </div>
+
             <h2 style="color:#16a34a;font-size:20px;margin-bottom:20px;">🎉 Congratulations! Your application has been approved!</h2>
             
             <p style="color:#374151;margin-bottom:15px;">Hi ${applicantName},</p>
@@ -137,7 +151,7 @@ serve(async (req) => {
         html = `
           <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;max-width:600px;margin:0 auto;padding:20px;">
             <div style="text-align:center;margin-bottom:30px;">
-              <h1 style="color:#2563eb;font-size:24px;margin:0;">NEESH</h1>
+              <img src="https://neesh.art/NEESH-logo-transparent.png.png" alt="NEESH Logo" style="height:60px;margin-bottom:10px;" />
               <p style="color:#6b7280;margin:5px 0 0 0;">Independent Magazine Platform</p>
             </div>
             
@@ -191,10 +205,17 @@ serve(async (req) => {
         html = `
           <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;max-width:600px;margin:0 auto;padding:20px;">
             <div style="text-align:center;margin-bottom:30px;">
-              <h1 style="color:#2563eb;font-size:24px;margin:0;">NEESH</h1>
+              <img src="https://neesh.art/NEESH-logo-transparent.png.png" alt="NEESH Logo" style="height:60px;margin-bottom:10px;" />
               <p style="color:#6b7280;margin:5px 0 0 0;">Independent Magazine Platform</p>
             </div>
-            
+
+            <div style="text-align:center;margin-bottom:30px;">
+              <video width="400" height="225" controls style="border-radius:8px;max-width:100%;">
+                <source src="https://neesh.art/Neesh_Brand_Video.mp4" type="video/mp4">
+                Your email client doesn't support video playback.
+              </video>
+            </div>
+
             <h2 style="color:#16a34a;font-size:20px;margin-bottom:20px;">🎉 Congratulations! Your application has been approved!</h2>
             
             <p style="color:#374151;margin-bottom:15px;">Hi ${applicantName},</p>
@@ -242,7 +263,7 @@ serve(async (req) => {
         html = `
           <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;max-width:600px;margin:0 auto;padding:20px;">
             <div style="text-align:center;margin-bottom:30px;">
-              <h1 style="color:#2563eb;font-size:24px;margin:0;">NEESH</h1>
+              <img src="https://neesh.art/NEESH-logo-transparent.png.png" alt="NEESH Logo" style="height:60px;margin-bottom:10px;" />
               <p style="color:#6b7280;margin:5px 0 0 0;">Independent Magazine Platform</p>
             </div>
             
@@ -286,7 +307,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'Neesh Applications <applications@mail.neesh.art>',
-        to: [recipientEmail],
+        to: ['sagenwanne5@gmail.com'], // Use verified email for testing
         subject: subject,
         html: html,
       }),
