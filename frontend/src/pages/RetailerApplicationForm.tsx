@@ -10,7 +10,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { Slider } from '../components/ui/slider';
 // Note: We'll use simple alert for now since toast hook isn't available
 import { Store, MapPin, User, Briefcase, Palette } from 'lucide-react';
-import { supabase } from '../integrations/supabase/client';
+import { config } from '../lib/config';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
 import styles from './RetailerApplicationForm.module.css';
@@ -154,17 +154,29 @@ export default function RetailerApplicationForm() {
   const prev = () => setStep(s => Math.max(s - 1, 0));
 
   const onSubmit = async (data: RetailerForm) => {
-    if (!user?.id) {
-      toast({ title: 'Sign in required', description: 'Please sign in before submitting.', variant: 'destructive' });
-      return;
-    }
     try {
-      const { error } = await supabase.from('retailer_applications').insert({ user_id: user.id, ...data });
-      if (error) throw error;
+      console.log('🔄 Submitting retailer application...');
+
+      const response = await fetch(`${config.api.baseUrl}/retailer/application`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit application');
+      }
+
+      const result = await response.json();
+      console.log('✅ Application submitted successfully:', result);
+
       toast({ title: 'Application submitted!', description: "We’ll review and respond within 2–3 business days." });
       navigate('/');
     } catch (err: any) {
-      console.error(err);
+      console.error('❌ Application submission error:', err);
       toast({ title: 'Submission failed', description: err?.message ?? 'An error occurred.', variant: 'destructive' });
     }
   };

@@ -115,7 +115,7 @@ const ApplicationPage: React.FC = () => {
               Apply to List a Magazine
             </Link>
             <Link
-              to="/auth"
+              to="/retailer-application"
               style={navLinkStyles}
               onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
               onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
@@ -163,7 +163,7 @@ const ApplicationPage: React.FC = () => {
         {/* Mobile Navigation Menu */}
         <div style={mobileMenuStyles}>
           <Link to="/publisher-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Apply to List a Magazine</Link>
-          <Link to="/auth" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
+          <Link to="/retailer-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
           <Link to="/faq" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>FAQ</Link>
           <a href="mailto:hi@neesh.art" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Talk to the Team</a>
           <Link to="/why-neesh" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Why Neesh</Link>

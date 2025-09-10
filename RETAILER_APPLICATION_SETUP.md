@@ -75,13 +75,13 @@ CREATE TRIGGER retailer_application_notify
 ```
 
 ### 4. Frontend Integration
-The retailer application form is now integrated into the `/auth` route and will be accessible via:
+The retailer application form is now integrated into the `/retailer-application` route and will be accessible via:
 - "Request Access for Your Shop" navbar link
 - "Request Retailer Access" CTA button on homepage
 
 ## Application Flow
 
-1. **User visits `/auth`** → Sees retailer application form
+1. **User visits `/retailer-application`** → Sees retailer application form
 2. **Completes 5-step form** → Data validated at each step
 3. **Submits application** → Data saved to `retailer_applications` table
 4. **Application number generated** → Format: RS-2025-000001
@@ -133,7 +133,7 @@ interested_genres TEXT[] -- Array of strings
 
 ## Testing
 
-1. **Navigate to `/auth`** on your site
+1. **Navigate to `/retailer-application`** on your site
 2. **Fill out the application form** step by step
 3. **Submit the application**
 4. **Check Supabase database** for the new record

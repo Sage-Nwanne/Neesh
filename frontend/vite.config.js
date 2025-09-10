@@ -17,4 +17,13 @@ export default defineConfig({
       '@/integrations': path.resolve(__dirname, './src/integrations'),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })

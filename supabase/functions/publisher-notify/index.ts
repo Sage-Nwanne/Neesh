@@ -39,49 +39,53 @@ serve(async (req) => {
       )
     }
 
-    const subject = `🆕 Retailer Application ${r.application_number || ''} — ${r.shop_name || 'Unknown Shop'}`
+    const subject = `📚 Publisher Application — ${r.magazine_title || 'Unknown Magazine'}`
 
     const html = `
       <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5">
-        <h2>New Retailer Application</h2>
-        <p><strong>Application ID:</strong> ${r.application_number ?? '—'}</p>
+        <h2>New Publisher Application</h2>
+        <p><strong>Application ID:</strong> ${r.id ?? '—'}</p>
         
-        <h3>Shop Information</h3>
-        <p><strong>Shop Name:</strong> ${r.shop_name ?? '—'}</p>
-        <p><strong>Store Category:</strong> ${r.store_category ?? '—'}</p>
-        <p><strong>Store Type:</strong> ${r.store_type ?? '—'}</p>
-        <p><strong>Store Size:</strong> ${r.store_size ?? '—'}</p>
-        <p><strong>Years in Business:</strong> ${r.years_in_business ?? '—'}</p>
+        <h3>Publisher Information</h3>
+        <p><strong>Name:</strong> ${r.first_name ?? '—'} ${r.last_name ?? '—'}</p>
+        <p><strong>Email:</strong> ${r.email ?? '—'}</p>
+        <p><strong>Business Name:</strong> ${r.business_name ?? '—'}</p>
         
-        <h3>Address</h3>
-        <p><strong>Address:</strong> ${r.business_address_line_1 ?? '—'}</p>
-        ${r.business_address_line_2 ? `<p><strong>Address Line 2:</strong> ${r.business_address_line_2}</p>` : ''}
-        <p><strong>City:</strong> ${r.business_city ?? '—'}</p>
-        <p><strong>State:</strong> ${r.business_state ?? '—'}</p>
-        <p><strong>ZIP:</strong> ${r.business_zip_code ?? '—'}</p>
-        <p><strong>Country:</strong> ${r.business_country ?? '—'}</p>
+        <h3>Magazine Details</h3>
+        <p><strong>Magazine Title:</strong> ${r.magazine_title ?? '—'}</p>
+        <p><strong>Publication Type:</strong> ${r.publication_type ?? '—'}</p>
+        <p><strong>Issue Number:</strong> ${r.issue_number ?? '—'}</p>
+        <p><strong>Issue Frequency:</strong> ${r.issue_frequency ?? '—'}</p>
+        <p><strong>Description:</strong> ${r.description ?? '—'}</p>
         
-        <h3>Contact Information</h3>
-        <p><strong>Buyer Name:</strong> ${r.buyer_name ?? '—'}</p>
-        <p><strong>Email:</strong> ${r.buyer_email ?? '—'}</p>
-        <p><strong>Phone:</strong> ${r.buyer_phone ?? '—'}</p>
+        <h3>Business Information</h3>
+        <p><strong>Website/Social:</strong> ${r.social_website_link ?? '—'}</p>
+        <p><strong>Print Run:</strong> ${r.print_run ?? '—'}</p>
+        <p><strong>Available Quantity:</strong> ${r.available_quantity ?? '—'}</p>
+        <p><strong>Wholesale Price:</strong> $${r.wholesale_price ?? '—'}</p>
+        <p><strong>Suggested Retail Price:</strong> $${r.suggested_retail_price ?? '—'}</p>
         
-        <h3>Business Operations</h3>
-        <p><strong>POS System:</strong> ${r.pos_system ?? '—'}</p>
-        <p><strong>Monthly Budget:</strong> $${r.monthly_magazine_budget ?? '—'}</p>
-        <p><strong>Delivery Frequency:</strong> ${r.preferred_delivery_frequency ?? '—'}</p>
-        <p><strong>Current Sources:</strong> ${Array.isArray(r.current_magazine_sources) ? r.current_magazine_sources.join(', ') : '—'}</p>
-        <p><strong>Current Titles:</strong> ${r.current_magazine_titles ?? '—'}</p>
+        <h3>Sales & Distribution</h3>
+        <p><strong>Has Sold Before:</strong> ${r.has_sold_before ? 'Yes' : 'No'}</p>
+        <p><strong>Distribution Channels:</strong> ${Array.isArray(r.distribution_channels) ? r.distribution_channels.join(', ') : r.distribution_channels ?? '—'}</p>
+        <p><strong>Copies Sold Estimate:</strong> ${r.copies_sold_estimate ?? '—'}</p>
+        <p><strong>Sales Feedback:</strong> ${r.quotes_feedback ?? '—'}</p>
         
-        <h3>Store Profile</h3>
-        <p><strong>Target Customers:</strong> ${Array.isArray(r.target_customers) ? r.target_customers.join(', ') : '—'}</p>
-        <p><strong>Aesthetic Preferences:</strong> ${Array.isArray(r.aesthetic_preferences) ? r.aesthetic_preferences.join(', ') : '—'}</p>
-        <p><strong>Interested Genres:</strong> ${Array.isArray(r.interested_genres) ? r.interested_genres.join(', ') : '—'}</p>
+        <h3>Fulfillment</h3>
+        <p><strong>Fulfillment Method:</strong> ${r.fulfillment_method ?? '—'}</p>
+        <p><strong>Shipping Location:</strong> ${r.shipping_city ?? '—'}, ${r.shipping_state ?? '—'}, ${r.shipping_country ?? '—'}</p>
+        <p><strong>Return Policy:</strong> ${r.accepts_returns ?? '—'}</p>
         
-        <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e5e7eb;">
-        <p style="color: #6b7280; font-size: 12px;">
-          Submitted: ${new Date(r.created_at).toLocaleString()}<br>
-          Application ID: ${r.application_number ?? r.id}
+        <h3>Additional Details</h3>
+        <p><strong>Specifications:</strong> ${r.specs ?? '—'}</p>
+        <p><strong>Cover Image:</strong> ${r.cover_image_url ? `<a href="${r.cover_image_url}">View Image</a>` : '—'}</p>
+        <p><strong>Volume Pricing:</strong> ${r.volume_pricing_tiers ? JSON.stringify(r.volume_pricing_tiers) : '—'}</p>
+        
+        <p><strong>Submitted:</strong> ${new Date(r.created_at).toLocaleString()}</p>
+        
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+        <p style="color: #666; font-size: 12px;">
+          Review this application in your <a href="https://your-admin-dashboard.com/applications">admin dashboard</a>.
         </p>
       </div>
     `
@@ -110,7 +114,7 @@ serve(async (req) => {
     console.log('Admin email sent successfully:', adminEmailResult)
 
     // Send confirmation email to applicant
-    const confirmationSubject = `🏪 Application Received - ${r.shop_name || 'Your Shop'}`
+    const confirmationSubject = `📚 Application Received - ${r.magazine_title || 'Your Magazine'}`
     const confirmationHtml = `
       <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;max-width:600px;margin:0 auto;padding:20px;">
         <div style="text-align:center;margin-bottom:30px;">
@@ -120,19 +124,19 @@ serve(async (req) => {
 
         <h2 style="color:#1f2937;font-size:20px;margin-bottom:20px;">Thank you for your application!</h2>
 
-        <p style="color:#374151;margin-bottom:15px;">Hi ${r.buyer_name || 'there'},</p>
+        <p style="color:#374151;margin-bottom:15px;">Hi ${r.first_name || 'there'},</p>
 
         <p style="color:#374151;margin-bottom:15px;">
-          We've successfully received your retailer application for <strong>${r.shop_name || 'your shop'}</strong>.
+          We've successfully received your publisher application for <strong>${r.magazine_title || 'your magazine'}</strong>.
           Our team will review your submission and get back to you within 3-5 business days.
         </p>
 
         <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:20px;margin:20px 0;">
           <h3 style="color:#1f2937;font-size:16px;margin:0 0 10px 0;">Application Summary</h3>
-          <p style="color:#6b7280;margin:5px 0;"><strong>Shop Name:</strong> ${r.shop_name || '—'}</p>
-          <p style="color:#6b7280;margin:5px 0;"><strong>Buyer:</strong> ${r.buyer_name || '—'}</p>
-          <p style="color:#6b7280;margin:5px 0;"><strong>Store Type:</strong> ${r.store_type || '—'}</p>
-          <p style="color:#6b7280;margin:5px 0;"><strong>Application Number:</strong> ${r.application_number || '—'}</p>
+          <p style="color:#6b7280;margin:5px 0;"><strong>Magazine Title:</strong> ${r.magazine_title || '—'}</p>
+          <p style="color:#6b7280;margin:5px 0;"><strong>Publisher:</strong> ${r.first_name || '—'} ${r.last_name || '—'}</p>
+          <p style="color:#6b7280;margin:5px 0;"><strong>Business:</strong> ${r.business_name || '—'}</p>
+          <p style="color:#6b7280;margin:5px 0;"><strong>Application ID:</strong> ${r.id || '—'}</p>
         </div>
 
         <p style="color:#374151;margin-bottom:15px;">
@@ -160,8 +164,8 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Neesh Applications <applications@mail.neesh.art>',
-        to: [r.buyer_email],
+        from: 'Neesh Applications <onboarding@resend.dev>',
+        to: [r.email],
         subject: confirmationSubject,
         html: confirmationHtml,
       }),
@@ -189,7 +193,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error in retailer-notify function:', error)
+    console.error('Error in publisher-notify function:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       {

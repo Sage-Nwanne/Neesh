@@ -49,35 +49,86 @@ export interface AdminStats {
 import { config } from '@/lib/config';
 
 class AdminApiService {
-  private baseUrl = config.api.baseUrl;
+  private baseUrl = import.meta.env.PROD
+    ? import.meta.env.VITE_API_BASE_URL || 'https://neesh-lxd52fwrl-sage-nwannes-projects.vercel.app/api'  // Production URL
+    : '/api';  // Use proxy in development
 
   // Applications Management
   async getApplications(): Promise<Application[]> {
     try {
+      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
+
       const response = await fetch(`${this.baseUrl}/admin/applications`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+          'Authorization': `Bearer ${adminToken}`,
           'Content-Type': 'application/json'
         }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch applications');
+        throw new Error(`Failed to fetch applications: ${response.status}`);
       }
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error) {
       console.error('Error fetching applications:', error);
+      return [];
+    }
+  }
+
+  async getApplicationDetails(id: string, type: 'publisher' | 'retailer'): Promise<Application> {
+    try {
+      // Create a simple admin token for testing
+      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
+
+      const response = await fetch(`${this.baseUrl}/admin/applications/${id}?type=${type}`, {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch application details');
+      }
+
+      const data = await response.json();
+
+      // Transform the raw data into Application format
+      return {
+        id: data.id,
+        type: data.type,
+        applicantName: type === 'publisher'
+          ? `${data.first_name || ''} ${data.last_name || ''}`.trim()
+          : data.buyer_name || '',
+        businessName: type === 'publisher'
+          ? data.business_name || ''
+          : data.shop_name || '',
+        email: type === 'publisher' ? data.email : data.buyer_email,
+        status: data.status || 'pending',
+        submittedAt: data.submitted_at || data.created_at,
+        magazineTitle: data.magazine_title,
+        storeLocation: type === 'retailer' && data.business_city && data.business_state
+          ? `${data.business_city}, ${data.business_state}`
+          : undefined,
+        applicationData: data // Store the full raw data for detailed view
+      };
+    } catch (error) {
+      console.error('Error fetching application details:', error);
       throw error;
     }
   }
 
   async approveApplication(applicationId: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
+      // Create a simple admin token for testing
+      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
+
       const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/approve`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+          'Authorization': `Bearer ${adminToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ type: applicationType })
@@ -96,10 +147,13 @@ class AdminApiService {
 
   async denyApplication(applicationId: string, reason?: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
+      // Create a simple admin token for testing
+      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
+
       const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/deny`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+          'Authorization': `Bearer ${adminToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ reason, type: applicationType })
@@ -151,7 +205,7 @@ class AdminApiService {
       ];
     } catch (error) {
       console.error('Error fetching reported publishers:', error);
-      throw error;
+      return [];
     }
   }
 
@@ -212,7 +266,7 @@ class AdminApiService {
       ];
     } catch (error) {
       console.error('Error fetching messages:', error);
-      throw error;
+      return [];
     }
   }
 

@@ -41,7 +41,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/retailer-application" replace />;
   }
 
   if (requiredRole && user.role !== requiredRole) {
@@ -57,7 +57,7 @@ export const AppRouter: React.FC = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/retailer-application" element={<AuthPage />} />
         <Route path="/publisher-application" element={<PublisherApplicationPage />} />
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/faq" element={<FAQPage />} />

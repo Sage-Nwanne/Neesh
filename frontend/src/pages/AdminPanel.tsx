@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './AdminPanel.module.css';
 import AdminLogin from '../components/AdminLogin';
+import ApplicationDetailModal from '../components/admin/ApplicationDetailModal';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import { adminApi, type Application, type ReportedPublisher, type AdminMessage } from '../services/adminApi';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -24,6 +25,8 @@ import {
 const AdminPanel: React.FC = () => {
   const { isAuthenticated, adminUser, isLoading, login, logout } = useAdminAuth();
   const [activeTab, setActiveTab] = useState<'applications' | 'reports' | 'messages' | 'chatbot'>('applications');
+
+  console.log('🔍 AdminPanel render - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading, 'adminUser:', adminUser);
   const [applications, setApplications] = useState<Application[]>([]);
   const [reportedPublishers, setReportedPublishers] = useState<ReportedPublisher[]>([]);
   const [messages, setMessages] = useState<AdminMessage[]>([]);
@@ -32,31 +35,38 @@ const AdminPanel: React.FC = () => {
   const [showAllReports, setShowAllReports] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<Array<{type: 'user' | 'bot', message: string}>>([]);
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [showApplicationDetail, setShowApplicationDetail] = useState(false);
 
   // Analytics tracking
   const { trackDashboardView, trackApplicationApproval, trackApplicationDenial } = useAnalytics();
 
   // Load data from API
   useEffect(() => {
+    console.log('🔄 AdminPanel useEffect triggered, isAuthenticated:', isAuthenticated);
     if (isAuthenticated) {
       loadAdminData();
-      trackDashboardView('admin');
     }
-  }, [isAuthenticated, trackDashboardView]);
+  }, [isAuthenticated]);
 
   const loadAdminData = async () => {
     try {
+      console.log('🔄 Loading admin data...');
       const [applicationsData, reportsData, messagesData] = await Promise.all([
         adminApi.getApplications(),
         adminApi.getReportedPublishers(),
         adminApi.getMessages()
       ]);
 
+      console.log('✅ Applications loaded:', applicationsData.length, applicationsData);
+      console.log('✅ Reports loaded:', reportsData.length);
+      console.log('✅ Messages loaded:', messagesData.length);
+
       setApplications(applicationsData);
       setReportedPublishers(reportsData);
       setMessages(messagesData);
     } catch (error) {
-      console.error('Error loading admin data:', error);
+      console.error('❌ Error loading admin data:', error);
     }
   };
 
@@ -71,14 +81,18 @@ const AdminPanel: React.FC = () => {
 
       // Track the approval
       trackApplicationApproval(type, id);
+
+      // Show success message
+      alert(`${type.charAt(0).toUpperCase() + type.slice(1)} application approved successfully! Invitation email sent.`);
     } catch (error) {
       console.error('Error approving application:', error);
+      alert('Failed to approve application. Please try again.');
     }
   };
 
-  const handleDenyApplication = async (id: string, type: 'publisher' | 'retailer' = 'publisher') => {
+  const handleDenyApplication = async (id: string, type: 'publisher' | 'retailer' = 'publisher', reason?: string) => {
     try {
-      await adminApi.denyApplication(id, undefined, type);
+      await adminApi.denyApplication(id, reason, type);
       setApplications(prev =>
         prev.map(app =>
           app.id === id ? { ...app, status: 'denied' as const } : app
@@ -87,8 +101,24 @@ const AdminPanel: React.FC = () => {
 
       // Track the denial
       trackApplicationDenial(type, id);
+
+      // Show success message
+      alert(`${type.charAt(0).toUpperCase() + type.slice(1)} application denied successfully. Notification email sent.`);
     } catch (error) {
       console.error('Error denying application:', error);
+      alert('Failed to deny application. Please try again.');
+    }
+  };
+
+  const handleViewApplicationDetails = async (application: Application) => {
+    try {
+      // Fetch detailed application data
+      const detailedApplication = await adminApi.getApplicationDetails(application.id, application.type);
+      setSelectedApplication(detailedApplication);
+      setShowApplicationDetail(true);
+    } catch (error) {
+      console.error('Error fetching application details:', error);
+      alert('Failed to load application details. Please try again.');
     }
   };
 
@@ -274,58 +304,141 @@ const AdminPanel: React.FC = () => {
             </div>
 
             <div className={styles.applicationsList}>
-              {filteredApplications.map(application => (
+              {console.log('🎯 Rendering applications:', filteredApplications.length, filteredApplications)}
+              {filteredApplications.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <p>No applications found matching your criteria.</p>
+                  <p>Total applications loaded: {applications.length}</p>
+                </div>
+              ) : (
+                filteredApplications.map(application => (
                 <div key={application.id} className={styles.applicationCard}>
                   <div className={styles.applicationHeader}>
+                    {application.status === 'pending' && (
+                      <div className={styles.quickActions}>
+                        <button
+                          className={styles.quickApproveBtn}
+                          onClick={() => handleApproveApplication(application.id, application.type)}
+                          title="Quick Approve"
+                        >
+                          <CheckCircle size={16} />
+                        </button>
+                        <button
+                          className={styles.quickDenyBtn}
+                          onClick={() => handleDenyApplication(application.id, application.type)}
+                          title="Quick Deny"
+                        >
+                          <XCircle size={16} />
+                        </button>
+                      </div>
+                    )}
+
                     <div className={styles.applicantInfo}>
-                      <h3>{application.applicantName}</h3>
+                      <h3>
+                        {application.type === 'publisher' ? 'Publisher' : 'Retailer'} - {application.applicantName}
+                      </h3>
                       <p className={styles.businessName}>{application.businessName}</p>
                       <span className={`${styles.badge} ${styles[application.type]}`}>
                         {application.type}
                       </span>
                     </div>
+
                     <div className={styles.applicationStatus}>
                       <span className={`${styles.statusBadge} ${styles[application.status]}`}>
                         {application.status}
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className={styles.applicationDetails}>
-                    <p><strong>Email:</strong> {application.email}</p>
-                    <p><strong>Submitted:</strong> {new Date(application.submittedAt).toLocaleDateString()}</p>
-                    {application.magazineTitle && (
-                      <p><strong>Magazine:</strong> {application.magazineTitle}</p>
+                    {application.type === 'publisher' ? (
+                      // Publisher-specific information (Account Information from form)
+                      <>
+                        <div className={styles.detailRow}>
+                          <strong>Email:</strong> {application.email}
+                        </div>
+                        <div className={styles.detailRow}>
+                          <strong>Business Name:</strong> {application.businessName}
+                        </div>
+                        {application.magazineTitle && (
+                          <div className={styles.detailRow}>
+                            <strong>Magazine Title:</strong> {application.magazineTitle}
+                          </div>
+                        )}
+                        {application.applicationData?.publication_type && (
+                          <div className={styles.detailRow}>
+                            <strong>Type:</strong> {application.applicationData.publication_type}
+                          </div>
+                        )}
+                        {application.applicationData?.description && (
+                          <div className={styles.detailRow}>
+                            <strong>Description:</strong> {application.applicationData.description.substring(0, 100)}...
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      // Retailer-specific information (Contact Information from form)
+                      <>
+                        <div className={styles.detailRow}>
+                          <strong>Buyer Name:</strong> {application.applicantName}
+                        </div>
+                        <div className={styles.detailRow}>
+                          <strong>Email:</strong> {application.email}
+                        </div>
+                        {application.applicationData?.buyer_phone && (
+                          <div className={styles.detailRow}>
+                            <strong>Phone:</strong> {application.applicationData.buyer_phone}
+                          </div>
+                        )}
+                        {application.applicationData?.store_type && (
+                          <div className={styles.detailRow}>
+                            <strong>Store Type:</strong> {application.applicationData.store_type}
+                          </div>
+                        )}
+                        {application.applicationData?.business_city && application.applicationData?.business_state && (
+                          <div className={styles.detailRow}>
+                            <strong>Location:</strong> {application.applicationData.business_city}, {application.applicationData.business_state}
+                          </div>
+                        )}
+                      </>
                     )}
-                    {application.storeLocation && (
-                      <p><strong>Location:</strong> {application.storeLocation}</p>
-                    )}
+
+                    <div className={styles.detailRow}>
+                      <strong>Submitted:</strong> {new Date(application.submittedAt).toLocaleDateString()}
+                    </div>
                   </div>
 
-                  {application.status === 'pending' && (
-                    <div className={styles.applicationActions}>
-                      <button
-                        className={styles.approveBtn}
-                        onClick={() => handleApproveApplication(application.id, application.type)}
-                      >
-                        <CheckCircle className={styles.actionIcon} />
-                        Approve
-                      </button>
-                      <button
-                        className={styles.denyBtn}
-                        onClick={() => handleDenyApplication(application.id, application.type)}
-                      >
-                        <XCircle className={styles.actionIcon} />
-                        Deny
-                      </button>
-                      <button className={styles.viewBtn}>
-                        <Eye className={styles.actionIcon} />
-                        View Details
-                      </button>
-                    </div>
-                  )}
+                  <div className={styles.applicationActions}>
+                    <button
+                      className={styles.viewBtn}
+                      onClick={() => handleViewApplicationDetails(application)}
+                    >
+                      <Eye className={styles.actionIcon} />
+                      View Details
+                    </button>
+
+                    {application.status === 'pending' && (
+                      <>
+                        <button
+                          className={styles.approveBtn}
+                          onClick={() => handleApproveApplication(application.id, application.type)}
+                        >
+                          <CheckCircle className={styles.actionIcon} />
+                          Accept
+                        </button>
+                        <button
+                          className={styles.denyBtn}
+                          onClick={() => handleDenyApplication(application.id, application.type)}
+                        >
+                          <XCircle className={styles.actionIcon} />
+                          Reject
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         )}
@@ -493,6 +606,18 @@ const AdminPanel: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Application Detail Modal */}
+      <ApplicationDetailModal
+        application={selectedApplication}
+        isOpen={showApplicationDetail}
+        onClose={() => {
+          setShowApplicationDetail(false);
+          setSelectedApplication(null);
+        }}
+        onApprove={handleApproveApplication}
+        onDeny={handleDenyApplication}
+      />
     </div>
   );
 };

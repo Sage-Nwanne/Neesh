@@ -4,6 +4,45 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// POST /api/retailer/application - Submit retailer application
+router.post('/application', async (req, res) => {
+  try {
+    console.log('📝 Received retailer application:', req.body);
+
+    const applicationData = req.body;
+
+    // Insert application into Supabase
+    const { data: result, error } = await supabase
+      .from('retailer_applications')
+      .insert([applicationData])
+      .select('id, shop_name, buyer_email')
+      .single();
+
+    if (error) {
+      console.error('❌ Error inserting retailer application:', error);
+      return res.status(500).json({
+        message: 'Failed to submit application',
+        error: error.message
+      });
+    }
+
+    console.log('✅ Retailer application submitted successfully:', result);
+
+    res.status(201).json({
+      message: 'Application submitted successfully',
+      applicationId: result.id,
+      shopName: result.shop_name,
+      email: result.buyer_email
+    });
+  } catch (error) {
+    console.error('❌ Retailer application error:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
 // GET /api/retailer/magazines - Get all available magazines
 router.get('/magazines', async (req, res) => {
   try {

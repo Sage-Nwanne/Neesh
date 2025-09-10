@@ -96,7 +96,7 @@ const RetailerSetupPage: React.FC = () => {
 
       // Show success message and redirect
       alert('Account created successfully! Please check your email to verify your account, then you can sign in.');
-      navigate('/auth?tab=signin');
+      navigate('/retailer-application?tab=signin');
 
     } catch (err: any) {
       console.error('Account creation error:', err);

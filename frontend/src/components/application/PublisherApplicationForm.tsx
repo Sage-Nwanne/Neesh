@@ -6,6 +6,7 @@ import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
 
 import { Palette, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { config } from '@/lib/config';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import styles from './PublisherApplicationForm.module.css';
@@ -420,17 +421,25 @@ const PublisherApplicationForm: React.FC = () => {
         status: 'pending'
       };
 
-      console.log('Submitting data to Supabase:', submissionData);
+      console.log('🔄 Submitting publisher application:', submissionData);
 
-      const { data: result, error } = await supabase
-        .from('publisher_applications')
-        .insert(submissionData)
-        .select('id, magazine_title')
-        .single();
+      const response = await fetch(`${config.api.baseUrl}/publisher/application`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit application');
+      }
 
-      console.log('Application submitted successfully:', result);
+      const result = await response.json();
+      console.log('✅ Application submitted successfully:', result);
+
+      // Email notification is handled automatically by database trigger
 
       // Show success and go to confirmation
       toast({ title: "Application submitted successfully! We'll review it and get back to you soon." });

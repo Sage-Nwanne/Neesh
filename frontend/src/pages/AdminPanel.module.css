@@ -261,6 +261,7 @@
   padding: 1.5rem;
   background: #fafbfc;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .applicationCard:hover {
@@ -273,6 +274,50 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
+  position: relative;
+}
+
+.quickActions {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.quickApproveBtn,
+.quickDenyBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quickApproveBtn {
+  background: #10b981;
+  color: white;
+}
+
+.quickApproveBtn:hover {
+  background: #059669;
+  transform: scale(1.1);
+}
+
+.quickDenyBtn {
+  background: #ef4444;
+  color: white;
+}
+
+.quickDenyBtn:hover {
+  background: #dc2626;
+  transform: scale(1.1);
 }
 
 .applicantInfo h3 {
@@ -353,6 +398,21 @@
   margin: 0.5rem 0;
   color: #495057;
   font-size: 0.9rem;
+}
+
+.detailRow {
+  margin: 0.5rem 0;
+  color: #495057;
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.detailRow strong {
+  color: #212529;
+  font-weight: 600;
+  min-width: 120px;
 }
 
 .applicationActions {

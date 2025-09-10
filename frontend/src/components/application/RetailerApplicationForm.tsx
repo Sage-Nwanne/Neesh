@@ -8,7 +8,7 @@ import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Checkbox } from '../ui/checkbox';
 import { Loader2, ChevronLeft, ChevronRight, X, Store, MapPin, Briefcase, Palette } from 'lucide-react';
-import { supabase } from '../../integrations/supabase/client';
+import { config } from '@/lib/config';
 import { toast } from '../../hooks/use-toast';
 import { useFormTracking, useAnalytics } from '@/hooks/useAnalytics';
 import Navbar from '../shared/Navbar';
@@ -191,9 +191,9 @@ const RetailerApplicationForm: React.FC = () => {
     formTracking.trackFormSubmit();
 
     try {
-      // Prepare data with all fields including arrays
+      // Prepare data for anonymous submission (no user_id required)
       const submissionData = {
-        // user_id: null, // Skip user_id for now since we don't have proper auth
+        // No user_id - this is an anonymous application
         shop_name: formData.shop_name,
         business_address_line_1: formData.business_address_line_1,
         business_address_line_2: formData.business_address_line_2,
@@ -217,29 +217,43 @@ const RetailerApplicationForm: React.FC = () => {
         current_magazine_sources: formData.current_magazine_sources,
         interested_genres: formData.interested_genres,
         // Note: current_magazine_titles is ARRAY in DB but string in form - convert it
-        current_magazine_titles: formData.current_magazine_titles ? [formData.current_magazine_titles] : []
+        current_magazine_titles: formData.current_magazine_titles ? [formData.current_magazine_titles] : [],
+        status: 'pending' // Set default status
       };
 
-      console.log('Submitting data:', submissionData);
+      console.log('🔄 Retailer Application - Submitting data:', submissionData);
 
-      const { data: result, error } = await supabase
-        .from('retailer_applications')
-        .insert(submissionData)
-        .select('id, shop_name')
-        .single();
+      const response = await fetch(`${config.api.baseUrl}/retailer/application`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit application');
+      }
+
+      const result = await response.json();
+      console.log('✅ Retailer Application submitted successfully:', result);
 
       // Store the application ID for the confirmation page
-      setApplicationId(result.id || 'N/A');
+      setApplicationId(result.applicationId || 'N/A');
+
+      // Email notification is handled automatically by database trigger
 
       // Track successful application submission
-      trackApplicationSubmission('retailer', result.id);
+      trackApplicationSubmission('retailer', result.applicationId);
+
+      // Show success toast
+      toast.success('Application submitted successfully! We\'ll review it and get back to you soon.');
 
       // Go to confirmation page (step 6)
       setCurrentStep(6);
     } catch (error: any) {
-      console.error('Submission error:', error);
+      console.error('❌ Retailer Application submission error:', error);
       formTracking.trackFormError(error.message || 'Submission failed');
       toast.error(`Submission failed: ${error.message || 'An error occurred'}`);
     } finally {
@@ -875,7 +889,7 @@ Guaranteed returns on trial issues
               Back
             </Button>
 
-            {currentStep < totalSteps ? (
+            {currentStep < 5 ? (
               <Button
                 onClick={nextStep}
                 className="flex items-center gap-2 px-8 py-3 text-base font-medium min-w-[120px] h-12 bg-black hover:bg-gray-800"
@@ -883,7 +897,7 @@ Guaranteed returns on trial issues
                 Next
                 <ChevronRight className="h-5 w-5" />
               </Button>
-            ) : (
+            ) : currentStep === 5 ? (
               <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
@@ -892,7 +906,7 @@ Guaranteed returns on trial issues
                 {isSubmitting && <Loader2 className="h-5 w-5 animate-spin" />}
                 Submit Application
               </Button>
-            )}
+            ) : null}
             </div>
             )}
           </div>

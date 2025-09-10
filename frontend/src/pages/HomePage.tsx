@@ -68,7 +68,7 @@ const Home = () => {
               <p>Magazines give a shop character. They spark conversations, set the vibe, and make customers linger. But clunky portals and risky bets have made them  a nightmare to stock. Neesh fixes that. 
 </p>
               <p className={styles.subText}>Browse curated titles, see clear margins upfront, and place small trial orders. Give your shoppers the culture they love while keeping business healthy.</p>
-              <Link to="/auth" className={styles.propLink}>
+              <Link to="/retailer-application" className={styles.propLink}>
                 Request Access for Your Shop
               </Link>
             </div>
@@ -179,7 +179,7 @@ const Home = () => {
         <Link to="/publisher-application" className={styles.publisherBtn}>
           Apply as a Publisher
         </Link>
-        <Link to="/auth" className={styles.retailerBtn}>
+        <Link to="/retailer-application" className={styles.retailerBtn}>
           Request Retailer Access
         </Link>
         <p className={styles.questionsText}>Have questions?</p>

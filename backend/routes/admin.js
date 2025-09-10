@@ -25,32 +25,97 @@ const sendRetailerInvitationEmail = async (application) => {
     console.log(`Invitation Link: ${invitationLink}`);
     console.log('================================');
 
-    // TODO: Replace with actual email service
-    // const emailResponse = await fetch('https://api.resend.com/emails', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     from: 'Neesh Team <team@neesh.art>',
-    //     to: [application.buyer_email],
-    //     subject: `Welcome to Neesh! Set up your retailer account for ${application.shop_name}`,
-    //     html: `
-    //       <h2>Congratulations! Your retailer application has been approved.</h2>
-    //       <p>Welcome to the Neesh marketplace, ${application.buyer_name}!</p>
-    //       <p>Your application for <strong>${application.shop_name}</strong> has been approved.</p>
-    //       <p><a href="${invitationLink}" style="background: #000; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Set Up Your Account</a></p>
-    //       <p>This link will allow you to create your login credentials and access your retailer dashboard.</p>
-    //       <p>Application ID: ${application.application_number}</p>
-    //     `
-    //   }),
-    // });
+    // Send actual email via Resend
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Neesh Team <team@mail.neesh.art>',
+        to: [application.buyer_email],
+        subject: `Welcome to Neesh! Set up your retailer account for ${application.shop_name}`,
+        html: `
+          <h2>Congratulations! Your retailer application has been approved.</h2>
+          <p>Welcome to the Neesh marketplace, ${application.buyer_name}!</p>
+          <p>Your application for <strong>${application.shop_name}</strong> has been approved.</p>
+          <p><a href="${invitationLink}" style="background: #000; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Set Up Your Account</a></p>
+          <p>This link will allow you to create your login credentials and access your retailer dashboard.</p>
+          <p>Application ID: ${application.id}</p>
+        `
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      console.error('Failed to send email:', await emailResponse.text());
+      return false;
+    }
+
+    const emailResult = await emailResponse.json();
+    console.log('✅ Email sent successfully:', emailResult.id);
 
     return true;
   } catch (error) {
     console.error('Error sending invitation email:', error);
     throw error;
+  }
+};
+
+// Email service function for sending publisher invitation emails
+const sendPublisherInvitationEmail = async (application) => {
+  try {
+    // Generate a temporary invitation token
+    const invitationToken = Buffer.from(JSON.stringify({
+      applicationId: application.id,
+      email: application.email,
+      businessName: application.business_name,
+      timestamp: Date.now()
+    })).toString('base64');
+
+    const invitationLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/publisher-setup?token=${invitationToken}`;
+
+    console.log('=== PUBLISHER INVITATION EMAIL ===');
+    console.log(`To: ${application.email}`);
+    console.log(`Business: ${application.business_name}`);
+    console.log(`Magazine: ${application.magazine_title}`);
+    console.log(`Invitation Link: ${invitationLink}`);
+    console.log('==================================');
+
+    // Send actual email via Resend
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Neesh Team <team@mail.neesh.art>',
+        to: [application.email],
+        subject: `Welcome to Neesh! Set up your publisher account for ${application.business_name}`,
+        html: `
+          <h2>Congratulations! Your publisher application has been approved.</h2>
+          <p>Welcome to the Neesh marketplace, ${application.first_name} ${application.last_name}!</p>
+          <p>Your application for <strong>${application.business_name}</strong> and your magazine <strong>${application.magazine_title}</strong> has been approved.</p>
+          <p><a href="${invitationLink}" style="background: #000; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Set Up Your Account</a></p>
+          <p>This link will allow you to create your login credentials and access your publisher dashboard.</p>
+          <p>Application ID: ${application.id}</p>
+        `
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      console.error('Failed to send publisher email:', await emailResponse.text());
+      return false;
+    }
+
+    const emailResult = await emailResponse.json();
+    console.log('✅ Publisher email sent successfully:', emailResult.id);
+
+    return true;
+  } catch (error) {
+    console.error('Error sending publisher invitation email:', error);
+    return false;
   }
 };
 
@@ -66,7 +131,7 @@ const requireAdmin = (req, res, next) => {
 
     try {
       // Decode the simple token (base64 encoded JSON)
-      const decoded = JSON.parse(atob(token));
+      const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
 
       if (decoded.role === 'admin' || decoded.role === 'owner') {
         req.user = decoded;
@@ -150,56 +215,38 @@ router.put('/applications/:id/approve', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { type } = req.body; // 'publisher' or 'retailer'
+    const reviewedBy = req.user?.userId || 'admin'; // Get from authenticated user
 
-    let application, error;
+    // Call the application-decision edge function
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (type === 'retailer') {
-      const result = await supabase
-        .from('retailer_applications')
-        .update({
-          status: 'approved',
-          reviewed_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select()
-        .single();
+    const edgeFunctionResponse = await fetch(`${SUPABASE_URL}/functions/v1/application-decision`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        applicationId: id,
+        applicationType: type || 'publisher',
+        decision: 'approved',
+        reviewedBy: reviewedBy
+      }),
+    });
 
-      application = result.data;
-      error = result.error;
-
-      // Send invitation email for approved retailer applications
-      if (!error && application) {
-        try {
-          await sendRetailerInvitationEmail(application);
-        } catch (emailError) {
-          console.error('Failed to send invitation email:', emailError);
-          // Don't fail the approval if email fails
-        }
-      }
-    } else {
-      // Default to publisher for backward compatibility
-      const result = await supabase
-        .from('publisher_applications')
-        .update({
-          status: 'approved',
-          reviewed_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      application = result.data;
-      error = result.error;
+    if (!edgeFunctionResponse.ok) {
+      const errorText = await edgeFunctionResponse.text();
+      console.error('Edge function error:', errorText);
+      return res.status(500).json({ message: 'Failed to process approval' });
     }
 
-    if (error) {
-      console.error('Error approving application:', error);
-      return res.status(500).json({ message: 'Failed to approve application' });
-    }
+    const result = await edgeFunctionResponse.json();
 
     res.json({
       message: 'Application approved successfully',
-      application
+      emailSent: result.success,
+      emailId: result.emailId
     });
   } catch (error) {
     console.error('Approve application error:', error);
@@ -212,34 +259,69 @@ router.put('/applications/:id/deny', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { reason, type } = req.body; // 'publisher' or 'retailer'
+    const reviewedBy = req.user?.userId || 'admin'; // Get from authenticated user
+
+    // Call the application-decision edge function
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    const edgeFunctionResponse = await fetch(`${SUPABASE_URL}/functions/v1/application-decision`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        applicationId: id,
+        applicationType: type || 'publisher',
+        decision: 'denied',
+        reviewedBy: reviewedBy,
+        denialReason: reason
+      }),
+    });
+
+    if (!edgeFunctionResponse.ok) {
+      const errorText = await edgeFunctionResponse.text();
+      console.error('Edge function error:', errorText);
+      return res.status(500).json({ message: 'Failed to process denial' });
+    }
+
+    const result = await edgeFunctionResponse.json();
+
+    res.json({
+      message: 'Application denied successfully',
+      emailSent: result.success,
+      emailId: result.emailId
+    });
+  } catch (error) {
+    console.error('Deny application error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/admin/applications/:id - Get detailed application data
+router.get('/applications/:id', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { type } = req.query; // 'publisher' or 'retailer'
 
     let application, error;
 
     if (type === 'retailer') {
       const result = await supabase
         .from('retailer_applications')
-        .update({
-          status: 'denied',
-          reviewer_notes: reason,
-          reviewed_at: new Date().toISOString()
-        })
+        .select('*')
         .eq('id', id)
-        .select()
         .single();
 
       application = result.data;
       error = result.error;
     } else {
-      // Default to publisher for backward compatibility
+      // Default to publisher
       const result = await supabase
         .from('publisher_applications')
-        .update({
-          status: 'denied',
-          reviewer_notes: reason,
-          reviewed_at: new Date().toISOString()
-        })
+        .select('*')
         .eq('id', id)
-        .select()
         .single();
 
       application = result.data;
@@ -247,16 +329,20 @@ router.put('/applications/:id/deny', requireAdmin, async (req, res) => {
     }
 
     if (error) {
-      console.error('Error denying application:', error);
-      return res.status(500).json({ message: 'Failed to deny application' });
+      console.error('Error fetching application:', error);
+      return res.status(500).json({ message: 'Failed to fetch application' });
+    }
+
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
     }
 
     res.json({
-      message: 'Application denied successfully',
-      application
+      ...application,
+      type: type || 'publisher'
     });
   } catch (error) {
-    console.error('Deny application error:', error);
+    console.error('Get application error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
