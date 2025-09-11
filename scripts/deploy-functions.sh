@@ -34,11 +34,21 @@ if ! command -v supabase &> /dev/null; then
     exit 1
 fi
 
-# Deploy publisher-notify function
+# Deploy application submission functions
+print_status "Deploying publisher-application function..."
+supabase functions deploy publisher-application
+
+print_status "Deploying retailer-application function..."
+supabase functions deploy retailer-application
+
+# Deploy admin function
+print_status "Deploying admin function..."
+supabase functions deploy admin
+
+# Deploy notification functions
 print_status "Deploying publisher-notify function..."
 supabase functions deploy publisher-notify
 
-# Deploy retailer-notify function
 print_status "Deploying retailer-notify function..."
 supabase functions deploy retailer-notify
 
@@ -49,6 +59,18 @@ if [ -d "supabase/functions/application-decision" ]; then
 fi
 
 print_success "🎉 All functions deployed successfully!"
-print_status "Note: Make sure to set the RESEND_API_KEY environment variable in your Supabase project"
-print_status "You can do this via the Supabase dashboard or using:"
+echo ""
+print_status "📋 Required environment variables in Supabase project:"
+print_status "   - SUPABASE_URL"
+print_status "   - SUPABASE_ANON_KEY"
+print_status "   - SUPABASE_SERVICE_ROLE_KEY"
+print_status "   - RESEND_API_KEY (for email notifications)"
+echo ""
+print_status "🔧 Set environment variables using:"
 print_status "supabase secrets set RESEND_API_KEY=your_api_key_here"
+echo ""
+print_status "🔒 Security features enabled:"
+print_status "   ✅ Proper CORS with allowed origins"
+print_status "   ✅ Preflight request handling"
+print_status "   ✅ Admin authentication via Supabase JWT"
+print_status "   ✅ Service role for database operations"

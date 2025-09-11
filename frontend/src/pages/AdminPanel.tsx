@@ -5,7 +5,7 @@ import AdminLogin from '../components/AdminLogin';
 import ApplicationDetailModal from '../components/admin/ApplicationDetailModal';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import { adminApi, type Application, type ReportedPublisher, type AdminMessage } from '../services/adminApi';
-import { useAnalytics } from '@/hooks/useAnalytics';
+import { useAnalytics } from '../hooks/useAnalytics';
 import Notification from '../components/Notification';
 import { useNotification } from '../hooks/useNotification';
 import {

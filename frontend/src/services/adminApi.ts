@@ -1,6 +1,9 @@
 // Admin API Service for NEESH Admin Panel
 // This service handles all admin-related API calls
 
+import { config } from '@/lib/config';
+import { createClient } from '@supabase/supabase-js';
+
 export interface Application {
   id: string;
   type: 'publisher' | 'retailer';
@@ -46,23 +49,32 @@ export interface AdminStats {
   pendingReplyMessages: number;
 }
 
-import { config } from '@/lib/config';
-
 class AdminApiService {
-  private baseUrl = import.meta.env.PROD
-    ? import.meta.env.VITE_API_BASE_URL || 'https://neesh-lxd52fwrl-sage-nwannes-projects.vercel.app/api'  // Production URL
-    : '/api';  // Use proxy in development
+  // Use Supabase URL for Edge Functions
+  private baseUrl = `${config.supabase.url}/functions/v1`;
+  private supabase = createClient(config.supabase.url, config.supabase.anonKey);
+
+  private async getAuthHeaders() {
+    // Get the current user's access token from Supabase
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const token = session?.access_token;
+
+    if (!token) {
+      throw new Error('No authentication token available');
+    }
+
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+  }
 
   // Applications Management
   async getApplications(): Promise<Application[]> {
     try {
-      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
-
-      const response = await fetch(`${this.baseUrl}/admin/applications`, {
-        headers: {
-          'Authorization': `Bearer ${adminToken}`,
-          'Content-Type': 'application/json'
-        }
+      const headers = await this.getAuthHeaders();
+      const response = await fetch(`${this.baseUrl}/admin`, {
+        headers
       });
 
       if (!response.ok) {
@@ -79,14 +91,9 @@ class AdminApiService {
 
   async getApplicationDetails(id: string, type: 'publisher' | 'retailer'): Promise<Application> {
     try {
-      // Create a simple admin token for testing
-      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
-
+      const headers = await this.getAuthHeaders();
       const response = await fetch(`${this.baseUrl}/admin/applications/${id}?type=${type}`, {
-        headers: {
-          'Authorization': `Bearer ${adminToken}`,
-          'Content-Type': 'application/json'
-        }
+        headers
       });
 
       if (!response.ok) {
@@ -122,15 +129,10 @@ class AdminApiService {
 
   async approveApplication(applicationId: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
-      // Create a simple admin token for testing
-      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
-
+      const headers = await this.getAuthHeaders();
       const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/approve`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${adminToken}`,
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify({ type: applicationType })
       });
 
@@ -147,15 +149,10 @@ class AdminApiService {
 
   async denyApplication(applicationId: string, reason?: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
-      // Create a simple admin token for testing
-      const adminToken = btoa(JSON.stringify({ role: 'admin', userId: 'admin-user' }));
-
+      const headers = await this.getAuthHeaders();
       const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/deny`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${adminToken}`,
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify({ reason, type: applicationType })
       });
 

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { config } from '@/lib/config';
 
 interface AdminUser {
   id: string;
@@ -11,71 +13,82 @@ export const useAdminAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 
   useEffect(() => {
-    // Check if admin is already authenticated
-    const adminToken = localStorage.getItem('admin_token');
-    const adminData = localStorage.getItem('admin_user');
-    
-    if (adminToken && adminData) {
-      try {
-        const user = JSON.parse(adminData);
-        setAdminUser(user);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error parsing admin data:', error);
-        localStorage.removeItem('admin_token');
-        localStorage.removeItem('admin_user');
-      }
-    }
-    
-    setIsLoading(false);
-  }, []);
+    // Check if user is already authenticated with Supabase
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      // For now, use simple hardcoded authentication
-      // In production, this should call a secure API endpoint
-      const validCredentials = [
-        { email: 'admin@neesh.art', password: 'neeshis@dmin', role: 'admin' as const, name: 'NEESH Admin' },
-        { email: 'owner@neesh.art', password: 'neesh2024owner', role: 'owner' as const, name: 'Owner' }
-      ];
-
-      const user = validCredentials.find(
-        cred => cred.email === email && cred.password === password
-      );
-
-      if (user) {
+      if (session?.user && session.user.app_metadata?.role === 'admin') {
         const adminUser: AdminUser = {
-          id: '1',
-          email: user.email,
-          role: user.role,
-          name: user.name
+          id: session.user.id,
+          email: session.user.email || '',
+          role: session.user.app_metadata.role,
+          name: session.user.user_metadata?.name || 'Admin'
         };
 
         setAdminUser(adminUser);
         setIsAuthenticated(true);
-
-        // Store a simple token for API calls (in production, use secure JWT)
-        const simpleToken = btoa(JSON.stringify({ email: user.email, role: user.role, userId: '1' }));
-        localStorage.setItem('admin_token', simpleToken);
-        localStorage.setItem('admin_user', JSON.stringify(adminUser));
-
-        return true;
       }
 
-      return false;
+      setIsLoading(false);
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user?.app_metadata?.role === 'admin') {
+        const adminUser: AdminUser = {
+          id: session.user.id,
+          email: session.user.email || '',
+          role: session.user.app_metadata.role,
+          name: session.user.user_metadata?.name || 'Admin'
+        };
+
+        setAdminUser(adminUser);
+        setIsAuthenticated(true);
+      } else if (event === 'SIGNED_OUT') {
+        setAdminUser(null);
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        console.error('Login error:', error);
+        return false;
+      }
+
+      // Check if user has admin role
+      if (data.user?.app_metadata?.role !== 'admin') {
+        await supabase.auth.signOut();
+        console.error('User does not have admin role');
+        return false;
+      }
+
+      // User will be set via the auth state change listener
+      return true;
     } catch (error) {
       console.error('Login error:', error);
       return false;
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setAdminUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('admin_token');
-    localStorage.removeItem('admin_user');
   };
 
   return {

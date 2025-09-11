@@ -157,7 +157,7 @@ export default function RetailerApplicationForm() {
     try {
       console.log('🔄 Submitting retailer application...');
 
-      const response = await fetch(`${config.api.baseUrl}/retailer/application`, {
+      const response = await fetch(`${config.api.baseUrl}/retailer-application`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

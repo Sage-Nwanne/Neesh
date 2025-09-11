@@ -1,9 +1,9 @@
 // Application configuration
 
 export const config = {
-  // API Configuration
+  // API Configuration - Always use Supabase Edge Functions for consistency
   api: {
-    baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+    baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://smfzrubkyxejzkblrrjr.supabase.co/functions/v1',
     timeout: 10000,
   },
 

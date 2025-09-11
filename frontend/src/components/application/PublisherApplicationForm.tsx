@@ -423,17 +423,19 @@ const PublisherApplicationForm: React.FC = () => {
 
       console.log('🔄 Submitting publisher application:', submissionData);
 
-      const response = await fetch(`${config.api.baseUrl}/publisher/application`, {
+      const response = await fetch(`${config.supabase.url}/functions/v1/publisher-application`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${config.supabase.anonKey}`,
+          'apikey': config.supabase.anonKey,
         },
         body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to submit application');
+        throw new Error(errorData.error || errorData.message || 'Failed to submit application');
       }
 
       const result = await response.json();
