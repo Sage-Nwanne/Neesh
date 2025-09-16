@@ -67,6 +67,9 @@ app.use('/api/publisher', publisherRoutes);
 app.use('/api/retailer', retailerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
+// Import mailing list routes
+import mailinglistRoutes from './routes/mailinglist.js';
+app.use('/api/mailinglist', mailinglistRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

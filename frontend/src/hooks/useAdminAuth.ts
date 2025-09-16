@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { config } from '@/lib/config';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AdminUser {
   id: string;
@@ -13,14 +12,13 @@ export const useAdminAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 
   useEffect(() => {
     // Check if user is already authenticated with Supabase
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
 
-      if (session?.user && session.user.app_metadata?.role === 'admin') {
+      if (session?.user && (session.user.app_metadata?.role === 'admin' || session.user.app_metadata?.role === 'owner')) {
         const adminUser: AdminUser = {
           id: session.user.id,
           email: session.user.email || '',
@@ -39,7 +37,7 @@ export const useAdminAuth = () => {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user?.app_metadata?.role === 'admin') {
+      if (event === 'SIGNED_IN' && session?.user && (session.user.app_metadata?.role === 'admin' || session.user.app_metadata?.role === 'owner')) {
         const adminUser: AdminUser = {
           id: session.user.id,
           email: session.user.email || '',
@@ -70,10 +68,10 @@ export const useAdminAuth = () => {
         return false;
       }
 
-      // Check if user has admin role
-      if (data.user?.app_metadata?.role !== 'admin') {
+      // Check if user has admin or owner role
+      if (data.user?.app_metadata?.role !== 'admin' && data.user?.app_metadata?.role !== 'owner') {
         await supabase.auth.signOut();
-        console.error('User does not have admin role');
+        console.error('User does not have admin or owner role');
         return false;
       }
 

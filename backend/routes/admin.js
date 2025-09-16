@@ -119,8 +119,8 @@ const sendPublisherInvitationEmail = async (application) => {
   }
 };
 
-// Simple admin authentication middleware (for development)
-const requireAdmin = (req, res, next) => {
+// Admin authentication middleware using Supabase JWT
+const requireAdmin = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -130,16 +130,26 @@ const requireAdmin = (req, res, next) => {
     const token = authHeader.substring(7);
 
     try {
-      // Decode the simple token (base64 encoded JSON)
-      const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+      // Verify the JWT token with Supabase
+      const { data: { user }, error } = await supabase.auth.getUser(token);
 
-      if (decoded.role === 'admin' || decoded.role === 'owner') {
-        req.user = decoded;
+      if (error || !user) {
+        return res.status(401).json({ message: 'Invalid token' });
+      }
+
+      // Check if user has admin role
+      if (user.app_metadata?.role === 'admin' || user.app_metadata?.role === 'owner') {
+        req.user = {
+          userId: user.id,
+          email: user.email,
+          role: user.app_metadata.role
+        };
         next();
       } else {
         res.status(403).json({ message: 'Admin access required' });
       }
     } catch (decodeError) {
+      console.error('Token verification error:', decodeError);
       res.status(401).json({ message: 'Invalid token' });
     }
   } catch (error) {
@@ -147,6 +157,67 @@ const requireAdmin = (req, res, next) => {
     res.status(500).json({ message: 'Authentication error' });
   }
 };
+
+// GET /api/admin - Get all applications (publisher and retailer) - Main route
+router.get('/', requireAdmin, async (req, res) => {
+  try {
+    // Fetch both publisher and retailer applications
+    const [publisherResult, retailerResult] = await Promise.all([
+      supabase
+        .from('publisher_applications')
+        .select('*')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('retailer_applications')
+        .select('*')
+        .order('created_at', { ascending: false })
+    ]);
+
+    if (publisherResult.error) {
+      console.error('Error fetching publisher applications:', publisherResult.error);
+      return res.status(500).json({ message: 'Failed to fetch publisher applications' });
+    }
+
+    if (retailerResult.error) {
+      console.error('Error fetching retailer applications:', retailerResult.error);
+      return res.status(500).json({ message: 'Failed to fetch retailer applications' });
+    }
+
+    // Transform and combine the data
+    const publisherApplications = publisherResult.data.map(app => ({
+      id: app.id,
+      type: 'publisher',
+      applicantName: `${app.first_name} ${app.last_name}`,
+      businessName: app.magazine_title,
+      email: app.email,
+      status: app.status || 'pending',
+      submittedAt: app.created_at,
+      magazineTitle: app.magazine_title,
+      applicationData: app
+    }));
+
+    const retailerApplications = retailerResult.data.map(app => ({
+      id: app.id,
+      type: 'retailer',
+      applicantName: app.buyer_name,
+      businessName: app.shop_name,
+      email: app.buyer_email,
+      status: app.status || 'pending',
+      submittedAt: app.created_at,
+      storeLocation: app.shop_location,
+      applicationData: app
+    }));
+
+    // Combine and sort by submission date
+    const allApplications = [...publisherApplications, ...retailerApplications]
+      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+    res.json(allApplications);
+  } catch (error) {
+    console.error('Error in admin applications route:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // GET /api/admin/applications - Get all applications (publisher and retailer)
 router.get('/applications', requireAdmin, async (req, res) => {
@@ -409,6 +480,26 @@ router.get('/reports', requireAdmin, async (req, res) => {
     res.json(mockReports);
   } catch (error) {
     console.error('Admin reports error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/admin/mailing-list - Get all mailing list subscribers
+router.get('/mailing-list', requireAdmin, async (req, res) => {
+  try {
+    const { data: subscribers, error } = await supabase
+      .from('mailing_list_subscribers')
+      .select('*')
+      .order('subscribed_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching mailing list subscribers:', error);
+      return res.status(500).json({ message: 'Failed to fetch mailing list subscribers' });
+    }
+
+    res.json(subscribers || []);
+  } catch (error) {
+    console.error('Error in admin mailing list route:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

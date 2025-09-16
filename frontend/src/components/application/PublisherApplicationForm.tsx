@@ -407,21 +407,23 @@ const PublisherApplicationForm: React.FC = () => {
         wholesale_price: formData.wholesale_price ? parseFloat(formData.wholesale_price.toString()) : 0,
         suggested_retail_price: formData.suggested_retail_price ? parseFloat(formData.suggested_retail_price.toString()) : 0,
         specs: formData.specs,
-        volume_pricing_tiers: formData.volume_pricing || [], // Database column name
+        volume_pricing_tiers: formData.volume_pricing || [], // Fixed: matches DB column name
         cover_image_url: formData.cover_image_url,
-        has_sold_before: formData.has_sold_before === 'yes', // Convert to boolean
+        has_sold_before: formData.has_sold_before === 'yes', // Convert to boolean to match DB type
         distribution_channels: formData.distribution_channels || [],
-        copies_sold_estimate: formData.estimated_copies_sold ? parseInt(formData.estimated_copies_sold.toString()) : 0, // Database column name
-        quotes_feedback: formData.sales_feedback, // Database column name
+        copies_sold_estimate: formData.estimated_copies_sold ? parseInt(formData.estimated_copies_sold.toString()) : 0, // Fixed: matches DB column name
+        quotes_feedback: formData.sales_feedback, // Fixed: matches DB column name
         fulfillment_method: formData.fulfillment_method,
         shipping_city: formData.shipping_city,
         shipping_state: formData.shipping_state,
         shipping_country: formData.shipping_country,
-        accepts_returns: formData.return_policy, // Database column name
+        accepts_returns: formData.return_policy, // Fixed: matches DB column name
         status: 'pending'
       };
 
       console.log('🔄 Submitting publisher application:', submissionData);
+      console.log('🔍 Submission data keys:', Object.keys(submissionData));
+      console.log('🔍 Cover image URL:', submissionData.cover_image_url);
 
       const response = await fetch(`${config.supabase.url}/functions/v1/publisher-application`, {
         method: 'POST',

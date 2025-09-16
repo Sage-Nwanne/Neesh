@@ -2,7 +2,7 @@
 // This service handles all admin-related API calls
 
 import { config } from '@/lib/config';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface Application {
   id: string;
@@ -39,6 +39,17 @@ export interface AdminMessage {
   attachments?: string[];
 }
 
+export interface MailingListSubscriber {
+  id: string;
+  email: string;
+  status: 'active' | 'unsubscribed' | 'bounced';
+  source: string;
+  subscribed_at: string;
+  unsubscribed_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AdminStats {
   totalApplications: number;
   pendingApplications: number;
@@ -47,42 +58,84 @@ export interface AdminStats {
   totalReports: number;
   unreadMessages: number;
   pendingReplyMessages: number;
+  totalSubscribers: number;
+  activeSubscribers: number;
 }
 
 class AdminApiService {
-  // Use Supabase URL for Edge Functions
-  private baseUrl = `${config.supabase.url}/functions/v1`;
-  private supabase = createClient(config.supabase.url, config.supabase.anonKey);
+  // Use Supabase directly - no need for Express backend for data fetching
 
-  private async getAuthHeaders() {
-    // Get the current user's access token from Supabase
-    const { data: { session } } = await this.supabase.auth.getSession();
-    const token = session?.access_token;
-
-    if (!token) {
-      throw new Error('No authentication token available');
+  private async checkAdminAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      throw new Error('No authentication session');
     }
 
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
+    const userRole = session.user.app_metadata?.role;
+    if (userRole !== 'admin' && userRole !== 'owner') {
+      throw new Error('Admin access required');
+    }
+
+    return session.user;
   }
 
   // Applications Management
   async getApplications(): Promise<Application[]> {
     try {
-      const headers = await this.getAuthHeaders();
-      const response = await fetch(`${this.baseUrl}/admin`, {
-        headers
-      });
+      await this.checkAdminAuth();
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch applications: ${response.status}`);
+      // Fetch both publisher and retailer applications from Supabase
+      const [publisherResult, retailerResult] = await Promise.all([
+        supabase
+          .from('publisher_applications')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('retailer_applications')
+          .select('*')
+          .order('created_at', { ascending: false })
+      ]);
+
+      if (publisherResult.error) {
+        console.error('Error fetching publisher applications:', publisherResult.error);
+        throw new Error('Failed to fetch publisher applications');
       }
 
-      const data = await response.json();
-      return data;
+      if (retailerResult.error) {
+        console.error('Error fetching retailer applications:', retailerResult.error);
+        throw new Error('Failed to fetch retailer applications');
+      }
+
+      // Transform and combine the data
+      const publisherApplications = (publisherResult.data || []).map(app => ({
+        id: app.id,
+        type: 'publisher' as const,
+        applicantName: `${app.first_name} ${app.last_name}`,
+        businessName: app.magazine_title,
+        email: app.email,
+        status: app.status || 'pending',
+        submittedAt: app.created_at,
+        magazineTitle: app.magazine_title,
+        applicationData: app
+      }));
+
+      const retailerApplications = (retailerResult.data || []).map(app => ({
+        id: app.id,
+        type: 'retailer' as const,
+        applicantName: app.buyer_name,
+        businessName: app.shop_name,
+        email: app.buyer_email,
+        status: app.status || 'pending',
+        submittedAt: app.created_at,
+        storeLocation: app.shop_location,
+        applicationData: app
+      }));
+
+      // Combine and sort by submission date
+      const allApplications = [...publisherApplications, ...retailerApplications]
+        .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+      return allApplications;
     } catch (error) {
       console.error('Error fetching applications:', error);
       return [];
@@ -91,34 +144,39 @@ class AdminApiService {
 
   async getApplicationDetails(id: string, type: 'publisher' | 'retailer'): Promise<Application> {
     try {
-      const headers = await this.getAuthHeaders();
-      const response = await fetch(`${this.baseUrl}/admin/applications/${id}?type=${type}`, {
-        headers
-      });
+      await this.checkAdminAuth();
 
-      if (!response.ok) {
+      const tableName = type === 'publisher' ? 'publisher_applications' : 'retailer_applications';
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching application details:', error);
         throw new Error('Failed to fetch application details');
       }
 
-      const data = await response.json();
+      if (!data) {
+        throw new Error('Application not found');
+      }
 
       // Transform the raw data into Application format
       return {
         id: data.id,
-        type: data.type,
+        type: type,
         applicantName: type === 'publisher'
           ? `${data.first_name || ''} ${data.last_name || ''}`.trim()
           : data.buyer_name || '',
         businessName: type === 'publisher'
-          ? data.business_name || ''
+          ? data.magazine_title || ''
           : data.shop_name || '',
         email: type === 'publisher' ? data.email : data.buyer_email,
         status: data.status || 'pending',
-        submittedAt: data.submitted_at || data.created_at,
+        submittedAt: data.created_at,
         magazineTitle: data.magazine_title,
-        storeLocation: type === 'retailer' && data.business_city && data.business_state
-          ? `${data.business_city}, ${data.business_state}`
-          : undefined,
+        storeLocation: type === 'retailer' ? data.shop_location : undefined,
         applicationData: data // Store the full raw data for detailed view
       };
     } catch (error) {
@@ -129,14 +187,16 @@ class AdminApiService {
 
   async approveApplication(applicationId: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
-      const headers = await this.getAuthHeaders();
-      const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/approve`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({ type: applicationType })
-      });
+      await this.checkAdminAuth();
 
-      if (!response.ok) {
+      const tableName = applicationType === 'publisher' ? 'publisher_applications' : 'retailer_applications';
+      const { error } = await supabase
+        .from(tableName)
+        .update({ status: 'approved' })
+        .eq('id', applicationId);
+
+      if (error) {
+        console.error('Error approving application:', error);
         throw new Error('Failed to approve application');
       }
 
@@ -149,14 +209,19 @@ class AdminApiService {
 
   async denyApplication(applicationId: string, reason?: string, applicationType: 'publisher' | 'retailer' = 'publisher'): Promise<boolean> {
     try {
-      const headers = await this.getAuthHeaders();
-      const response = await fetch(`${this.baseUrl}/admin/applications/${applicationId}/deny`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({ reason, type: applicationType })
-      });
+      await this.checkAdminAuth();
 
-      if (!response.ok) {
+      const tableName = applicationType === 'publisher' ? 'publisher_applications' : 'retailer_applications';
+      const { error } = await supabase
+        .from(tableName)
+        .update({
+          status: 'denied',
+          denial_reason: reason
+        })
+        .eq('id', applicationId);
+
+      if (error) {
+        console.error('Error denying application:', error);
         throw new Error('Failed to deny application');
       }
 
@@ -289,18 +354,76 @@ class AdminApiService {
     }
   }
 
+  // Mailing List Management
+  async getMailingListSubscribers(): Promise<MailingListSubscriber[]> {
+    try {
+      await this.checkAdminAuth();
+
+      const { data, error } = await supabase
+        .from('mailing_list_subscribers')
+        .select('*')
+        .order('subscribed_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching mailing list:', error);
+        throw new Error('Failed to fetch mailing list');
+      }
+
+      return (data || []).map(entry => ({
+        id: entry.id,
+        email: entry.email,
+        status: entry.status || 'active',
+        source: entry.source || 'website',
+        subscribed_at: entry.subscribed_at,
+        unsubscribed_at: entry.unsubscribed_at,
+        created_at: entry.created_at,
+        updated_at: entry.updated_at
+      }));
+    } catch (error) {
+      console.error('Error fetching mailing list subscribers:', error);
+      return [];
+    }
+  }
+
   // Admin Statistics
   async getAdminStats(): Promise<AdminStats> {
     try {
-      // Mock data for now - replace with actual API call
+      await this.checkAdminAuth();
+
+      // Get counts from both application tables
+      const [publisherStats, retailerStats, mailingListStats] = await Promise.all([
+        supabase
+          .from('publisher_applications')
+          .select('status', { count: 'exact' }),
+        supabase
+          .from('retailer_applications')
+          .select('status', { count: 'exact' }),
+        supabase
+          .from('mailing_list_subscribers')
+          .select('*', { count: 'exact' })
+      ]);
+
+      // Count applications by status
+      const publisherApps = publisherStats.data || [];
+      const retailerApps = retailerStats.data || [];
+      const allApps = [...publisherApps, ...retailerApps];
+
+      const totalApplications = allApps.length;
+      const pendingApplications = allApps.filter(app => app.status === 'pending' || !app.status).length;
+      const approvedApplications = allApps.filter(app => app.status === 'approved').length;
+      const deniedApplications = allApps.filter(app => app.status === 'rejected' || app.status === 'denied').length;
+      const totalSubscribers = mailingListStats.count || 0;
+
       return {
-        totalApplications: 15,
-        pendingApplications: 5,
-        approvedApplications: 8,
-        deniedApplications: 2,
-        totalReports: 3,
-        unreadMessages: 2,
-        pendingReplyMessages: 4
+        totalApplications,
+        pendingApplications,
+        approvedApplications,
+        deniedApplications,
+        totalReports: 0, // TODO: Implement reports tracking
+        unreadMessages: 0, // TODO: Implement message tracking
+        pendingReplyMessages: 0, // TODO: Implement message tracking
+        totalSubscribers,
+        activeSubscribers: totalSubscribers // Assuming all are active for now
       };
     } catch (error) {
       console.error('Error fetching admin stats:', error);

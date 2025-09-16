@@ -4,7 +4,7 @@ import styles from './AdminPanel.module.css';
 import AdminLogin from '../components/AdminLogin';
 import ApplicationDetailModal from '../components/admin/ApplicationDetailModal';
 import { useAdminAuth } from '../hooks/useAdminAuth';
-import { adminApi, type Application, type ReportedPublisher, type AdminMessage } from '../services/adminApi';
+import { adminApi, type Application, type ReportedPublisher, type AdminMessage, type MailingListSubscriber } from '../services/adminApi';
 import { useAnalytics } from '../hooks/useAnalytics';
 import Notification from '../components/Notification';
 import { useNotification } from '../hooks/useNotification';
@@ -16,6 +16,8 @@ import {
   MessageCircle,
   CheckCircle,
   XCircle,
+  Check,
+  X,
   Eye,
   Filter,
   Search,
@@ -26,12 +28,13 @@ import {
 
 const AdminPanel: React.FC = () => {
   const { isAuthenticated, adminUser, isLoading, login, logout } = useAdminAuth();
-  const [activeTab, setActiveTab] = useState<'applications' | 'reports' | 'messages' | 'chatbot'>('applications');
+  const [activeTab, setActiveTab] = useState<'applications' | 'reports' | 'messages' | 'mailing-list' | 'chatbot'>('applications');
 
   console.log('🔍 AdminPanel render - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading, 'adminUser:', adminUser);
   const [applications, setApplications] = useState<Application[]>([]);
   const [reportedPublishers, setReportedPublishers] = useState<ReportedPublisher[]>([]);
   const [messages, setMessages] = useState<AdminMessage[]>([]);
+  const [mailingListSubscribers, setMailingListSubscribers] = useState<MailingListSubscriber[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [showAllReports, setShowAllReports] = useState(false);
@@ -57,19 +60,22 @@ const AdminPanel: React.FC = () => {
   const loadAdminData = async () => {
     try {
       console.log('🔄 Loading admin data...');
-      const [applicationsData, reportsData, messagesData] = await Promise.all([
+      const [applicationsData, reportsData, messagesData, mailingListData] = await Promise.all([
         adminApi.getApplications(),
         adminApi.getReportedPublishers(),
-        adminApi.getMessages()
+        adminApi.getMessages(),
+        adminApi.getMailingListSubscribers()
       ]);
 
       console.log('✅ Applications loaded:', applicationsData.length, applicationsData);
       console.log('✅ Reports loaded:', reportsData.length);
       console.log('✅ Messages loaded:', messagesData.length);
+      console.log('✅ Mailing list loaded:', mailingListData.length);
 
       setApplications(applicationsData);
       setReportedPublishers(reportsData);
       setMessages(messagesData);
+      setMailingListSubscribers(mailingListData);
     } catch (error) {
       console.error('❌ Error loading admin data:', error);
     }
@@ -202,10 +208,22 @@ const AdminPanel: React.FC = () => {
       } else if (lowerInput.includes('unread messages')) {
         const unreadCount = messages.filter(msg => !msg.isRead).length;
         botResponse = `You have ${unreadCount} unread messages.`;
+      } else if (lowerInput.includes('mailing list') || lowerInput.includes('subscribers') || lowerInput.includes('email list')) {
+        const activeSubscribers = mailingListSubscribers.filter(sub => sub.status === 'active').length;
+        const totalSubscribers = mailingListSubscribers.length;
+        const unsubscribed = mailingListSubscribers.filter(sub => sub.status === 'unsubscribed').length;
+        botResponse = `Mailing List Stats: ${totalSubscribers} total subscribers, ${activeSubscribers} active, ${unsubscribed} unsubscribed.`;
+      } else if (lowerInput.includes('latest subscriber') || lowerInput.includes('newest subscriber')) {
+        if (mailingListSubscribers.length > 0) {
+          const latest = mailingListSubscribers[0]; // Already sorted by subscribed_at desc
+          botResponse = `Latest subscriber: ${latest.email} (subscribed ${new Date(latest.subscribed_at).toLocaleDateString()})`;
+        } else {
+          botResponse = 'No subscribers yet.';
+        }
       } else if (lowerInput.includes('approve all pending') || lowerInput.includes('approve pending')) {
         botResponse = 'I can help you approve applications. Please specify which applications you\'d like to approve, or use the Applications tab for individual approvals.';
       } else {
-        botResponse = 'I can help you with: checking pending applications, viewing reports, counting unread messages, and basic data queries. What would you like to know?';
+        botResponse = 'I can help you with: checking pending applications, viewing reports, counting unread messages, mailing list stats, and basic data queries. What would you like to know?';
       }
 
       setChatMessages(prev => [...prev, { type: 'bot', message: botResponse }]);
@@ -276,14 +294,21 @@ const AdminPanel: React.FC = () => {
           <AlertTriangle className={styles.tabIcon} />
           Reports
         </button>
-        <button 
+        <button
           className={`${styles.tab} ${activeTab === 'messages' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('messages')}
         >
           <Mail className={styles.tabIcon} />
           Messages
         </button>
-        <button 
+        <button
+          className={`${styles.tab} ${activeTab === 'mailing-list' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('mailing-list')}
+        >
+          <Users className={styles.tabIcon} />
+          Mailing List
+        </button>
+        <button
           className={`${styles.tab} ${activeTab === 'chatbot' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('chatbot')}
         >
@@ -355,18 +380,34 @@ const AdminPanel: React.FC = () => {
 
                     <div className={styles.applicantInfo}>
                       <h3>
-                        {application.type === 'publisher' ? 'Publisher' : 'Retailer'} - {application.applicantName}
+                        {application.type.toUpperCase()} - {application.email} - submitted at: {new Date(application.submittedAt).toLocaleString()}
                       </h3>
                       <p className={styles.businessName}>{application.businessName}</p>
-                      <span className={`${styles.badge} ${styles[application.type]}`}>
-                        {application.type}
-                      </span>
                     </div>
 
-                    <div className={styles.applicationStatus}>
-                      <span className={`${styles.statusBadge} ${styles[application.status]}`}>
-                        {application.status}
-                      </span>
+                    <div className={styles.applicationActions}>
+                      {application.status === 'pending' ? (
+                        <>
+                          <button
+                            className={styles.approveBtn}
+                            onClick={() => handleApproveApplication(application.id, application.type)}
+                          >
+                            <Check className={styles.actionIcon} />
+                            APPROVE
+                          </button>
+                          <button
+                            className={styles.denyBtn}
+                            onClick={() => handleDenyApplication(application.id, application.type)}
+                          >
+                            <X className={styles.actionIcon} />
+                            REJECT
+                          </button>
+                        </>
+                      ) : (
+                        <span className={`${styles.statusBadge} ${styles[application.status]}`}>
+                          {application.status.toUpperCase()}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -575,13 +616,73 @@ const AdminPanel: React.FC = () => {
           </div>
         )}
 
+        {/* Mailing List Tab */}
+        {activeTab === 'mailing-list' && (
+          <div className={styles.tabContent}>
+            <div className={styles.sectionHeader}>
+              <h2>Mailing List Subscribers</h2>
+              <div className={styles.messageStats}>
+                <span className={styles.stat}>
+                  {mailingListSubscribers.filter(sub => sub.status === 'active').length} Active
+                </span>
+                <span className={styles.stat}>
+                  {mailingListSubscribers.filter(sub => sub.status === 'unsubscribed').length} Unsubscribed
+                </span>
+                <span className={styles.stat}>
+                  {mailingListSubscribers.length} Total
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.subscribersList}>
+              {mailingListSubscribers.map(subscriber => (
+                <div key={subscriber.id} className={styles.subscriberCard}>
+                  <div className={styles.subscriberHeader}>
+                    <div className={styles.subscriberInfo}>
+                      <div className={styles.subscriberEmail}>
+                        <span className={`${styles.statusDot} ${subscriber.status === 'active' ? styles.activeDot : styles.inactiveDot}`}></span>
+                        {subscriber.email}
+                      </div>
+                      <div className={styles.subscriberMeta}>
+                        <span className={styles.subscribedAt}>
+                          Subscribed at: {new Date(subscriber.subscribed_at).toLocaleString()}
+                        </span>
+                        {subscriber.unsubscribed_at && (
+                          <span className={styles.unsubscribedAt}>
+                            Unsubscribed at: {new Date(subscriber.unsubscribed_at).toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.subscriberActions}>
+                      <span className={`${styles.statusBadge} ${styles[subscriber.status]}`}>
+                        {subscriber.status.charAt(0).toUpperCase() + subscriber.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className={styles.subscriberDetails}>
+                    <span className={styles.source}>Source: {subscriber.source}</span>
+                  </div>
+                </div>
+              ))}
+
+              {mailingListSubscribers.length === 0 && (
+                <div className={styles.emptyState}>
+                  <Users className={styles.emptyIcon} />
+                  <p>No mailing list subscribers yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Chatbot Tab */}
         {activeTab === 'chatbot' && (
           <div className={styles.tabContent}>
             <div className={styles.sectionHeader}>
               <h2>Admin Assistant</h2>
               <p className={styles.chatbotDescription}>
-                Ask me about pending applications, reports, messages, or request simple data operations.
+                Ask me about pending applications, reports, messages, mailing list subscribers, or request simple data operations.
               </p>
             </div>
 
@@ -595,6 +696,8 @@ const AdminPanel: React.FC = () => {
                       <li>Checking pending applications count</li>
                       <li>Viewing reported publishers summary</li>
                       <li>Counting unread messages</li>
+                      <li>Mailing list subscriber statistics</li>
+                      <li>Latest subscriber information</li>
                       <li>Basic data queries and operations</li>
                     </ul>
                     <p>What would you like to know?</p>

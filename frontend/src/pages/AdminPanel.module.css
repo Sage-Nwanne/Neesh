@@ -785,6 +785,130 @@
   background: #0056b3;
 }
 
+/* Mailing List Styles */
+.subscribersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.subscriberCard {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #fafbfc;
+  transition: all 0.3s ease;
+}
+
+.subscriberCard:hover {
+  border-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.subscriberHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.subscriberInfo {
+  flex: 1;
+}
+
+.subscriberEmail {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 0.5rem;
+}
+
+.statusDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.activeDot {
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.inactiveDot {
+  background: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.subscriberMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subscribedAt,
+.unsubscribedAt {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.unsubscribedAt {
+  color: #dc3545;
+}
+
+.subscriberActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.statusBadge.active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statusBadge.unsubscribed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.statusBadge.bounced {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.subscriberDetails {
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.source {
+  color: #666;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #666;
+}
+
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  color: #ccc;
+  margin: 0 auto 1rem;
+}
+
+.emptyState p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .headerContent {

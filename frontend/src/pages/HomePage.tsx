@@ -4,12 +4,72 @@ import IntroPage from '../components/IntroPage';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
 import styles from './Home.module.css';
+import { supabase } from '@/integrations/supabase/client';
 
 const Home = () => {
   const [showIntro, setShowIntro] = useState(true);
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscriptionMessage, setSubscriptionMessage] = useState('');
 
   const handleIntroComplete = () => {
     setShowIntro(false);
+  };
+
+  const handleEmailSubscription = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !email.includes('@')) {
+      setSubscriptionMessage('Please enter a valid email address');
+      return;
+    }
+
+    setIsSubscribing(true);
+    setSubscriptionMessage('');
+
+    try {
+      // Check if email already exists
+      const { data: existingSubscriber, error: checkError } = await supabase
+        .from('mailing_list_subscribers')
+        .select('email')
+        .eq('email', email.toLowerCase())
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking existing subscriber:', checkError);
+        setSubscriptionMessage('Something went wrong. Please try again.');
+        return;
+      }
+
+      if (existingSubscriber) {
+        setSubscriptionMessage('You\'re already subscribed to our mailing list!');
+        setEmail('');
+        return;
+      }
+
+      // Add to mailing list
+      const { error: insertError } = await supabase
+        .from('mailing_list_subscribers')
+        .insert([{
+          email: email.toLowerCase(),
+          status: 'active',
+          source: 'website'
+        }]);
+
+      if (insertError) {
+        console.error('Error inserting subscriber:', insertError);
+        setSubscriptionMessage('Something went wrong. Please try again.');
+        return;
+      }
+
+      setSubscriptionMessage('Thanks for subscribing! Welcome to NEESH.');
+      setEmail('');
+    } catch (error) {
+      console.error('Subscription error:', error);
+      setSubscriptionMessage('Something went wrong. Please try again.');
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   const scrollToPipeline = () => {
@@ -184,6 +244,37 @@ const Home = () => {
         </Link>
         <p className={styles.questionsText}>Have questions?</p>
         <a href="mailto:hi@neesh.art" className={styles.teamLink}>Talk to the Team</a>
+      </section>
+
+      {/* Mailing List Section */}
+      <section className={styles.mailingList}>
+        <div className={styles.mailingListContent}>
+          <h3 className={styles.mailingListTitle}>Stay up to date on all things NEESH</h3>
+          <p className={styles.mailingListSubtitle}>Get the latest updates on new magazines, features, and indie print news.</p>
+          <form className={styles.mailingListForm} onSubmit={handleEmailSubscription}>
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className={styles.mailingListInput}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubscribing}
+              required
+            />
+            <button
+              type="submit"
+              className={styles.mailingListButton}
+              disabled={isSubscribing}
+            >
+              {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+            </button>
+          </form>
+          {subscriptionMessage && (
+            <p className={`${styles.subscriptionMessage} ${subscriptionMessage.includes('Thanks') ? styles.success : styles.error}`}>
+              {subscriptionMessage}
+            </p>
+          )}
+        </div>
       </section>
 
       <Footer />
