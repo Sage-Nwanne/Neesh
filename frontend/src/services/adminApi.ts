@@ -189,16 +189,28 @@ class AdminApiService {
     try {
       await this.checkAdminAuth();
 
-      const tableName = applicationType === 'publisher' ? 'publisher_applications' : 'retailer_applications';
-      const { error } = await supabase
-        .from(tableName)
-        .update({ status: 'approved' })
-        .eq('id', applicationId);
+      // Use the Supabase Edge Function that handles email notifications
+      const response = await fetch(`${config.api.baseUrl}/application-decision`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await this.getAuthToken()}`
+        },
+        body: JSON.stringify({
+          applicationId,
+          applicationType,
+          decision: 'approved',
+          reviewedBy: 'admin'
+        })
+      });
 
-      if (error) {
-        console.error('Error approving application:', error);
-        throw new Error('Failed to approve application');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to approve application' }));
+        throw new Error(errorData.message || 'Failed to approve application');
       }
+
+      const result = await response.json();
+      console.log('Application approved:', result);
 
       return true;
     } catch (error) {
@@ -211,25 +223,43 @@ class AdminApiService {
     try {
       await this.checkAdminAuth();
 
-      const tableName = applicationType === 'publisher' ? 'publisher_applications' : 'retailer_applications';
-      const { error } = await supabase
-        .from(tableName)
-        .update({
-          status: 'denied',
-          denial_reason: reason
+      // Use the Supabase Edge Function that handles email notifications
+      const response = await fetch(`${config.api.baseUrl}/application-decision`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await this.getAuthToken()}`
+        },
+        body: JSON.stringify({
+          applicationId,
+          applicationType,
+          decision: 'denied',
+          reviewedBy: 'admin',
+          denialReason: reason
         })
-        .eq('id', applicationId);
+      });
 
-      if (error) {
-        console.error('Error denying application:', error);
-        throw new Error('Failed to deny application');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to deny application' }));
+        throw new Error(errorData.message || 'Failed to deny application');
       }
+
+      const result = await response.json();
+      console.log('Application denied:', result);
 
       return true;
     } catch (error) {
       console.error('Error denying application:', error);
       throw error;
     }
+  }
+
+  private async getAuthToken(): Promise<string> {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) {
+      throw new Error('No authentication token available');
+    }
+    return session.access_token;
   }
 
   // Reports Management

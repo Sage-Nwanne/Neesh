@@ -174,6 +174,34 @@ serve(async (req: Request) => {
 
     console.log("✅ Publisher application submitted successfully:", result);
 
+    // Send confirmation email
+    try {
+      const confirmationResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/application-confirmation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+        },
+        body: JSON.stringify({
+          applicationId: result.id,
+          applicationType: 'publisher',
+          applicantEmail: result.email,
+          applicantName: `${result.first_name} ${result.last_name}`.trim(),
+          businessName: (applicationData as any).business_name,
+          magazineTitle: result.magazine_title,
+        }),
+      });
+
+      if (confirmationResponse.ok) {
+        console.log("✅ Confirmation email sent successfully");
+      } else {
+        console.error("❌ Failed to send confirmation email:", await confirmationResponse.text());
+      }
+    } catch (emailError) {
+      console.error("❌ Error sending confirmation email:", emailError);
+      // Don't fail the application submission if email fails
+    }
+
     return new Response(JSON.stringify({
       success: true,
       message: "Application submitted",

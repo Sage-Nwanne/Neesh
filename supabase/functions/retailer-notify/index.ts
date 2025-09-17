@@ -95,7 +95,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'Neesh Applications <onboarding@resend.dev>',
-        to: ['sagenwanne5@gmail.com'], // Use verified email for testing
+        to: ['sagenwanne5@gmail.com'], // Admin notification
         subject: subject,
         html: html,
       }),
@@ -161,7 +161,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'Neesh Applications <applications@mail.neesh.art>',
-        to: ['sagenwanne5@gmail.com'], // Use verified email for testing
+        to: [r.buyer_email], // Send to actual applicant
         subject: confirmationSubject,
         html: confirmationHtml,
       }),

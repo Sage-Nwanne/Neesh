@@ -68,6 +68,34 @@ serve(async (req) => {
 
     console.log('✅ Retailer application submitted successfully:', result);
 
+    // Send confirmation email
+    try {
+      const confirmationResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/application-confirmation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+        },
+        body: JSON.stringify({
+          applicationId: result.id,
+          applicationType: 'retailer',
+          applicantEmail: result.buyer_email,
+          applicantName: result.buyer_name || 'there',
+          businessName: (applicationData as any).business_name,
+          shopName: result.shop_name,
+        }),
+      });
+
+      if (confirmationResponse.ok) {
+        console.log("✅ Confirmation email sent successfully");
+      } else {
+        console.error("❌ Failed to send confirmation email:", await confirmationResponse.text());
+      }
+    } catch (emailError) {
+      console.error("❌ Error sending confirmation email:", emailError);
+      // Don't fail the application submission if email fails
+    }
+
     return new Response(
       JSON.stringify({ success: true, message: "Application submitted", data: result }),
       { status: 201, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } },
