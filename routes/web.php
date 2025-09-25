@@ -28,4 +28,32 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+// Admin routes
+Route::middleware(['role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return "Welcome Admin!";
+    });
+});
+
+// Publisher routes
+Route::middleware(['role:publisher'])->group(function () {
+    Route::get('/publisher/dashboard', function () {
+        return "Welcome Publisher!";
+    });
+});
+
+// Retailer routes
+Route::middleware(['role:retailer'])->group(function () {
+    Route::get('/retailer/dashboard', function () {
+        return "Welcome Retailer!";
+    });
+});
+Route::middleware(['role:admin|publisher'])->group(function () {
+    Route::get('/products/manage', function () {
+        return "Admin & Publisher can manage products.";
+    });
+});
+
+
 require __DIR__.'/auth.php';
