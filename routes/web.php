@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MagazineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,26 +31,26 @@ Route::middleware('auth')->group(function () {
 
 
 // Admin routes
-Route::middleware(['role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return "Welcome Admin!";
     });
 });
 
 // Publisher routes
-Route::middleware(['role:publisher'])->group(function () {
-    Route::get('/publisher/dashboard', function () {
-        return "Welcome Publisher!";
-    });
+
+Route::middleware(['auth', 'role:publisher'])->group(function () {
+    Route::get('/magazines/create', [MagazineController::class, 'create'])->name('magazines.create');
+    Route::post('/magazines', [MagazineController::class, 'store'])->name('magazines.store');
 });
 
 // Retailer routes
-Route::middleware(['role:retailer'])->group(function () {
+Route::middleware(['auth', 'role:retailer'])->group(function () {
     Route::get('/retailer/dashboard', function () {
         return "Welcome Retailer!";
     });
 });
-Route::middleware(['role:admin|publisher'])->group(function () {
+Route::middleware(['auth', 'role:admin|publisher'])->group(function () {
     Route::get('/products/manage', function () {
         return "Admin & Publisher can manage products.";
     });

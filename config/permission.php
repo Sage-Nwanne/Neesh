@@ -199,4 +199,16 @@ return [
 
         'store' => 'default',
     ],
+    /*
+     * The default guard to use for permissions and roles.
+     * This can be set to any name, but must match the name of a guard
+     * in your auth.php configuration file.
+     */
+    'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+],
+
 ];
