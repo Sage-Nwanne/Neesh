@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Magazine;
+use App\Models\MagazineImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use App\Models\PublisherProfile;
 
 class MagazineController extends Controller
 {
@@ -13,63 +14,113 @@ class MagazineController extends Controller
     {
         return view('magazines.create');
     }
+    public function showByPublisher()
+    {
+        // publisher profile find karo
+        $publisher = auth()->user();
+
+        $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
+        if (!$publisherProfile) {
+            return redirect()->back()->with('error', 'Publisher profile not found.');
+        }
+        // us publisher ki magazines load karo + unki images
+        $magazines = Magazine::with('images')
+            ->where('publisher_id', $publisherProfile->id)
+            ->get();
+
+        return view('dashboard', compact('magazines', 'publisherProfile'));
+    }
+    public function show($id)
+{
+    $magazine = Magazine::with('images', 'publisher')->findOrFail($id);
+
+    // For related products, show others from same publisher or same genre
+    $relatedMagazines = Magazine::where('publisher_id', $magazine->publisher_id)
+        ->where('id', '!=', $magazine->id)
+        ->take(4)
+        ->get();
+
+    return view('magazines.index', compact('magazine', 'relatedMagazines'));
+}
+
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title_name' => 'required|string|max:255',
-            'issue_identifier' => 'required|string|max:255',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // extra images
-            'genre' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'dimensions' => 'nullable|string|max:255',
-            'page_count' => 'nullable|integer',
-            'stock' => 'nullable|integer',
-            'wholesale_price' => 'nullable|numeric',
-            'msrp' => 'nullable|numeric',
-            'return_policy' => 'nullable|string|max:255',
-            'retailer_fit_tags' => 'nullable|string',
+        try {
+            //code...
+       
+        $publisher = auth()->user();
+
+        $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
+
+        if (!$publisherProfile) {
+            return redirect()->back()->with('error', 'Publisher profile not found.');
+        }
+        // ✅ validate input
+        $validated = $request->validate([
+            'title'             => ['required', 'string', 'max:255'],
+            'issue_number'      => ['nullable', 'string', 'max:255'],
+            'frequency'         => ['nullable', 'string', 'max:255'],
+            'type'              => ['required', 'in:single,series'],
+            'genre'             => ['nullable', 'string'],
+            'dimensions'        => ['nullable', 'string'],
+            'page_count'        => ['nullable', 'integer'],
+            'print_run'         => ['required', 'integer'],
+            'warehouse'         => ['nullable', 'string'],
+            'stock'             => ['required', 'integer'],
+            'restock_time'      => ['nullable', 'string'],
+            'promotional_text'  => ['nullable', 'string'],
+            'metadata'          => ['nullable', 'string'],
+            'wholesale_price'   => ['required', 'numeric'],
+            'retail_price'      => ['required', 'numeric'],
+            'discount'          => ['nullable', 'string'],
+            'payment_terms'     => ['nullable', 'string'],
+
+            'files'   => ['nullable', 'array', 'max:6'],
+            // 'files.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
         ]);
 
-        // Create magazine
+        // ✅ save magazine
         $magazine = Magazine::create([
-            'publisher_id' => Auth::user()->publisherProfile->id, // assuming relation
-            'title_name' => $request->title_name,
-            'issue_identifier' => $request->issue_identifier,
-            'cover_image' => $request->file('cover_image')
-                ? $request->file('cover_image')->store('magazines/covers', 'public')
-                : null,
-            'genre' => $request->genre,
-            'description' => $request->description,
-            'dimensions' => $request->dimensions,
-            'page_count' => $request->page_count,
-            'stock' => $request->stock ?? 0,
-            'wholesale_price' => $request->wholesale_price,
-            'msrp' => $request->msrp,
-            'return_policy' => $request->return_policy,
-            'retailer_fit_tags' => $request->retailer_fit_tags,
-            'status' => 'pending',
-            'logo' => $request->file('logo')
-                ? $request->file('logo')->store('magazines/logos', 'public')
-                : null,
-            'type' => $request->type,
-            'total_printed' => $request->total_printed ?? 0,
-            'visibility' => $request->has('visibility'),
-            'restock_timeline' => $request->restock_timeline,
-
+            'title_name'        => $validated['title'],
+            'publisher_id'      => $publisherProfile->id, // ✅ ab correct foreign key
+            'issue_identifier'  => $validated['issue_number'] ?? null,
+            'issue_frequency'   => $validated['frequency'] ?? null,
+            'type'              => $validated['type'],
+            'dimensions'        => $validated['dimensions'] ?? null,
+            'page_count'        => $validated['page_count'] ?? null,
+            'total_printed'     => $validated['print_run'],
+            'warehouse'         => $validated['warehouse'] ?? null,
+            'stock'             => $validated['stock'],
+            'restock_time'      => $validated['restock_time'] ?? null,
+            'promotional_text'  => $validated['promotional_text'] ?? null,
+            'metadata'          => $validated['metadata'] ?? null,
+            'wholesale_price'   => $validated['wholesale_price'],
+            'msrp'              => $validated['retail_price'],
+            'discount'          => $validated['discount'] ?? null,
+            'payment_terms'     => $validated['payment_terms'] ?? null,
+            'status'            => 'pending',
         ]);
 
-        // Store multiple images (extra fields, not in migration)
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $path = $file->store('magazines/images', 'public');
-                $magazine->images()->create([
-                    'image_path' => $path,
+        // ✅ save images
+        // dd($request->file('files'));
+        if ($request->file('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('magazines', 'public');
+                MagazineImage::create([
+                    'magazine_id' => $magazine->id,
+                    'image_path'  => $path,
                 ]);
             }
         }
 
-        return redirect()->route('magazines.create')->with('success', 'Magazine submitted successfully!');
+        return redirect()->back()->with('success', 'Magazine uploaded successfully!');
+         } catch (\Exception $e) {
+            //throw $th;
+        return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+
+        }
+
+        
     }
 }

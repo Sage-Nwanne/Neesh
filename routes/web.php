@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MagazineController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RetailerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +17,47 @@ use App\Http\Controllers\MagazineController;
 |
 */
 
+Route::get('/admin/verify-user/{id}', [AdminController::class, 'verifyUser'])
+    ->name('admin.verify.user');
+
+
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/start', function () {
+    return view('start');
+})->name('start');
+Route::get('/register/publisher', function () {
+    return view('publisher.auth.register');
+})->name('register.publisher');
+Route::get('/register/retailer', function () {
+    return view('retailer.auth.register');
+})->name('register.retailer');
+
+
+Route::post('/retailerregister', [RetailerController::class, 'store'])->name('register.submit.retailer');
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard'); 
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+
+    if ($user->hasRole('admin')) {
+        return app(AdminController::class)->dashboard();
+    }
+
+    if ($user->hasRole('publisher')) {
+        return app(MagazineController::class)->showByPublisher();
+    }
+
+    if ($user->hasRole('retailer')) {
+        return app(RetailerController::class)->dashboard();
+    }
+
+    abort(403, 'Unauthorized access.');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -38,10 +75,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 // Publisher routes
+Route::get('/magazine/{id}', [MagazineController::class, 'show'])->name('magazines.show');
 
 Route::middleware(['auth', 'role:publisher'])->group(function () {
-    Route::get('/magazines/create', [MagazineController::class, 'create'])->name('magazines.create');
-    Route::post('/magazines', [MagazineController::class, 'store'])->name('magazines.store');
+   Route::get('/magazines/create', [MagazineController::class, 'create'])->name('magazines.create');
+Route::post('/magazines', [MagazineController::class, 'store'])->name('magazines.store');
+
 });
 
 // Retailer routes

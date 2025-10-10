@@ -1,47 +1,98 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="en">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+  <style>
+    .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            border: 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        .btn-back {
+            background: #eee;
+            color: #222;
+        }
+
+        .btn-next {
+            background: #222;
+            color: #fff;
+        }
+  </style>
+</head>
+
+<body>
+  <div class="logo-image">
+    <img src="{{ asset('assets/image/Logo A1.png') }}" alt="Logo Image">
+  </div>
+
+  <div class="new_to_nessh_innerwhole_container">
+    <a href="{{ url()->previous() }}" class="new_to_nessh_back_arrow">
+      <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back Arrow">
+    </a>
+    <div class="new_to_nessh_container">
+      <div class="heading_and_description_container">
+        <h1 class="new_to_nessh_heading">
+          Welcome Back
+        </h1>
+        <p class="new_to_nessh_description">
+          Log in to your account
+        </p>
+      </div>
+
+      <div class="publisher_and_retailer_conatiner">
+        <form method="POST" action="{{ route('login') }}">
+          @csrf
+          <div class="name_and_password_inputs">
+            <div class="email_container">
+              <input type="email" name="email" placeholder="Email" class="input_innerclass" required autofocus>
+            </div>
+            <div class="password_container">
+              <input type="password" name="password" placeholder="Password" class="input_innerclass" required>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; margin-top:10px; margin-bottom:20px;">
+          <button type="submit" class="btn btn-next" id="nextBtn">Login</button>
+
+
+          </div>
+        </form>
+
+        <div class="or-divider_login">
+          <span>OR</span>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="log_in_container">
+          <p class="log_in_text">New to Neesh?</p>
+          <a href="{{ route('start') }}" class="log_in">
+            <p>Apply</p>
+            <div class="log_in_navigation_arrow">
+              <img src="{{ asset('assets/image/right arrow.png') }}" alt="Right Navigation Arrow">
+            </div>
+          </a>
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
+        <div class="talking_with_team_container">
+          <div class="only_border"></div>
+          <div class="talking_with_team_inner">
+            <p>Have any questions?</p>
+            <a href="#" class="team_call_and_image">
+              <h3>Talk to the team</h3>
+              <div class="team_call_navigation_arrow">
+                <img src="{{ asset('assets/image/right arrow.png') }}" alt="Right Navigation Arrow">
+              </div>
+            </a>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+</body>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</html>

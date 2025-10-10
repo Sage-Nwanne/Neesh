@@ -9,19 +9,52 @@ class Magazine extends Model
 {
     use HasFactory;
 
-   protected $fillable = [
-    'publisher_id','title_name','issue_identifier','cover_image','logo','genre','description',
-    'dimensions','page_count','stock','total_printed','wholesale_price','msrp',
-    'return_policy','retailer_fit_tags','type','visibility','archive','restock_timeline','status'
-];
+    protected $fillable = [
+        'publisher_id',
+        'title_name',
+        'issue_identifier',
+        'cover_image',
+        'logo',
+        'specs',
+        'genre',
+        'warehouse',
+        'description',
+        'dimensions',
+        'page_count',
+        'stock',
+        'total_printed',
+        'copies_sold',
+        'wholesale_price',
+        'msrp',
+        'type',
+        'series_issue_count',
+        'issue_frequency',
+        'return_policy',
+        'fulfillment_method',
+        'retailer_fit_tags',
+        'promotional_text',
+        'metadata',
+        'sales_experience',
+        'sales_feedback',
+        'visibility',
+        'restock_timeline',
+        'status',
+    ];
+
+    protected $casts = [
+        'metadata' => 'array',
+        'sales_experience' => 'boolean',
+        'visibility' => 'boolean',
+        'restock_timeline' => 'date',
+    ];
 
 
-    public function publisher() {
+    public function publisher()
+    {
         return $this->belongsTo(PublisherProfile::class, 'publisher_id');
     }
     public function images()
-{
-    return $this->hasMany(MagazineImage::class);
-}
-
+    {
+        return $this->hasMany(MagazineImage::class);
+    }
 }

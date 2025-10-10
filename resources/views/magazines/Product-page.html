@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product Gallery - Clone</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="assets/js/menu.js"></script>
+  <script src="assets/js/product-page.js" defer></script>
+</head>
+
+<body>
+  <div class="upload_topmenu_wrapper">
+    <div class="upload_topmenu">
+      <div class="logo-image">
+        <img src="image/Logo A1.png" alt="Logo Image">
+      </div>
+      <div class="menu-and-cart-container">
+        <div class="cart-container">
+          <object type="image/svg+xml" data="svg/add-to-cart.svg"></object>
+        </div>
+        <div class="menu-container" id="menuToggle">
+          <img src="svg/hamburger-menu.svg" alt="menu" class="hamburger-menu_image">
+        </div>
+      </div>
+
+      <div id="sideMenu" class="side-menu">
+        <span class="closeBtn" id="closeMenu">✕</span>
+        <a href="#">Dashboard</a>
+        <a href="Catelog.html">Catalogue</a>
+        <a href="#">Orders</a>
+        <a href="#">Messages</a>
+        <a href="#">Account</a>
+        <a href="#">Help Center</a>
+        <a href="#">FAQ</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="product_heading_link">
+    <a href="Catelog.html" class="login_new_to_nessh_back_arrow">
+      <div class="back_navigation_title">
+        <img src="image/left arrow.png" alt="Back Arrow">
+      </div>
+      <h2 class="my_title">My Titles</h2>
+    </a>
+  </div>
+
+
+
+
+<div class="product-wrap_wrapper-wrapper page-width">
+  <div class="product-wrap_wrapper">
+    <div class="product-wrap">
+
+      <div class="gallery" aria-label="Product images gallery">
+        <div class="main-viewport" aria-live="polite">
+          <img src="image/Catalogue 1.png" data-index="0" class="main-img" alt="Product image 1">
+          <img src="image/Catalogue 2.png" data-index="1" class="main-img" style="opacity:0;transform:scale(1.02)"
+            alt="Product image 2">
+          <img src="image/Catalogue 3.png" data-index="2" class="main-img" style="opacity:0;transform:scale(1.02)"
+            alt="Product image 3">
+          <img src="image/Catalogue 4.png" data-index="3" class="main-img" style="opacity:0;transform:scale(1.02)"
+            alt="Product image 4">
+          <img src="image/Catalogue 5.png" data-index="4" class="main-img" style="opacity:0;transform:scale(1.02)"
+            alt="Product image 5">
+          <img src="image/Catalogue 6.png" data-index="5" class="main-img" style="opacity:0;transform:scale(1.02)"
+            alt="Product image 6">
+
+          <div class="controls">
+            <button class="arrow prev" aria-label="Previous image">
+              <img src="image/left arrow.png">
+            </button>
+            <button class="arrow next" aria-label="Next image">
+              <img src="image/right arrow.png">
+            </button>
+          </div>
+        </div>
+
+        <div class="thumbs" role="tablist" aria-label="Thumbnails">
+          <button class="thumb active" data-index="0" role="tab" aria-selected="true" aria-controls="main-image-0">
+            <img src="image/Catalogue 1.png" alt="Thumbnail 1">
+          </button>
+          <button class="thumb" data-index="1" role="tab" aria-selected="false" aria-controls="main-image-1">
+            <img src="image/Catalogue 2.png" alt="Thumbnail 2">
+          </button>
+          <button class="thumb" data-index="2" role="tab" aria-selected="false" aria-controls="main-image-2">
+            <img src="image/Catalogue 3.png" alt="Thumbnail 3">
+          </button>
+          <button class="thumb" data-index="3" role="tab" aria-selected="false" aria-controls="main-image-3">
+            <img src="image/Catalogue 4.png" alt="Thumbnail 4">
+          </button>
+          <button class="thumb" data-index="4" role="tab" aria-selected="false" aria-controls="main-image-3">
+            <img src="image/Catalogue 5.png" alt="Thumbnail 5">
+          </button>
+          <button class="thumb" data-index="5" role="tab" aria-selected="false" aria-controls="main-image-3">
+            <img src="image/Catalogue 6.png" alt="Thumbnail 6">
+          </button>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn">
+            <span>Bookmark</span>
+            <img src="image/black save icon.png" alt="Bookmark Icon">
+          </button>
+
+          <button class="action-btn">
+            <span>Copy info</span>
+            <img src="image/Qr code.png" alt="Copy Icon">
+          </button>
+
+          <button class="action-btn">
+            <span>Contact Publisher</span>
+            <img src="image/email.png" alt="Mail Icon">
+          </button>
+        </div>
+      </div>
+
+
+      <div class="right_container">
+        <h2 class="product_title">WW Zine</h2>
+        <div class="product_special_infprmation_contaienr">
+          <p class="book_owner">Weird Walk</p>
+          <p class="issue_no">Issue 8</p>
+        </div>
+        <div class="product_special_infprmation_contaienr">
+          <p class="product_special_infprmation">2025</p>
+          <p class="product_special_infprmation">ISSN</p>
+        </div>
+        <div class="product_special_infprmation_contaienr">
+          <P class="product_special_infprmation">48 pages</P>
+          <p class="product_special_infprmation">148 mm x 210 mm</p>
+        </div>
+        <div class="product_special_infprmation_contaienr">
+          <p class="product_special_infprmation">SKU</p>
+          <p class="product_special_infprmation">Soft Cover</p>
+        </div>
+        <p class="product_special_infprmation">Folklore, Horror</p>
+        <p class="product_disscription">
+          It is with much gladness that we present issue number eight of our irregular journal.
+        </p>
+        <p class="product_disscription">
+          With spring well and truly sprung, there is no better moment to be reminded of the creativity which continues
+          to
+          unfold in the landscape, whether through new folk forms, socially-engaged art or weird tales told on stage and
+          screen.
+        </p>
+        <p class="product_disscription">
+          With contributions from Maxine Peake, Rachel Adams, Lucy Wright, Isaura Barbé-Brown and Beccy Mccray.
+        </p>
+        <p class="price_text">Price</p>
+        <div class="price_container">
+          <div class="wsp_msrp_containers_wrapper">
+            <div class="wsp_price_wrapper">
+              <p class="wsp_container">WSP</p>
+              <p class="wsp_price">$8.81</p>
+            </div>
+            <div class="msrp_price_wrapper">
+              <p class="msrp_text">MSRP</p>
+              <p class="msrp_price">$20.00</p>
+            </div>
+          </div>
+
+          <div class="my_margin_container">
+            <p class="my_margin_text">MY MARGIN</p>
+            <P class="my_margin_price">$7.59</P>
+          </div>
+        </div>
+
+        <div class="product-data" data-product-id="prod-001" data-product-title="WW Zine" data-product-price="8.81"
+          data-product-img="image/Catalogue 1.png">
+        </div>
+
+        <div class="cart-component">
+          <div class="quantity-selector" data-quantity="1">
+            <button class="quantity-btn decrease" type="button" aria-label="Decrease quantity">−</button>
+            <span class="quantity-display">1</span>
+            <button class="quantity-btn increase" type="button" aria-label="Increase quantity">+</button>
+          </div>
+
+          <a class="add-to-cart" href="#" role="button">
+            <span>Add To Cart</span>
+            <i class="fa-solid fa-bag-shopping"></i>
+          </a>
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="relative_collection-wrapper">
+    <h2 class="relative_product_title">
+      Explore similar titles
+    </h2>
+    <div class="collection">
+      <a href="product2.html" class="product-card relative-product product-card-underline">
+        <img src="image/Catalogue 1.png" alt="Product 1">
+        <div class="product_info">
+          <span class="product_vendor">WW Issue 08</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Weird Walk</h3>
+            <p>UK</p>
+          </div>
+          <span class="product_price">$ 8.81</span>
+        </div>
+      </a>
+      <a href="product2.html" class="product-card relative-product product-card-underline">
+        <img src="image/Catalogue 2.png" alt="Product 2">
+        <div class="product_info">
+          <span class="product_vendor">Catnip Vol 1</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Broccoli</h3>
+            <p>Portland, OR</p>
+          </div>
+          <span class="product_price">$ 28.00</span>
+        </div>
+      </a>
+      <a href="#" class="product-card relative-product product-card-underline">
+        <img src="image/Catalogue 6.png" alt="Product 6">
+        <div class="product_info">
+          <span class="product_vendor">Mushroom People</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Broccoli</h3>
+            <p>Portland, OR</p>
+          </div>
+          <span class="product_price">$ 28.00</span>
+        </div>
+      </a>
+      <a href="#" class="product-card relative-product product-card-underline">
+        <img src="image/Catalogue 12.png" alt="Product 12">
+        <div class="product_info">
+          <span class="product_vendor">Wild Alchemy Journal Issue No. 5: Aether</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Mama Xanadu</h3>
+            <p>UK</p>
+          </div>
+          <span class="product_price">$ 35.00</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+
+
+  <div id="cartOverlay" class="cart-overlay" aria-hidden="true"></div>
+
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+    <div class="top_cartdrawer">
+      <div class="cart-header">
+        <h3 class="cart-title">Your Cart</h3>
+        <button id="closeCart" class="cart-close" aria-label="Close cart">✕</button>
+      </div>
+
+      <div id="cartItems" class="cart-items"></div>
+    </div>
+
+    <div class="bottom_cartdrawer">
+      <div class="cart-subtotal">
+        <strong>Subtotal</strong>
+        <strong id="subtotal">$0.00</strong>
+      </div>
+
+      <div class="cart-footer">
+        <a href="cheekout.html" id="checkoutBtn" class="cart-checkout">Checkout</a>
+      </div>
+    </div>
+  </aside>
+</div>
+
+</body>
+
+</html>

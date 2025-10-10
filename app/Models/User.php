@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Contracts\Auth\MustVerifyEmail; // ye line uncomment karo
 
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -34,7 +36,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
+public function sendEmailVerificationNotification()
+    {
+        // Do nothing (we don’t want to send verification to the user)
+    }
     /**
      * The attributes that should be cast.
      *
@@ -49,5 +54,10 @@ class User extends Authenticatable
 {
     return $this->hasOne(PublisherProfile::class);
 }
+public function retailerProfile()
+{
+    return $this->hasOne(RetailerProfile::class);
+}
+
 
 }
