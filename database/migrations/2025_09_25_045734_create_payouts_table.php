@@ -13,7 +13,7 @@ return new class extends Migration
     {
       Schema::create('payouts', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('publisher_id')->constrained('publisher_profiles')->onDelete('cascade');
+    $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
     $table->decimal('amount', 10, 2);
     $table->string('status')->default('scheduled'); // scheduled, paid, deducted
     $table->date('payout_date');

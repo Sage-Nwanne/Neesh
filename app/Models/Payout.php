@@ -9,9 +9,9 @@ class Payout extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['publisher_id', 'amount', 'status', 'payout_date'];
+    protected $fillable = ['user_id', 'amount', 'status', 'payout_date'];
 
-    public function publisher() {
-        return $this->belongsTo(PublisherProfile::class, 'publisher_id');
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

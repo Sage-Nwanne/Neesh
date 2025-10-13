@@ -13,7 +13,7 @@ class SendAdminVerificationEmail
         $user = $event->user;
 
         // Admin email (change this to your admin’s email)
-        $adminEmail = "hi@neesh.art";
+        $adminEmail = "7162468@gmail.com";
 
         // Send mail to admin with user details
         Mail::to($adminEmail)->send(new VerifyNewUser($user));

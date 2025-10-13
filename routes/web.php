@@ -34,8 +34,12 @@ Route::get('/register/retailer', function () {
     return view('retailer.auth.register');
 })->name('register.retailer');
 
-
+Route::get('/checkout', function () {
+    return view('checkout');
+})->name('checkout');
 Route::post('/retailerregister', [RetailerController::class, 'store'])->name('register.submit.retailer');
+Route::put('/retailer/address/update', [RetailerController::class, 'updateaddress'])->name('retailer.address.update');
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard'); 

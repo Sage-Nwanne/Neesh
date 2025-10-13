@@ -202,7 +202,7 @@
                   <input type="number" class="uptitle-input-text" name="print_run" placeholder="Print Run" required>
                   <input type="text" class="uptitle-input-text" name="warehouse" placeholder="e.g ,123 NEESH St, New York, NY 10001" required>
                   <input type="number" class="uptitle-input-text" name="stock" placeholder="Available Quantities" required>
-                  <input type="text" class="uptitle-input-text" name="restock_time" placeholder="e.g , 3 months, 6 weeks">
+                  <input type="text" class="uptitle-input-text" name="restock_time" placeholder="Restock Timeline (e.g , 3 months, 6 weeks) ">
               </div>
 
               <div class="uptitle-right-col">

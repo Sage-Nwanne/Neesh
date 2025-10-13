@@ -45,18 +45,57 @@
     }
 
     // validation for a step index
-    function publisher_validateStep(n) {
-        const publisher_fields = Array.from(publisher_steps[n].querySelectorAll('.publisher_formfields'));
-        let publisher_valid = true;
+   function publisher_validateStep(n) {
+    const publisher_fields = Array.from(publisher_steps[n].querySelectorAll('.publisher_formfields'));
+    let publisher_valid = true;
 
-        for (const publisher_field of publisher_fields) {
-            const publisher_input = publisher_field.querySelector('input, textarea, select');
-            const publisher_isVisible = publisher_field.offsetParent !== null;
-            const publisher_shouldValidate = publisher_input && publisher_input.hasAttribute('required') && publisher_isVisible;
+    for (const publisher_field of publisher_fields) {
+        const publisher_input = publisher_field.querySelector('input, textarea, select');
+        const publisher_isVisible = publisher_field.offsetParent !== null;
+        const publisher_shouldValidate = publisher_input && publisher_input.hasAttribute('required') && publisher_isVisible;
 
-            if (publisher_shouldValidate && !String(publisher_input.value || '').trim()) {
+        // Remove any old error message
+        let oldError = publisher_field.querySelector('.error-message');
+        if (oldError) oldError.remove();
+
+        if (publisher_shouldValidate && !String(publisher_input.value || '').trim()) {
+            publisher_field.classList.add('showerror');
+            publisher_valid = false;
+
+            // Create and append error message
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'error-message';
+            errorMsg.style.color = 'red';
+            errorMsg.style.fontSize = '12px';
+            errorMsg.style.marginTop = '0px';
+            errorMsg.textContent = `${publisher_input.getAttribute('name')?.replace(/_/g, ' ') || 'This field'} is required`;
+            publisher_field.appendChild(errorMsg);
+
+            if (!publisher_form._focusedInvalid) {
+                publisher_input.focus();
+                publisher_form._focusedInvalid = true;
+            }
+        } else {
+            publisher_field.classList.remove('showerror');
+        }
+
+        // Strict email check on step 0
+        if (n === 0 && publisher_input && publisher_input.type === 'email') {
+            const oldEmailError = publisher_field.querySelector('.error-message');
+            if (!publisher_validateEmail(publisher_input.value.trim())) {
                 publisher_field.classList.add('showerror');
                 publisher_valid = false;
+
+                if (oldEmailError) oldEmailError.remove();
+
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.style.color = 'red';
+                errorMsg.style.fontSize = '12px';
+                errorMsg.style.marginTop = '4px';
+                errorMsg.textContent = 'Please enter a valid email address';
+                publisher_field.appendChild(errorMsg);
+
                 if (!publisher_form._focusedInvalid) {
                     publisher_input.focus();
                     publisher_form._focusedInvalid = true;
@@ -64,25 +103,12 @@
             } else {
                 publisher_field.classList.remove('showerror');
             }
-
-            // Strict email check on step 0
-            if (n === 0 && publisher_input && publisher_input.type === 'email') {
-                if (!publisher_validateEmail(publisher_input.value.trim())) {
-                    publisher_field.classList.add('showerror');
-                    publisher_valid = false;
-                    if (!publisher_form._focusedInvalid) {
-                        publisher_input.focus();
-                        publisher_form._focusedInvalid = true;
-                    }
-                } else {
-                    publisher_field.classList.remove('showerror');
-                }
-            }
         }
-
-        publisher_form._focusedInvalid = false;
-        return publisher_valid;
     }
+
+    publisher_form._focusedInvalid = false;
+    return publisher_valid;
+}
 
     // series toggle
     const publisher_radioSingle = document.getElementById('single_issue');

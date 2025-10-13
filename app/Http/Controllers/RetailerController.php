@@ -6,7 +6,10 @@ use App\Models\User;
 use App\Models\RetailerProfile;
 use App\Models\Magazine;
 use App\Models\RetailerAddress;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -21,37 +24,27 @@ class RetailerController extends Controller
     $magazines = Magazine::with('images')->get();
         return view('retailer.dashboard', compact('magazines', 'retailerProfile'));
     }
-    public function store(Request $request)
-    {
-        try {
-            //code...
+   public function store(Request $request)
+{
+    try {
         $validated = $request->validate([
-            // Step 1
             'buyer_name' => 'required|string|max:255',
             'email_address' => 'required|email|unique:users,email',
             'phone_number' => 'required|string|max:20',
             'password' => 'required|string|min:6',
-
-            // Step 2
             'storename' => 'required|string|max:255',
             'bussinesyears' => 'nullable|integer|min:0',
             'storecategory' => 'nullable|string|max:255',
             'store_type' => 'nullable|string|max:255',
             'store_size' => 'nullable|string|max:255',
-
-            // Step 3
             'address_line1' => 'required|string|max:255',
             'address_line2' => 'nullable|string|max:255',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'zip_code' => 'required|string|max:20',
-
-            // Step 4
             'target_customers' => 'nullable|array',
             'store_aesthetic' => 'nullable|array',
             'interested_genres' => 'nullable|array',
-
-            // Step 5
             'pos_system' => 'nullable|string|max:255',
             'issue_frequency' => 'nullable|string|max:255',
             'monthly_budget' => 'nullable|numeric',
@@ -60,17 +53,15 @@ class RetailerController extends Controller
             'mag_other_input' => 'nullable|string|max:255',
         ]);
 
-        DB::transaction(function () use ($validated, $request) {
-            // Step 1 — Create user
+        $user = DB::transaction(function () use ($validated) {
             $user = User::create([
                 'name' => $validated['buyer_name'],
                 'email' => $validated['email_address'],
                 'password' => Hash::make($validated['password']),
             ]);
 
-            $user->assignRole('retailer'); // if Spatie roles are in use
+            $user->assignRole('retailer');
 
-            // Step 2–5 — Create retailer profile
             $profile = RetailerProfile::create([
                 'user_id' => $user->id,
                 'store_name' => $validated['storename'],
@@ -89,7 +80,6 @@ class RetailerController extends Controller
                 'mag_other_input' => $validated['mag_other_input'] ?? null,
             ]);
 
-            // Step 3 — Create address
             RetailerAddress::create([
                 'retailer_id' => $profile->id,
                 'address_line1' => $validated['address_line1'],
@@ -97,17 +87,47 @@ class RetailerController extends Controller
                 'city' => $validated['city'],
                 'state' => $validated['state'],
                 'zip_code' => $validated['zip_code'],
-                'country' => 'US', // optional
+                'country' => 'US',
             ]);
+
+            return $user;
         });
-        return redirect()->back()->with('success', 'Retailer created successfully!');
-  
+
+        event(new Registered($user));
+        Auth::login($user);
+
+        return redirect(RouteServiceProvider::HOME)
+            ->with('success', 'Publisher registered successfully! You will receive a confirmation email from admin shortly.');
+
     } catch (\Exception $e) {
-            //throw $th;
         return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
-
-        }
-
     }
+}
+
+
+    public function updateaddress(Request $request)
+{
+    $request->validate([
+        'address_line1' => 'required|string|max:255',
+        'address_line2' => 'nullable|string|max:255',
+        'city' => 'required|string|max:100',
+        'state' => 'nullable|string|max:100',
+        'zip_code' => 'nullable|string|max:20',
+        'country' => 'nullable|string|max:100',
+    ]);
+
+    $address = RetailerAddress::find($request->address_id);
+
+    if (!$address || $address->retailer_id !== auth()->user()->retailerProfile->id) {
+        abort(403, 'Unauthorized');
+    }
+
+    $address->update($request->only([
+        'address_line1', 'address_line2', 'city', 'state', 'zip_code', 'country'
+    ]));
+
+    return redirect()->back()->with('success', 'Address updated successfully.');
+}
+
 }
 

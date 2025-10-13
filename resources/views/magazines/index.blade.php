@@ -169,7 +169,83 @@
 
     </div>
   </div>
+   <div class="relative_collection-wrapper">
+    <h2 class="relative_product_title">
+      Explore similar titles
+    </h2>
+    <div class="collection">
+      <a href="product2.html" class="product-card relative-product product-card-underline">
+        <img src="{{asset('assets/image/Catalogue 1.png')}}" alt="Product 6">
+        <div class="product_info">
+          <span class="product_vendor">WW Issue 08</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Weird Walk</h3>
+            <p>UK</p>
+          </div>
+          <span class="product_price">$ 8.81</span>
+        </div>
+      </a>
+      <a href="product2.html" class="product-card relative-product product-card-underline">
+        <img src="{{asset('assets/image/Catalogue 6.png')}}" alt="Product 6">
+        <div class="product_info">
+          <span class="product_vendor">Catnip Vol 1</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Broccoli</h3>
+            <p>Portland, OR</p>
+          </div>
+          <span class="product_price">$ 28.00</span>
+        </div>
+      </a>
+      <a href="#" class="product-card relative-product product-card-underline">
+        <img src="{{asset('assets/image/Catalogue 6.png')}}" alt="Product 6">
+        <div class="product_info">
+          <span class="product_vendor">Mushroom People</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Broccoli</h3>
+            <p>Portland, OR</p>
+          </div>
+          <span class="product_price">$ 28.00</span>
+        </div>
+      </a>
+      <a href="#" class="product-card relative-product product-card-underline">
+        <img src="{{asset('assets/image/Catalogue 12.png')}}" alt="Product 6">
+        <div class="product_info">
+          <span class="product_vendor">Wild Alchemy Journal Issue No. 5: Aether</span>
+          <div class="title_and_country">
+            <h3 class="product_title">Mama Xanadu</h3>
+            <p>UK</p>
+          </div>
+          <span class="product_price">$ 35.00</span>
+        </div>
+      </a>
+    </div>
+  </div>
 
+
+  <div id="cartOverlay" class="cart-overlay" aria-hidden="true"></div>
+
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+    <div class="top_cartdrawer">
+      <div class="cart-header">
+        <h3 class="cart-title">Your Cart</h3>
+        <button id="closeCart" class="cart-close" aria-label="Close cart">✕</button>
+      </div>
+      
+      <div id="cartItems" class="cart-items"></div>
+    </div>
+
+    <div class="bottom_cartdrawer">
+      <div class="cart-subtotal">
+        <strong>Subtotal</strong>
+        <strong id="subtotal">$0.00</strong>
+      </div>
+
+      <div class="cart-footer">
+        <a href="{{route('checkout')}}" id="checkoutBtn" class="cart-checkout">Checkout</a>
+      </div>
+    </div>
+  </aside>
+</div>
 
 </body>
 
