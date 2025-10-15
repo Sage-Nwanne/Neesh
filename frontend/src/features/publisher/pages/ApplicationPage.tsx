@@ -99,9 +99,9 @@ const ApplicationPage: React.FC = () => {
       <header style={headerStyles}>
         <div style={containerStyles}>
           <div style={logoStyles}>
-            <Link to="/">
+            <a href="/">
               <img src="/NEESH-logo-transparent.png.png" alt="NEESH" style={{ height: '32px', width: 'auto' }} />
-            </Link>
+            </a>
           </div>
 
           {/* Desktop Navigation */}
@@ -112,7 +112,7 @@ const ApplicationPage: React.FC = () => {
               onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
               onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
             >
-              Apply to List a Magazine
+              For Publishers
             </Link>
             <Link
               to="/retailer-application"
@@ -120,7 +120,7 @@ const ApplicationPage: React.FC = () => {
               onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
               onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
             >
-              Request Access for Your Shop
+              For Retailers
             </Link>
             <Link
               to="/faq"
@@ -130,14 +130,6 @@ const ApplicationPage: React.FC = () => {
             >
               FAQ
             </Link>
-            <a
-              href="mailto:hi@neesh.art"
-              style={navLinkStyles}
-              onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#000'}
-              onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#515050'}
-            >
-              Talk to the Team
-            </a>
             <Link
               to="/why-neesh"
               style={navLinkStyles}
@@ -162,10 +154,9 @@ const ApplicationPage: React.FC = () => {
 
         {/* Mobile Navigation Menu */}
         <div style={mobileMenuStyles}>
-          <Link to="/publisher-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Apply to List a Magazine</Link>
-          <Link to="/retailer-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Request Access for Your Shop</Link>
+          <Link to="/publisher-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>For Publishers</Link>
+          <Link to="/retailer-application" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>For Retailers</Link>
           <Link to="/faq" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>FAQ</Link>
-          <a href="mailto:hi@neesh.art" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Talk to the Team</a>
           <Link to="/why-neesh" style={mobileNavLinkStyles} onClick={toggleMobileMenu}>Why Neesh</Link>
         </div>
       </header>

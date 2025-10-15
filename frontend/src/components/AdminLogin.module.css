@@ -164,6 +164,126 @@
   line-height: 1.4;
 }
 
+/* Forgot Password Styles */
+.forgotPassword {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.forgotPasswordLink {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.forgotPasswordLink:hover {
+  color: #000;
+}
+
+.forgotPasswordSection {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.forgotPasswordText {
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.forgotPasswordActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cancelButton {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cancelButton:hover {
+  background: #5a6268;
+}
+
+.resetButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resetButton:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.resetButton:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.resetSuccess {
+  text-align: center;
+  padding: 1rem;
+}
+
+.resetSuccess svg {
+  color: #28a745;
+  margin-bottom: 0.5rem;
+}
+
+.resetSuccess p {
+  color: #333;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.resetSuccessSubtext {
+  color: #666 !important;
+  font-size: 0.8rem !important;
+  font-weight: normal !important;
+}
+
+.backToLoginButton {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 0.75rem;
+}
+
+.backToLoginButton:hover {
+  background: #218838;
+}
+
 /* Responsive Design */
 @media (max-width: 480px) {
   .loginContainer {

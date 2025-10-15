@@ -157,16 +157,7 @@ const Auth = () => {
               </div>
             </div>
             
-            <div className="text-center pt-6 border-t border-border">
-              <p className="text-caption text-muted-foreground mb-6 leading-relaxed">
-                Have questions about joining Neesh?
-              </p>
-              <Button variant="ghost" className="text-primary font-medium" asChild>
-                <a href="mailto:hi@neesh.art">
-                  Talk to the Team
-                </a>
-              </Button>
-            </div>
+
           </CardContent>
         </Card>
         </div>

@@ -1,0 +1,345 @@
+.landingPage {
+  min-height: 100vh;
+  background: white;
+  font-family: 'Manrope', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Hero Section */
+.hero {
+  padding: 80px 0;
+  background: white;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+}
+
+.hero .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.heroContent {
+  text-align: left;
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #000;
+  line-height: 1.1;
+  font-family: 'Manrope', sans-serif;
+}
+
+.heroSubtitle {
+  font-size: 1.8rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.heroDescription {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.ctaButton {
+  display: inline-block;
+  background: #000;
+  color: white;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Manrope', sans-serif;
+}
+
+.ctaButton:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.heroVisual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heroIcon {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+
+/* Benefits Section */
+.benefits {
+  padding: 80px 0;
+  background: #f8f6f3;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #000;
+  line-height: 1.2;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.benefitCard {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.benefitCard:hover {
+  transform: translateY(-5px);
+}
+
+.benefitIcon {
+  margin-bottom: 1.5rem;
+}
+
+.benefitIcon img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.benefitCard h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.benefitCard p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* How It Works Section */
+.howItWorks {
+  padding: 80px 0;
+  background: white;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.step {
+  text-align: center;
+}
+
+.stepNumber {
+  width: 60px;
+  height: 60px;
+  background: #000;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem auto;
+}
+
+.step h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.step p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Shop Types Section */
+.shopTypes {
+  padding: 80px 0;
+  background: #f8f6f3;
+}
+
+.shopTypesContent {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.shopTypesList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.shopType {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.shopType h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #000;
+}
+
+.shopType p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Benefits Details Section */
+.benefitsDetails {
+  padding: 80px 0;
+  background: white;
+}
+
+.benefitsDetailsContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.benefitsDetailsList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.benefitDetail {
+  background: #f8f6f3;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.benefitDetail h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #000;
+}
+
+.benefitDetail p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Final CTA Section */
+.finalCta {
+  padding: 80px 0;
+  background: #f8f6f3;
+}
+
+.ctaContent {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ctaContent h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #000;
+}
+
+.ctaContent p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.ctaSubtext {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.ctaSubtext a {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.ctaSubtext a:hover {
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .hero .container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.4rem;
+  }
+
+  .benefitsGrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .stepsGrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .shopTypesList {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .benefitsDetailsList {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .ctaContent h2 {
+    font-size: 2rem;
+  }
+}

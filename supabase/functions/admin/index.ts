@@ -47,6 +47,10 @@ serve(async (req)=>{
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY"); // used only to verify user JWT
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"); // privileged DB
+
+    // Create Supabase client for database operations
+    const supabaseClient = createClient(supabaseUrl ?? '', serviceKey ?? '')
+
     // ---------- AUTH ----------
     const authHeader = req.headers.get("Authorization") || "";
     console.log("Auth header received:", authHeader ? `Bearer ${authHeader.slice(0, 20)}...` : "NONE");
@@ -289,6 +293,323 @@ serve(async (req)=>{
         authState: "ok-admin"
       });
     }
+
+    // GET /admin - Get all applications (main route)
+    if (req.method === "GET" && (path === "/admin" || path === "/admin/")) {
+      const [publisherResult, retailerResult] = await Promise.all([
+        supabaseClient
+          .from('publisher_applications')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabaseClient
+          .from('retailer_applications')
+          .select('*')
+          .order('created_at', { ascending: false })
+      ]);
+
+      if (publisherResult.error) {
+        return json({
+          error: "Failed to fetch publisher applications",
+          details: publisherResult.error.message
+        }, {
+          status: 500,
+          origin,
+          authState: "ok-admin"
+        });
+      }
+
+      if (retailerResult.error) {
+        return json({
+          error: "Failed to fetch retailer applications",
+          details: retailerResult.error.message
+        }, {
+          status: 500,
+          origin,
+          authState: "ok-admin"
+        });
+      }
+
+      // Transform publisher applications
+      const publisherApplications = (publisherResult.data || []).map(app => ({
+        id: app.id,
+        type: 'publisher',
+        applicantName: `${app.first_name || ''} ${app.last_name || ''}`.trim(),
+        businessName: app.magazine_title || '',
+        email: app.email,
+        status: app.status || 'pending',
+        submittedAt: app.created_at,
+        magazineTitle: app.magazine_title,
+        applicationData: app
+      }));
+
+      // Transform retailer applications
+      const retailerApplications = (retailerResult.data || []).map(app => ({
+        id: app.id,
+        type: 'retailer',
+        applicantName: app.buyer_name,
+        businessName: app.shop_name,
+        email: app.buyer_email,
+        status: app.status || 'pending',
+        submittedAt: app.created_at,
+        storeLocation: app.shop_location,
+        applicationData: app
+      }));
+
+      // Combine and sort by submission date
+      const allApplications = [...publisherApplications, ...retailerApplications]
+        .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+      return json(allApplications, {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
+    // GET /admin/applications - Get all applications
+    if (req.method === "GET" && path === "/admin/applications") {
+      // Same logic as above
+      const [publisherResult, retailerResult] = await Promise.all([
+        supabaseClient
+          .from('publisher_applications')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabaseClient
+          .from('retailer_applications')
+          .select('*')
+          .order('created_at', { ascending: false })
+      ]);
+
+      if (publisherResult.error || retailerResult.error) {
+        return json({
+          error: "Failed to fetch applications"
+        }, {
+          status: 500,
+          origin,
+          authState: "ok-admin"
+        });
+      }
+
+      const publisherApplications = (publisherResult.data || []).map(app => ({
+        id: app.id,
+        type: 'publisher',
+        applicantName: `${app.first_name || ''} ${app.last_name || ''}`.trim(),
+        businessName: app.magazine_title || '',
+        email: app.email,
+        status: app.status || 'pending',
+        submittedAt: app.created_at,
+        magazineTitle: app.magazine_title,
+        applicationData: app
+      }));
+
+      const retailerApplications = (retailerResult.data || []).map(app => ({
+        id: app.id,
+        type: 'retailer',
+        applicantName: app.buyer_name,
+        businessName: app.shop_name,
+        email: app.buyer_email,
+        status: app.status || 'pending',
+        submittedAt: app.created_at,
+        storeLocation: app.shop_location,
+        applicationData: app
+      }));
+
+      const allApplications = [...publisherApplications, ...retailerApplications]
+        .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+      return json(allApplications, {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
+    // GET /admin/applications/:id - Get detailed application data
+    if (req.method === "GET" && path.match(/^\/admin\/applications\/[^\/]+$/)) {
+      const parts = path.split("/").filter(Boolean);
+      const id = parts[parts.length - 1];
+      const url = new URL(req.url);
+      const type = url.searchParams.get('type') || 'publisher';
+
+      let application, error;
+
+      if (type === 'retailer') {
+        const result = await supabaseClient
+          .from('retailer_applications')
+          .select('*')
+          .eq('id', id)
+          .single();
+        application = result.data;
+        error = result.error;
+      } else {
+        const result = await supabaseClient
+          .from('publisher_applications')
+          .select('*')
+          .eq('id', id)
+          .single();
+        application = result.data;
+        error = result.error;
+      }
+
+      if (error || !application) {
+        return json({
+          error: "Application not found"
+        }, {
+          status: 404,
+          origin,
+          authState: "ok-admin"
+        });
+      }
+
+      // Transform the application data
+      const transformedApplication = {
+        id: application.id,
+        type: type,
+        applicantName: type === 'publisher'
+          ? `${application.first_name || ''} ${application.last_name || ''}`.trim()
+          : application.buyer_name || '',
+        businessName: type === 'publisher'
+          ? application.magazine_title || ''
+          : application.shop_name || '',
+        email: type === 'publisher' ? application.email : application.buyer_email,
+        status: application.status || 'pending',
+        submittedAt: application.created_at,
+        magazineTitle: application.magazine_title,
+        storeLocation: type === 'retailer' ? application.shop_location : undefined,
+        applicationData: application
+      };
+
+      return json(transformedApplication, {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
+    // GET /admin/mailing-list - Get all mailing list subscribers
+    if (req.method === "GET" && path === "/admin/mailing-list") {
+      const { data: subscribers, error } = await supabaseClient
+        .from('mailing_list_subscribers')
+        .select('*')
+        .order('subscribed_at', { ascending: false });
+
+      if (error) {
+        return json({
+          error: "Failed to fetch mailing list subscribers",
+          details: error.message
+        }, {
+          status: 500,
+          origin,
+          authState: "ok-admin"
+        });
+      }
+
+      return json(subscribers || [], {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
+    // GET /admin/reports - Get reported publishers (mock data)
+    if (req.method === "GET" && path === "/admin/reports") {
+      const mockReports = [
+        {
+          id: '1',
+          publisherName: 'Alex Thompson',
+          businessName: 'Fake Magazine Co',
+          reportReason: 'Fraudulent business practices',
+          reportedAt: '2024-01-12T16:45:00Z',
+          reportedBy: 'retailer@example.com',
+          status: 'under_review'
+        },
+        {
+          id: '2',
+          publisherName: 'Lisa Brown',
+          businessName: 'Scam Publications',
+          reportReason: 'Inappropriate messaging to retailers',
+          reportedAt: '2024-01-11T11:30:00Z',
+          reportedBy: 'store@example.com',
+          status: 'under_review'
+        }
+      ];
+
+      return json(mockReports, {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
+    // GET /admin/messages - Get messages (mock data)
+    if (req.method === "GET" && path === "/admin/messages") {
+      const mockMessages = [
+        {
+          id: '1',
+          from: 'publisher@example.com',
+          subject: 'Question about application process',
+          body: 'Hi, I submitted my application last week and wanted to check on the status. Could you please provide an update?',
+          receivedAt: '2024-01-15T08:30:00Z',
+          isRead: false,
+          isReplied: false
+        },
+        {
+          id: '2',
+          from: 'retailer@bookstore.com',
+          subject: 'Partnership inquiry',
+          body: 'We are interested in becoming a retail partner and would like to know more about the process.',
+          receivedAt: '2024-01-14T15:20:00Z',
+          isRead: true,
+          isReplied: false
+        }
+      ];
+
+      return json(mockMessages, {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
+    // GET /admin/stats - Get admin dashboard statistics
+    if (req.method === "GET" && path === "/admin/stats") {
+      const [publisherResult, retailerResult] = await Promise.all([
+        supabaseClient.from('publisher_applications').select('status'),
+        supabaseClient.from('retailer_applications').select('status')
+      ]);
+
+      if (publisherResult.error || retailerResult.error) {
+        return json({
+          error: "Failed to fetch statistics"
+        }, {
+          status: 500,
+          origin,
+          authState: "ok-admin"
+        });
+      }
+
+      const allApplications = [
+        ...(publisherResult.data || []),
+        ...(retailerResult.data || [])
+      ];
+
+      const stats = {
+        totalApplications: allApplications.length,
+        pendingApplications: allApplications.filter(app => (app.status || 'pending') === 'pending').length,
+        approvedApplications: allApplications.filter(app => app.status === 'approved').length,
+        deniedApplications: allApplications.filter(app => app.status === 'denied').length,
+        totalReports: 2,
+        unreadMessages: 1,
+        pendingReplyMessages: 2
+      };
+
+      return json(stats, {
+        status: 200,
+        origin,
+        authState: "ok-admin"
+      });
+    }
+
     // Route not found
     return json({
       error: "Route not found"

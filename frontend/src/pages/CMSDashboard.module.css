@@ -1,0 +1,394 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 18px;
+  color: #666;
+}
+
+.header {
+  background: white;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerContent h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.headerContent p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.quickStats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.statNumber {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
+.statLabel {
+  display: block;
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.tabNav {
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  padding: 0 2rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6c757d;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #007bff;
+  background: #f8f9fa;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  background: #f8f9fa;
+}
+
+.main {
+  padding: 2rem;
+}
+
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.quickActions h2 {
+  margin: 0 0 1rem 0;
+  color: #212529;
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quickAction {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #212529;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quickAction:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: #007bff;
+}
+
+.actionIcon {
+  font-size: 1.5rem;
+}
+
+.recentContent h2 {
+  margin: 0 0 1rem 0;
+  color: #212529;
+}
+
+.contentList {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.contentItem {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contentItem:last-child {
+  border-bottom: none;
+}
+
+.contentInfo h4 {
+  margin: 0 0 0.5rem 0;
+  color: #212529;
+  font-size: 1.1rem;
+}
+
+.contentInfo p {
+  margin: 0 0 0.5rem 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.contentMeta {
+  font-size: 0.75rem;
+  color: #adb5bd;
+}
+
+.editBtn {
+  background: #007bff;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.editBtn:hover {
+  background: #0056b3;
+  text-decoration: none;
+  color: white;
+}
+
+.tools h2 {
+  margin: 0 0 2rem 0;
+  color: #212529;
+  text-align: center;
+}
+
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.toolCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.toolCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+  padding: 1.5rem;
+  border-top: 4px solid;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardIcon {
+  font-size: 2rem;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  color: #212529;
+  font-size: 1.25rem;
+}
+
+.cardContent {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.cardContent p {
+  margin: 0 0 1rem 0;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.featureList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.featureList li {
+  padding: 0.25rem 0;
+  color: #495057;
+  font-size: 0.875rem;
+}
+
+.featureList li:before {
+  content: '✓';
+  color: #28a745;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.cardFooter {
+  padding: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.cardButton {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cardButton:hover {
+  opacity: 0.9;
+  text-decoration: none;
+  color: white;
+}
+
+.analytics h2 {
+  margin: 0 0 2rem 0;
+  color: #212529;
+  text-align: center;
+}
+
+.analyticsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.analyticsCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.analyticsCard h3 {
+  margin: 0 0 1rem 0;
+  color: #212529;
+}
+
+.chartPlaceholder {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+}
+
+.pieChart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.pieSlice {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: var(--color);
+  color: white;
+  text-align: center;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.activityIcon {
+  font-size: 1.25rem;
+}
+
+.activityTime {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .quickStats {
+    justify-content: center;
+  }
+  
+  .tabNav {
+    padding: 0 1rem;
+  }
+  
+  .main {
+    padding: 1rem;
+  }
+  
+  .actionGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .toolsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .analyticsGrid {
+    grid-template-columns: 1fr;
+  }
+}

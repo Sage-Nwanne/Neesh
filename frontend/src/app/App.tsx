@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './router';
 import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import CaseSensitiveCard from '@/components/CaseSensitiveCard';
+import MailingListPopup from '@/components/MailingListPopup';
 import { Toaster } from 'sonner';
 import { usePageTracking } from '@/hooks/useAnalytics';
 import AnalyticsDebugger from '@/components/dev/AnalyticsDebugger';
@@ -23,12 +23,12 @@ function App(): JSX.Element {
           <AuthProvider>
             <div className="App min-h-screen bg-gray-50">
               <AppRouter />
-              <CaseSensitiveCard
-                delayMs={4000}
+              <MailingListPopup
+                delayMs={5000}
                 hideForDays={7}
                 placement="br"
                 triggerOnScroll={false}
-                scrollThreshold={20}
+                scrollThreshold={40}
               />
               <Toaster />
               <AnalyticsDebugger />

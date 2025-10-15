@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, Mail } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import styles from './AdminLogin.module.css';
 
 interface AdminLoginProps {
@@ -12,6 +13,9 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +31,31 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    // Only allow password reset for gem@neesh.art
+    const allowedEmail = 'gem@neesh.art';
+
+    setResetLoading(true);
+    setError('');
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(allowedEmail, {
+        redirectTo: `${window.location.origin}/admin-panel?reset=true`,
+      });
+
+      if (error) {
+        setError('Failed to send reset email. Please try again.');
+      } else {
+        setResetEmailSent(true);
+        setError('');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -49,7 +78,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@neesh.art"
+                placeholder="gem@neesh.art"
                 required
                 className={styles.input}
               />
@@ -93,6 +122,64 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+
+        <div className={styles.forgotPassword}>
+          {!showForgotPassword ? (
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              className={styles.forgotPasswordLink}
+            >
+              Forgot Password?
+            </button>
+          ) : (
+            <div className={styles.forgotPasswordSection}>
+              {!resetEmailSent ? (
+                <>
+                  <p className={styles.forgotPasswordText}>
+                    Password reset will be sent to the owner's email (gem@neesh.art)
+                  </p>
+                  <div className={styles.forgotPasswordActions}>
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotPassword(false)}
+                      className={styles.cancelButton}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleForgotPassword}
+                      disabled={resetLoading}
+                      className={styles.resetButton}
+                    >
+                      <Mail size={16} />
+                      {resetLoading ? 'Sending...' : 'Send Reset Email'}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className={styles.resetSuccess}>
+                  <Mail size={24} />
+                  <p>Password reset email sent to gem@neesh.art</p>
+                  <p className={styles.resetSuccessSubtext}>
+                    Check your email for reset instructions
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForgotPassword(false);
+                      setResetEmailSent(false);
+                    }}
+                    className={styles.backToLoginButton}
+                  >
+                    Back to Login
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className={styles.loginFooter}>
           <p>For security purposes, only authorized personnel can access this panel.</p>

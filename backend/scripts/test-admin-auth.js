@@ -30,8 +30,8 @@ async function testAdminAuth() {
   console.log('====================================');
 
   // Get admin credentials from command line or use defaults
-  const adminEmail = process.argv[2] || 'admin@neesh.art';
-  const adminPassword = process.argv[3] || 'NeeshAdmin2025!';
+  const adminEmail = process.argv[2] || 'gem@neesh.art';
+  const adminPassword = process.argv[3] || 'neeshis@dmin';
   
   console.log('📧 Testing with email:', adminEmail);
 

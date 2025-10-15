@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
+    "@sanity/client": "^7.11.2",
+    "@sanity/image-url": "^1.2.0",
     "@stripe/react-stripe-js": "^2.0.0",
     "@stripe/stripe-js": "^2.0.0",
     "@supabase/supabase-js": "^2.55.0",

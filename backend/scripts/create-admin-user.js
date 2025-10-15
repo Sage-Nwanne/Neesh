@@ -33,8 +33,8 @@ async function createAdminUser() {
   console.log('🔧 Creating Admin User');
   console.log('=====================');
 
-  const adminEmail = 'admin@neesh.art';
-  const adminPassword = 'NeeshAdmin2025!';
+  const adminEmail = 'gem@neesh.art';
+  const adminPassword = 'neeshis@dmin';
 
   console.log('📧 Admin Email:', adminEmail);
   console.log('🔑 Password:', adminPassword.replace(/./g, '*'));
@@ -50,7 +50,7 @@ async function createAdminUser() {
         role: 'admin'
       },
       user_metadata: {
-        name: 'NEESH Admin'
+        name: 'Gem - NEESH Owner'
       }
     });
 
@@ -77,7 +77,7 @@ async function createAdminUser() {
               role: 'admin'
             },
             user_metadata: {
-              name: 'NEESH Admin'
+              name: 'Gem - NEESH Owner'
             }
           }
         );

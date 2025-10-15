@@ -1,0 +1,176 @@
+.styleEditor {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.styleEditor h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.styleSection {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+}
+
+.styleSection h4 {
+  margin: 0 0 15px 0;
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.styleRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.styleRow label {
+  min-width: 120px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+}
+
+.styleRow input[type="range"] {
+  flex: 1;
+  max-width: 150px;
+}
+
+.styleRow input[type="number"] {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.styleRow input[type="text"] {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.styleRow input[type="color"] {
+  width: 40px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.styleRow select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  background: white;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.styleRow span {
+  font-size: 12px;
+  color: #888;
+  min-width: 20px;
+}
+
+.customCSSSection {
+  margin-top: 20px;
+}
+
+.customCSSSection textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.customCSSSection small {
+  display: block;
+  margin-top: 5px;
+  color: #888;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .styleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .styleRow label {
+    min-width: auto;
+    margin-bottom: 5px;
+  }
+  
+  .styleRow input[type="range"] {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Hover effects */
+.styleRow input:hover,
+.styleRow select:hover {
+  border-color: #bbb;
+}
+
+.styleRow input:focus,
+.styleRow select:focus {
+  outline: none;
+  border-color: #007cba;
+  box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.1);
+}
+
+/* Custom range slider styling */
+.styleRow input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #ddd;
+  border-radius: 3px;
+  outline: none;
+}
+
+.styleRow input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #007cba;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.styleRow input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #007cba;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}

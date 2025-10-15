@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '../ui/button';
+import Button from '../ui/Button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Progress } from '../ui/progress';
 
-import { Palette, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+// TEMPORARILY DISABLED - Cover image related imports commented out
+// import { Palette, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { config } from '@/lib/config';
-import { supabase } from '@/integrations/supabase/client';
+// TEMPORARILY DISABLED - Supabase import commented out (only used for image upload)
+// import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import styles from './PublisherApplicationForm.module.css';
 
@@ -86,7 +88,8 @@ const initialData: ApplicationData = {
   return_policy: ''
 };
 
-// Stock Images Array Definition with multiple images per category
+// TEMPORARILY DISABLED - Stock Images Array commented out per boss request
+/*
 const stockImages = {
   'art': {
     name: 'Art & Design',
@@ -180,17 +183,20 @@ const stockImages = {
     ]
   }
 };
+*/
 
 const PublisherApplicationForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ApplicationData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+  // TEMPORARILY DISABLED - Cover image related state variables commented out
+  // const [isUploading, setIsUploading] = useState(false);
+  // const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
 
   const { toast } = useToast();
 
-  // State for carousel navigation - tracks current image index for each category
+  // TEMPORARILY DISABLED - Carousel navigation state commented out
+  /*
   const [currentImageIndex, setCurrentImageIndex] = useState<{[key: string]: number}>({
     art: 0,
     fashion: 0,
@@ -203,6 +209,7 @@ const PublisherApplicationForm: React.FC = () => {
     travel: 0,
     food: 0
   });
+  */
 
   const totalSteps = 8;
   const progress = (currentStep / totalSteps) * 100;
@@ -211,6 +218,8 @@ const PublisherApplicationForm: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // TEMPORARILY DISABLED - Cover image related functions commented out
+  /*
   // Carousel navigation functions
   const navigateImage = (category: string, direction: 'prev' | 'next') => {
     const categoryImages = stockImages[category as keyof typeof stockImages];
@@ -261,7 +270,10 @@ const PublisherApplicationForm: React.FC = () => {
     setUploadedImageUrl(''); // Clear local state too
     console.log('Removed cover image selection');
   };
+  */
 
+  // TEMPORARILY DISABLED - Image upload functions commented out
+  /*
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -351,6 +363,7 @@ const PublisherApplicationForm: React.FC = () => {
       setIsUploading(false);
     }
   };
+  */
 
   const validateStep = (step: number): boolean => {
     switch (step) {
@@ -732,10 +745,13 @@ const PublisherApplicationForm: React.FC = () => {
                 placeholder="Additional details about your magazine specifications..."
               />
             </div>
+            {/* TEMPORARILY DISABLED - Cover Image functionality commented out per boss request */}
+            {/*
             <div>
               <Label>Cover Image</Label>
               <div className="mt-4 space-y-6">
                 {/* Stock Images Section */}
+                {/*
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Palette className="h-4 w-4 text-primary" />
@@ -759,6 +775,7 @@ const PublisherApplicationForm: React.FC = () => {
                         >
                           <div className={`p-2 ${styles.stockImageCarousel}`}>
                             {/* Navigation arrows */}
+                            {/*
                             <div className={styles.carouselNavigation}>
                               <button
                                 type="button"
@@ -804,6 +821,7 @@ const PublisherApplicationForm: React.FC = () => {
                 </div>
 
                 {/* Custom Upload Section */}
+                {/*
                 <div className="space-y-2">
                   <Label htmlFor="cover_image">Or upload your own cover image</Label>
                   <p className="text-sm text-gray-600">
@@ -812,7 +830,7 @@ const PublisherApplicationForm: React.FC = () => {
                   <div className="flex items-center gap-4">
                     <div className="uploadContainer">
                       <Input
-                        
+
                         id="cover_image"
                         type="file"
                         accept="image/*"
@@ -876,8 +894,11 @@ const PublisherApplicationForm: React.FC = () => {
                   </div>
                   <p className="text-sm text-muted-foreground">Front cover only, for now</p>
                 </div>
+                */}
+              {/*
               </div>
             </div>
+            */}
           </div>
         );
 

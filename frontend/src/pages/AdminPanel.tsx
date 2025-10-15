@@ -8,6 +8,7 @@ import { adminApi, type Application, type ReportedPublisher, type AdminMessage, 
 import { useAnalytics } from '../hooks/useAnalytics';
 import Notification from '../components/Notification';
 import { useNotification } from '../hooks/useNotification';
+import CMSNavigation from '../components/CMSNavigation';
 import {
   Users,
   FileText,
@@ -258,6 +259,7 @@ const AdminPanel: React.FC = () => {
 
   return (
     <div className={styles.adminPanel}>
+      <CMSNavigation onLogout={logout} />
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.headerContent}>

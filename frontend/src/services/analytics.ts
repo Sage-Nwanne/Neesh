@@ -25,7 +25,7 @@ export interface UserProperties {
 
 class AnalyticsService {
   private isEnabled: boolean = false;
-  private trackingId: string = import.meta.env.VITE_GA_TRACKING_ID || 'G-B3SXLCTCZ9';
+  private trackingId: string = import.meta.env.VITE_GA_TRACKING_ID || 'G-4NDZTD6XEX';
 
   constructor() {
     // Check if gtag is available and we're not in development mode

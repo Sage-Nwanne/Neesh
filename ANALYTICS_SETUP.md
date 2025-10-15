@@ -11,13 +11,14 @@ Google Analytics has been implemented across the NEESH application to track user
 The Google Analytics tracking code is embedded in `frontend/index.html`:
 
 ```html
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-B3SXLCTCZ9"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4NDZTD6XEX"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-B3SXLCTCZ9');
+
+  gtag('config', 'G-4NDZTD6XEX');
 </script>
 ```
 
@@ -27,7 +28,7 @@ Configure the tracking ID in your environment files:
 
 ```bash
 # .env.local
-VITE_GA_TRACKING_ID=G-B3SXLCTCZ9
+VITE_GA_TRACKING_ID=G-4NDZTD6XEX
 VITE_ENABLE_ANALYTICS=true
 ```
 
