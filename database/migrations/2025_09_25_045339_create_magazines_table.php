@@ -38,6 +38,7 @@ return new class extends Migration {
             $table->string('type')->default('single_issue'); // series or single_issue
             $table->integer('series_issue_count')->nullable(); // ✅ new
             $table->string('issue_frequency')->nullable();     // ✅ new
+            $table->string('discount')->nullable();     // ✅ new
             
             // Policies & logistics
             $table->string('return_policy')->nullable();
@@ -52,8 +53,12 @@ return new class extends Migration {
             
             // Visibility & status
             $table->boolean('visibility')->default(true);
-            $table->date('restock_timeline')->nullable();
+            $table->string('restock_timeline')->nullable();
+            $table->string('payment_terms')->nullable();
+
             $table->string('status')->default('pending');
+
+
             
             $table->timestamps();
         });

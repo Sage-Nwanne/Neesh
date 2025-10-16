@@ -11,11 +11,11 @@ class SendAdminVerificationEmail
     public function handle(Registered $event)
     {
         $user = $event->user;
+        $adminEmail = env('ADMIN_EMAIL');
 
-        // Admin email (change this to your admin’s email)
-        $adminEmail = "hi@neesh.art";
+        // Send admin to user details page
+        $verificationUrl = route('admin.users.view', $user->id);
 
-        // Send mail to admin with user details
-        Mail::to($adminEmail)->send(new VerifyNewUser($user));
+        Mail::to($adminEmail)->send(new VerifyNewUser($user, $verificationUrl));
     }
 }

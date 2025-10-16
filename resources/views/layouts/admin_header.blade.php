@@ -25,7 +25,7 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
-                <a href="#">Dashboard</a>
+<a href="{{ route('admin.users') }}">Users</a>
                 <a href="#">Catalogue</a>
                 <a href="#">Orders</a>
                 <a href="#">Messages</a>

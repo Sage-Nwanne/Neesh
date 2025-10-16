@@ -20,6 +20,7 @@ class Magazine extends Model
         'warehouse',
         'description',
         'dimensions',
+        'discount',
         'page_count',
         'stock',
         'total_printed',
@@ -39,13 +40,13 @@ class Magazine extends Model
         'visibility',
         'restock_timeline',
         'status',
+        'payment_terms',
     ];
 
     protected $casts = [
         'metadata' => 'array',
         'sales_experience' => 'boolean',
         'visibility' => 'boolean',
-        'restock_timeline' => 'date',
     ];
 
 

@@ -12,10 +12,13 @@ class VerifyNewUser extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+ public $verificationUrl; // ✅ declare it
 
-    public function __construct(User $user)
+
+    public function __construct(User $user  , $verificationUrl)
     {
         $this->user = $user;
+        $this->verificationUrl = $verificationUrl;
     }
 
     public function build()
@@ -24,7 +27,7 @@ class VerifyNewUser extends Mailable
             ->subject("New User Verification Needed")
             ->with([
                 'user' => $this->user,
-                'verificationUrl' => route('admin.verify.user', $this->user->id),
+                'verificationUrl' => $this->verificationUrl
             ]);
     }
 }

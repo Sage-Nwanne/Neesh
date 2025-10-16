@@ -1,13 +1,13 @@
 @component('mail::message')
 # New User Registration
 
-A new user has registered and needs admin verification.
+A new {{ ucfirst($user->roles->pluck('name')->first()) }} has registered and needs admin verification.
 
 **Name:** {{ $user->name }}  
 **Email:** {{ $user->email }}
 
 @component('mail::button', ['url' => $verificationUrl])
-Verify This User
+View & Verify User
 @endcomponent
 
 Thanks,  

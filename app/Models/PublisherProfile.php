@@ -14,5 +14,10 @@ class PublisherProfile extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+    public function magazines()
+{
+    return $this->hasMany(Magazine::class, 'publisher_id');
+}
+
 }
 

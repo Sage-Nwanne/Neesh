@@ -6,15 +6,49 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
+    public function usersList()
+    {
+        $users = User::with('roles')->get(); // includes role info from spatie
+        return view('admin.users.index', compact('users'));
+    }
+
+    // ✅ View single user details
+    public function viewUser($id)
+    {
+        $user = User::with(['roles', 'publisherProfile.magazines.images', 'paymentDetails'])->findOrFail($id);
+        return view('admin.users.show', compact('user'));
+    }
+
+
+    // ✅ Verify user
     public function verifyUser($id)
     {
         $user = User::findOrFail($id);
 
-        if (! $user->hasVerifiedEmail()) {
-            $user->markEmailAsVerified(); // Laravel built-in
+        // Set email verified timestamp if not already set
+        if (is_null($user->email_verified_at)) {
+            $user->email_verified_at = now();
+            $user->save();
         }
 
-        return redirect()->route('home') // or admin dashboard
-            ->with('status', 'User verified successfully!');
+        return redirect()->route('admin.users')->with('success', 'User verified successfully!');
     }
+
+    public function dashboard()
+    {
+        // Fetch all users for admin overview
+        $users = User::all();
+        return view('admin.dashboard', compact('users'));
+    }
+    // public function verifyUser($id)
+    // {
+    //     $user = User::findOrFail($id);
+
+    //     if (! $user->hasVerifiedEmail()) {
+    //         $user->markEmailAsVerified(); // Laravel built-in
+    //     }
+
+    //     return redirect()->route('home') // or admin dashboard
+    //         ->with('status', 'User verified successfully!');
+    // }
 }

@@ -23,6 +23,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make('admin123'), // change later
+                'email_verified_at' => now(), // mark as verified
             ]
         );
 

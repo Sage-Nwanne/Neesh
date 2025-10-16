@@ -60,4 +60,10 @@ public function retailerProfile()
 }
 
 
+public function paymentDetails()
+{
+    return $this->hasOne(PublisherPaymentDetail::class, 'user_id');
+}
+
+
 }

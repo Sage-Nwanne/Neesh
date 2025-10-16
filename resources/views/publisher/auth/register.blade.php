@@ -7,6 +7,7 @@
     <title>register</title>
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <link rel="stylesheet" href="{{ asset('assets/css/publisherregister.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/js/publisherregisterform.js') }}">
 
@@ -505,7 +506,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Step 7 -->
                         <div class="form-step" id="review_step">
                             <div class="uptitle-section-title">Review & Submit</div>
@@ -515,10 +515,11 @@
                                 <button type="submit" class="btn btn-next" id="finalSubmitBtn">Submit</button>
                             </div>
                         </div>
-
                         <div class="form-nav">
                             <button type="button" class="btn btn-back" id="prevBtn">Back</button>
                             <button type="button" class="btn btn-next" id="nextBtn">Continue</button>
+                            {{-- <button type="button" class="next-step-btn" id="termsNextBtn" disabled>I Agree & Continue →</button> --}}
+
                         </div>
                     </form>
                 </div>
@@ -554,6 +555,7 @@
             });
         });
     </script>
+    
 </body>
 
 </html>

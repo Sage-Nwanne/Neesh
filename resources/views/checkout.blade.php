@@ -47,7 +47,7 @@
                                     </small>
 
                                     <div class="checkout_editimage_container">
-                                        <img src="{{ asset('assets/image/pencil.jpg') }}" alt="Edit"
+                                        <img src="{{ asset('assets/image/pencil.png') }}" alt="Edit"
                                             style="cursor:pointer;" id="editAddressBtn">
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                         </div>
                                     </div>
                                     <div class="checkout_editimage_container">
-                                        <img src="{{ asset('assets/image/pencil.jpg') }}">
+                                        <img src="{{ asset('assets/image/pencil.png') }}">
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                                         12 Pallet Town Blvd Suite 03, Pe
                                     </small>
                                     <div class="checkout_editimage_container">
-                                        <img src="{{ asset('assets/image/pencil.jpg') }}">
+                                        <img src="{{ asset('assets/image/pencil.png') }}">
                                     </div>
                                 </div>
                                 <div class="checkout__default-btn-wrapper">

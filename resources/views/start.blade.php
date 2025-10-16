@@ -31,7 +31,7 @@
 
       <div class="publisher_and_retailer_conatiner">
         <div class="applying_publisher_and_retailer">
-          <a href="{{route('register.publisher')}}" class="image_and_text_container">
+          <a href="{{route('terms')}}" class="image_and_text_container">
             <div class="image_container">
               <img src="{{asset('assets/image/book.png')}}" alt="Book">
             </div>

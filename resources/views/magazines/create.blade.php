@@ -61,33 +61,13 @@
   </head>
 
   <body>
-      <div class="upload_topmenu_wrapper">
-          <div class="upload_topmenu">
-              <div class="logo-image">
-                  <img src="{{asset('assets/image/Logo A1.png')}}" alt="Logo Image">
-              </div>
-              <div class="menu-container" id="menuToggle">
-                  <img src="{{asset('assets/svg/hamburger-menu.svg')}}" alt="menu" style="width:35px;cursor:pointer;">
-
-              </div>
-              <div id="sideMenu" class="side-menu">
-                  <span class="closeBtn" id="closeMenu">✕</span>
-                  <a href="#">Dashboard</a>
-                  <a href="#">Catalogue</a>
-                  <a href="#">Orders</a>
-                  <a href="#">Messages</a>
-                  <a href="#">Account</a>
-                  <a href="#">Help Center</a>
-                  <a href="#">FAQ</a>
-              </div>
-          </div>
-      </div>
-
+     
+      @include('layouts.publisherheader')
 
 
       <div class="uptitle-main-heading-container_wrapper">
           <div class="uptitle-main-heading-container">
-              <a href="{{route('dashboard')}}" class="login_new_to_nessh_back_arrow"> <!--uptitle-main-back-link class replace -->
+              <a href="{{route('publisher.dashboard')}}" class="login_new_to_nessh_back_arrow"> <!--uptitle-main-back-link class replace -->
                   <div class="back_navigation_title"> <!--uptitle-main-heading-img class replace -->
                       <img src="{{asset('assets/image/left arrow.png')}}" alt="Logo Image">
 
@@ -202,7 +182,7 @@
                   <input type="number" class="uptitle-input-text" name="print_run" placeholder="Print Run" required>
                   <input type="text" class="uptitle-input-text" name="warehouse" placeholder="e.g ,123 NEESH St, New York, NY 10001" required>
                   <input type="number" class="uptitle-input-text" name="stock" placeholder="Available Quantities" required>
-                  <input type="text" class="uptitle-input-text" name="restock_time" placeholder="Restock Timeline (e.g , 3 months, 6 weeks) ">
+                  <input type="text" class="uptitle-input-text" name="restock_timeline" placeholder="Restock Timeline (e.g , 3 months, 6 weeks) ">
               </div>
 
               <div class="uptitle-right-col">
@@ -220,7 +200,7 @@
                   <div class="uptitle-section-title">Commercial Terms</div>
                   <input type="number" step="0.01" class="uptitle-input-text" name="wholesale_price" placeholder="Wholesale Price (WSP)" required>
                   <input type="number" step="0.01" class="uptitle-input-text" name="retail_price" placeholder="Retail Price (MSRP)" required>
-                  <input type="text" class="uptitle-input-text" name="discount" placeholder="Discount Structure">
+                  <input type="text" class="uptitle-input-text" name="discount" placeholder="Discount Structure (available discount on bulk orders)">
                   <input type="text" class="uptitle-input-text" name="payment_terms" placeholder="Payment Terms & Schedule">
 
                   <div style="display: flex; justify-content: end; margin-top: 30px; margin-bottom: 30px;">
