@@ -55,13 +55,13 @@
     </div>
 
     <div class="new_to_nessh_innerwhole_container">
-        <a href="{{ route('start') }}" class="new_to_nessh_back_arrow">
+        <a href="{{ route('home') }}" class="new_to_nessh_back_arrow">
             <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back Arrow">
         </a>
         <div class="new_to_nessh_container">
             <div class="heading_and_description_container">
-                <h1 class="new_to_nessh_heading">Welcome Back</h1>
-                <p class="new_to_nessh_description">Register to your account</p>
+                <h1 class="new_to_nessh_heading">Join Neesh as a Publisher</h1>
+                <p class="new_to_nessh_description">Apply to join our curated network</p>
             </div>
             @if (session('success'))
                 <div
@@ -244,7 +244,7 @@
                                 <div class="publisher_form_input_display series_fields" id="series_fields"
                                     aria-hidden="true">
                                     <div class="publisher_formfields">
-                                        <label for="series_issue_count">Issue Number or Seasonal ID</label>
+                                        <label for="series_issue_count">Issue Number</label>
                                         <input type="number" id="series_issue_count" class="uptitle-input-text"
                                             name="series_issue_count" placeholder="Issue Number or Seasonal ID">
                                     </div>
@@ -302,6 +302,15 @@
                         </div>
                         <div class="form-step">
                             <div class="uptitle-section-title">Assets</div>
+                            <div style="background: #f0f8ff; border-left: 4px solid #2196F3; padding: 12px; margin-bottom: 16px; border-radius: 4px;">
+                                <p style="margin: 0; font-size: 14px; color: #333; line-height: 1.6;">
+                                    <strong>Image Requirements:</strong><br>
+                                    • Minimum file size: 100 KB<br>
+                                    • Maximum file size: 5 MB<br>
+                                    • Recommended: High Resolution Images (300 DPI)<br>
+                                    • Maximum 6 images per upload
+                                </p>
+                            </div>
                             <label for="coverUploadimage" class="uptitle-upload-box">
                                 <h2>Upload Images</h2>
                                 <p>High Resolution Images (300DPI)</p>
@@ -379,84 +388,12 @@
 
                         <!-- Step 5 -->
                         <div class="form-step">
-                            <div class="uptitle-section-title">Payment & Payout Information</div>
-                            <div class="publisher_form_input_display" style="display:flex; flex-wrap:wrap; gap:12px;">
-
-                                <div class="publisher_formfields">
-                                    <label for="payout_method">Preferred Payout Method</label>
-                                    <select id="payout_method" name="payout_method" class="uptitle-input-text"
-                                        required>
-                                        <option value="" disabled selected hidden>Select Payout Method</option>
-                                        <option value="stripe">Stripe Connect</option>
-                                        <option value="bank_transfer">Bank Transfer</option>
-                                    </select>
-                                    <small>Helper: Stripe Connect recommended for fastest payouts</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="account_holder_name">Account Holder Name</label>
-                                    <input type="text" id="account_holder_name" name="account_holder_name"
-                                        class="uptitle-input-text" placeholder="Enter Account Holder Name" required>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="iban">Account Number / IBAN</label>
-                                    <input type="text" id="iban" name="iban" class="uptitle-input-text"
-                                        placeholder="Enter IBAN or Account Number" required>
-                                    <small>Validation: Enter a valid account or IBAN number</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="swift_code">Routing Number / SWIFT Code</label>
-                                    <input type="text" id="swift_code" name="swift_code"
-                                        class="uptitle-input-text" placeholder="Enter Routing or SWIFT Code" required>
-                                </div>
-
-                                <div class="publisher_formfields" style="flex:1 1 100%;">
-                                    <label for="business_address">Business Address</label>
-                                    <textarea id="business_address" name="business_address" class="uptitle-input-text"
-                                        placeholder="Enter Business Address" rows="3" required></textarea>
-                                    <small>Helper: Must match tax records</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="tax_id">Tax ID / EIN / VAT</label>
-                                    <input type="text" id="tax_id" name="tax_id" class="uptitle-input-text"
-                                        placeholder="Enter Tax ID (if applicable)">
-                                    <small>Required if registered entity</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="currency_preference">Currency Preference</label>
-                                    <select id="currency_preference" name="currency_preference"
-                                        class="uptitle-input-text" required>
-                                        <option value="USD" selected>USD</option>
-                                        <option value="EUR">EUR</option>
-                                        <option value="GBP">GBP</option>
-                                        <option value="AED">AED</option>
-                                        <option value="PKR">PKR</option>
-                                    </select>
-                                    <small>Default: USD</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="payment_contact_email">Payment Contact Email</label>
-                                    <input type="email" id="payment_contact_email" name="payment_contact_email"
-                                        class="uptitle-input-text" placeholder="Enter alternate contact email">
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <!-- Step 6 -->
-                        <div class="form-step">
                             <div class="uptitle-section-title">Sales Experience</div>
                             <label class="password_label" for="salesexperience">Have you sold this issue
                                 before?</label>
 
                             <div class="publisher_form_input_display">
-                                <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                                <div style="position: relative;top:12px;display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
                                     <div class="uploadform_single_and_series_issue_checkbox">
                                         <input type="radio" name="sales_experience" value="yes" id="sales_yes"
                                             required>
@@ -470,7 +407,7 @@
 
                                 <div id="sales_experience_fields" style="display:none; margin-top:15px;">
                                     <div>
-                                        <label class="email_label">Distribution Channels</label>
+                                        <label class="email_label">Distribution Channels *</label>
                                         <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:8px;">
                                             <div><input type="checkbox" name="distribution_channels[]" value="online"
                                                     id="channel_online"><label for="channel_online">Online
@@ -499,14 +436,14 @@
                                     </div>
 
                                     <div class="publisher_formfields" style="margin-top:15px;">
-                                        <label for="sales_feedback">What feedback have you received?</label>
+                                        <label for="sales_feedback">Share relevant press links or reviews of your publication.</label>
                                         <textarea class="uptitle-input-text" id="sales_feedback" name="sales_feedback"
-                                            placeholder="What feedback have you received?" rows="3"></textarea>
+                                            placeholder="Share your feedback..." rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Step 7 -->
+                        <!-- Step 6 -->
                         <div class="form-step" id="review_step">
                             <div class="uptitle-section-title">Review & Submit</div>
                             <div id="summaryList"></div>

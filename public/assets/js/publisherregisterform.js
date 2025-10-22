@@ -165,17 +165,45 @@
         });
     }
 
+    // Image size validation constants
+    const publisher_MIN_FILE_SIZE = 100 * 1024; // 100 KB in bytes
+    const publisher_MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+
     publisher_coverUpload?.addEventListener('change', function () {
             console.log("publisher_coverUpload.files:", publisher_coverUpload.files);
 
         const publisher_files = Array.from(this.files || []);
+
+        // Check total file count
         if (publisher_selectedFiles.length + publisher_files.length > publisher_MAX_FILES) {
             alert(`You can only upload up to ${publisher_MAX_FILES} images.`);
             this.value = '';
             return;
         }
+
+        // Filter for images and validate sizes
         const publisher_images = publisher_files.filter(p => p.type && p.type.startsWith('image/'));
-        publisher_selectedFiles = publisher_selectedFiles.concat(publisher_images);
+        const publisher_validImages = [];
+        let publisher_hasErrors = false;
+
+        publisher_images.forEach(file => {
+            if (file.size < publisher_MIN_FILE_SIZE) {
+                alert(`⚠️ Image too small: "${file.name}"\n\nMinimum file size: 100 KB\nYour file size: ${(file.size / 1024).toFixed(2)} KB\n\nPlease upload a larger image.`);
+                publisher_hasErrors = true;
+            } else if (file.size > publisher_MAX_FILE_SIZE) {
+                alert(`⚠️ Image too large: "${file.name}"\n\nMaximum file size: 5 MB\nYour file size: ${(file.size / (1024 * 1024)).toFixed(2)} MB\n\nPlease upload a smaller image.`);
+                publisher_hasErrors = true;
+            } else {
+                publisher_validImages.push(file);
+            }
+        });
+
+        if (publisher_hasErrors && publisher_validImages.length === 0) {
+            this.value = '';
+            return;
+        }
+
+        publisher_selectedFiles = publisher_selectedFiles.concat(publisher_validImages);
         publisher_renderPreviews();
         this.value = '';
     });
@@ -263,6 +291,42 @@ publisher_form.addEventListener('submit', function (e) {
 });
 
 
+    // Helper function to convert field names to customer-facing names
+    function publisher_formatFieldName(fieldName) {
+        const fieldNameMap = {
+            'firstname': 'First Name',
+            'lastname': 'Last Name',
+            'bussinessname': 'Business / Publisher Name',
+            'email': 'Email',
+            'password': 'Password',
+            'magazine_title': 'Full Magazine Title',
+            'website_link': 'Website / Social Link',
+            'magazinedescription': 'Description',
+            'genre': 'Genre(s)',
+            'dimensions': 'Dimensions',
+            'page_count': 'Page Count',
+            'issue_type': 'Issue Type',
+            'series_issue_count': 'Issue Number',
+            'issue_frequency': 'Issue Frequency',
+            'print_run': 'Print Run',
+            'available_quantities': 'Available Quantities',
+            'wholesale_price': 'Wholesale Price (WSP)',
+            'retail_price': 'Suggested Retail Price',
+            'specs': 'Additional Specs',
+            'fulfillment_method': 'Fulfillment Method',
+            'warehouse': 'Warehouse Address',
+            'shipping_city': 'Shipping City',
+            'shipping_state': 'Shipping State',
+            'shipping_country': 'Shipping Country',
+            'return_policy': 'Return Policy',
+            'sales_experience': 'Have you sold this issue before?',
+            'distribution_channels': 'Distribution Channels',
+            'copies_sold': 'Estimated Copies Sold',
+            'sales_feedback': 'Share relevant press links or reviews of your publication'
+        };
+        return fieldNameMap[fieldName] || fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
     function publisher_populateSummary() {
         if (!publisher_summaryList) return;
         publisher_summaryList.innerHTML = '';
@@ -280,7 +344,7 @@ publisher_form.addEventListener('submit', function (e) {
 
             const publisher_controls = Array.from(publisher_stepElem.querySelectorAll('input, textarea, select'));
             publisher_controls.forEach(publisher_ctrl => {
-                const publisher_key = publisher_ctrl.placeholder || publisher_ctrl.getAttribute('aria-label') || publisher_ctrl.name || publisher_ctrl.id || 'field';
+                const publisher_key = publisher_ctrl.placeholder || publisher_ctrl.getAttribute('aria-label') || publisher_formatFieldName(publisher_ctrl.name) || publisher_ctrl.id || 'field';
                 let publisher_value = '';
 
                 if (publisher_ctrl.type === 'radio') {

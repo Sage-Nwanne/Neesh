@@ -92,13 +92,13 @@
     </div>
 
     <div class="new_to_nessh_innerwhole_container">
-        <a href="{{route('start')}}" class="new_to_nessh_back_arrow">
+        <a href="{{route('home')}}" class="new_to_nessh_back_arrow">
             <img src="{{asset('assets/image/left arrow.png')}}" alt="Back Arrow">
         </a>
         <div class="new_to_nessh_container">
             <div class="heading_and_description_container">
-                <h1 class="new_to_nessh_heading">Welcome Back</h1>
-                <p class="new_to_nessh_description">Register to your account</p>
+                <h1 class="new_to_nessh_heading">Join Neesh as a Retailer</h1>
+                <p class="new_to_nessh_description">Apply to join our curated network</p>
             </div>
             @if (session('success'))
             <div style="

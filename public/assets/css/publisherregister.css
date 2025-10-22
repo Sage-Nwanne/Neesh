@@ -86,6 +86,11 @@
             border-radius: 6px;
             border: 1px solid #f5f5f5;
             font-size: 18px;
+            font-family: "Manrope", sans-serif;
+        }
+
+        textarea {
+            font-family: "Manrope", sans-serif;
         }
 
         .upload_topmenu_wrapper label {

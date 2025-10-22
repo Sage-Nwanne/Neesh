@@ -4,7 +4,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Publisher and Retailer</title>
+  <meta name="description" content="Join Neesh as a Publisher or Retailer. Apply to join our curated network for indie print.">
+  <meta name="keywords" content="indie print, magazine, publisher, retailer, publishing platform">
+  <meta name="author" content="Neesh">
+
+  <title>Join Neesh - Publisher or Retailer</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ asset('assets/image/Logo A1.png') }}">
+  <link rel="shortcut icon" type="image/png" href="{{ asset('assets/image/Logo A1.png') }}">
+
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 

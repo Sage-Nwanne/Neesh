@@ -19,7 +19,6 @@ use App\Http\Controllers\RetailerController;
 // Public Routes
 // ---------------------
 Route::get('/', fn() => view('welcome'))->name('home');
-Route::get('/start', fn() => view('start'))->name('start');
 Route::get('/checkout', fn() => view('checkout'))->name('checkout');
 Route::get('/termsandconditions', fn() => view('terms'))->name('terms');
 
