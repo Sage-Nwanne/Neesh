@@ -33,21 +33,21 @@ class RetailerController extends Controller
             'phone_number' => 'required|string|max:20',
             'password' => 'required|string|min:6',
             'storename' => 'required|string|max:255',
-            'bussinesyears' => 'nullable|integer|min:0',
-            'storecategory' => 'nullable|string|max:255',
-            'store_type' => 'nullable|string|max:255',
-            'store_size' => 'nullable|string|max:255',
+            'bussinesyears' => 'required|integer|min:0',
+            'storecategory' => 'required|string|max:255',
+            'store_type' => 'required|string|max:255',
+            'store_size' => 'required|string|max:255',
             'address_line1' => 'required|string|max:255',
             'address_line2' => 'nullable|string|max:255',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'zip_code' => 'required|string|max:20',
-            'target_customers' => 'nullable|array',
-            'store_aesthetic' => 'nullable|array',
-            'interested_genres' => 'nullable|array',
-            'pos_system' => 'nullable|string|max:255',
-            'issue_frequency' => 'nullable|string|max:255',
-            'monthly_budget' => 'nullable|numeric',
+            'target_customers' => 'required|array|min:1',
+            'store_aesthetic' => 'required|array|min:1',
+            'interested_genres' => 'required|array|min:1',
+            'pos_system' => 'required|string|max:255',
+            'issue_frequency' => 'required|string|max:255',
+            'monthly_budget' => 'required|numeric|min:0',
             'magazine_titles' => 'nullable|string',
             'magazine_sources' => 'nullable|array',
             'mag_other_input' => 'nullable|string|max:255',
@@ -97,9 +97,21 @@ class RetailerController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME)
-            ->with('success', 'Publisher registered successfully! You will receive a confirmation email from admin shortly.');
+            ->with('success', 'Retailer registered successfully! You will receive a confirmation email from admin shortly.');
 
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        if ($request->expectsJson()) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+        return redirect()->back()->withErrors($e->errors())->withInput();
     } catch (\Exception $e) {
+        \Log::error('Retailer registration error: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
         return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
     }
 }

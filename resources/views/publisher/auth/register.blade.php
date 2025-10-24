@@ -169,8 +169,7 @@
                                     <label class="email_label" for="publisheremail">Email</label>
                                     <div class="publisher_formfields">
                                         <input class="uptitle-input-text" id="publisheremail" name="email"
-                                            type="email" placeholder="Email" required
-                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                                            type="email" placeholder="Email" required>
                                     </div>
                                 </div>
 
@@ -179,7 +178,7 @@
                                     <div class="publisher_formfields">
                                         <div class="publisher_formfields_innerwrapper">
                                             <input class="uptitle-input-text" id="publisherpassword" name="password"
-                                                type="password" placeholder="Password" required>
+                                                type="password" placeholder="Password" minlength="6" required>
                                             <i class="fa-solid fa-eye publisher-eye-toggle"
                                                 data-target="publisherpassword"></i>
                                         </div>
@@ -211,14 +210,14 @@
                                 </div>
                             </div>
                             <div class="publisher_formfields">
-                                <label for="magazinedescription">Genre(s)</label>
+                                <label for="genre">Genre(s)</label>
                                 <input type="text" class="uptitle-input-text" name="genre"
-                                    placeholder="Genre(s) , e.g: Fashion, Art, Culture">
+                                    placeholder="Genre(s)">
                             </div>
                             <div class="publisher_formfields">
-                                <label for="magazinedescription">Dimensions</label>
+                                <label for="dimensions">Dimensions</label>
                                 <input type="text" class="uptitle-input-text" name="dimensions"
-                                    placeholder="Dimensions (width x height, weight)">
+                                    placeholder="Dimensions (width x height)">
                             </div>
                             <div class="publisher_formfields">
                                 <label for="magazinedescription">Page Count</label>
@@ -252,7 +251,7 @@
                                     <div class="publisher_formfields">
                                         <label for="issue_frequency">Issue Frequency</label>
                                         <select class="uptitle-input-text" id="issue_frequency"
-                                            name="issue_frequency" required>
+                                            name="issue_frequency">
                                             <option value="" disabled selected hidden>Issue Frequency</option>
                                             <option value="monthly">Monthly</option>
                                             <option value="quarterly">Quarterly</option>
@@ -285,13 +284,13 @@
                                 <div class="publisher_formfields">
                                     <label for="wholesale_price">Wholesale Price (WSP)</label>
                                     <input type="number" id="wholesale_price" class="uptitle-input-text"
-                                        name="wholesale_price" placeholder="Wholesale Price (WSP)" required>
+                                        name="wholesale_price" placeholder="Wholesale Price (WSP)" step="0.01" required>
                                 </div>
 
                                 <div class="publisher_formfields">
                                     <label for="retail_price">Suggested Retail Price</label>
                                     <input type="number" id="retail_price" class="uptitle-input-text"
-                                        name="retail_price" placeholder="Suggested Retail Price" required>
+                                        name="retail_price" placeholder="Suggested Retail Price" step="0.01" required>
                                 </div>
 
                                 <div class="publisher_formfields">
@@ -320,19 +319,6 @@
                             </label>
                             <div id="previewContainer" class="formimagesshow"></div>
                             <div class="limit_telling">You can only upload 6 images.</div>
-
-                            {{-- <div class="publisher_form_input_display">
-                                <div class="publisher_formfields">
-                                    <label for="promotional_text">Promotional Text</label>
-                                    <input type="text" id="promotional_text" class="uptitle-input-text"
-                                        name="promotional_text" placeholder="Promotional Text" required>
-                                </div>
-                                <div class="publisher_formfields">
-                                    <label for="metadata">Metadata</label>
-                                    <input type="text" id="metadata" class="uptitle-input-text" name="metadata"
-                                        placeholder="Metadata (e.g: ISBN, ISSN, keywords)" required>
-                                </div>
-                            </div> --}}
                         </div>
                         <!-- Step 4 -->
                         <div class="form-step">
@@ -351,14 +337,9 @@
                                     </select>
                                 </div>
                                 <div class="publisher_formfields">
-                                    <label for="warehouse">Warehouse Address</label>
+                                    <label for="warehouse">Shipping Address</label>
                                     <input type="text" class="uptitle-input-text" name="warehouse"
-                                        placeholder="e.g ,123 NEESH St, New York, NY 10001" required>
-                                </div>
-                                <div class="publisher_formfields">
-                                    <label for="shipping_city">Shipping City</label>
-                                    <input type="text" id="shipping_city" class="uptitle-input-text"
-                                        name="shipping_city" placeholder="Shipping City" required>
+                                        placeholder="Shipping Address" required>
                                 </div>
                                 <div class="publisher_formfields">
                                     <label for="shipping_city">Shipping City</label>

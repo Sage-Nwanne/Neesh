@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RetailerController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ Route::get('/register/publisher', fn() => view('publisher.auth.register'))->name
 Route::get('/register/retailer', fn() => view('retailer.auth.register'))->name('register.retailer');
 
 // Registration Handlers
+Route::post('/publisherregister', [RegisteredUserController::class, 'publisherstore'])->name('register.submit.publisher');
 Route::post('/retailerregister', [RetailerController::class, 'store'])->name('register.submit.retailer');
 
 // ---------------------

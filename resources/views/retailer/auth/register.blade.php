@@ -189,7 +189,7 @@
 
                                 <div class="publisher_formfields">
                                     <label for="password">Password</label>
-                                    <input type="password" id="password" class="uptitle-input-text" name="password" placeholder="Enter password" required>
+                                    <input type="password" id="password" class="uptitle-input-text" name="password" placeholder="Enter password" minlength="6" required>
                                 </div>
 
                             </div>
@@ -380,8 +380,8 @@
                                     </select>
                                 </div>
                                 <div class="publisher_formfields">
-                                    <label for="metadata">Monthly Magazine Budget ($)</label>
-                                    <input type="number" id="monthly_budget" class="uptitle-input-text" name="monthly_budget" placeholder="e.g , 500" required>
+                                    <label for="monthly_budget">Monthly Magazine Budget ($)</label>
+                                    <input type="number" id="monthly_budget" class="uptitle-input-text" name="monthly_budget" placeholder="e.g , 500" step="0.01" required>
                                 </div>
 
 
@@ -435,7 +435,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('assets/js/publisherregisterform.js') }}"></script>
+    <script src="{{ asset('assets/js/retailerregisterform.js') }}"></script>
     <script>
         (function() {
             const step = document.querySelector('.form-step.store-profile');

@@ -9,6 +9,7 @@ use App\Models\PublisherProfile;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,8 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Models\MagazineImage; // add this on top
 use App\Models\PublisherPaymentDetail;
+use App\Mail\PublisherRegistrationConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -140,7 +143,7 @@ class RegisteredUserController extends Controller
 //             ->withErrors(['error' => 'Something went wrong during registration: ' . $e->getMessage()]);
 //     }
 // }
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         // dd($request->all());
         // dd($request->file('files'));
@@ -153,45 +156,39 @@ class RegisteredUserController extends Controller
                 'firstname' => ['required', 'string', 'max:255'],
                 'lastname' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-                'password' => ['required'],
+                'password' => ['required', 'string', 'min:6'],
 
                 // publisher profile
                 'bussinessname' => ['required', 'string', 'max:255'],
 
                 // magazine fields
                 'magazine_title' => ['required', 'string', 'max:255'],
-                'magazinedescription' => ['nullable', 'string'],
+                'website_link' => ['nullable', 'string', 'max:255'],
+                'magazinedescription' => ['required', 'string'],
                 'issue_type' => ['required', 'in:single,series'],
                 'series_issue_count' => ['nullable', 'integer'],
                 'issue_frequency' => ['nullable', 'string'],
-                'print_run' => ['required', 'integer'],
-                'page_count' => ['nullable', 'integer'],
-                'genre' => ['nullable', 'string'],
-                'available_quantities' => ['required', 'integer'],
-                'wholesale_price' => ['required', 'numeric'],
-                'retail_price' => ['required', 'numeric'],
-                'specs' => ['nullable', 'string'],
+                'print_run' => ['required', 'integer', 'min:1'],
+                'page_count' => ['nullable', 'integer', 'min:1'],
+                'genre' => ['nullable', 'string', 'max:255'],
+                'dimensions' => ['nullable', 'string', 'max:255'],
+                'available_quantities' => ['required', 'integer', 'min:1'],
+                'wholesale_price' => ['required', 'numeric', 'min:0'],
+                'retail_price' => ['required', 'numeric', 'min:0'],
+                'specs' => ['required', 'string'],
                 'fulfillment_method' => ['required', 'string'],
-                'shipping_city' => ['required', 'string'],
-                'shipping_state' => ['required', 'string'],
-                'shipping_country' => ['required', 'string'],
-                'return_policy' => ['nullable', 'string'],
+                'warehouse' => ['required', 'string', 'max:255'],
+                'shipping_city' => ['required', 'string', 'max:255'],
+                'shipping_state' => ['required', 'string', 'max:255'],
+                'shipping_country' => ['required', 'string', 'max:255'],
+                'return_policy' => ['required', 'string'],
                 'promotional_text' => ['nullable', 'string'],
                 'metadata' => ['nullable', 'string'],
-                // payout / payment details
-                'payout_method' => ['nullable', 'string'],
-                'account_holder_name' => ['nullable', 'string', 'max:255'],
-                'iban' => ['nullable', 'string', 'max:255'],
-                'swift_code' => ['nullable', 'string', 'max:255'],
-                'business_address' => ['nullable', 'string'],
-                'tax_id' => ['nullable', 'string', 'max:255'],
-                'currency_preference' => ['nullable', 'string', 'max:10'],
-                'payment_contact_email' => ['nullable', 'email', 'max:255'],
 
                 // sales experience
                 'sales_experience' => ['required', 'in:yes,no'],
                 'distribution_channels' => ['nullable', 'array'],
-                'copies_sold' => ['nullable', 'integer'],
+                'copies_sold' => ['nullable', 'integer', 'min:0'],
                 'sales_feedback' => ['nullable', 'string'],
 
                 // files
@@ -272,16 +269,39 @@ class RegisteredUserController extends Controller
 
             DB::commit();
 
-            // Step 6: login + redirect
+            // Step 6: Send confirmation email to user
+            Mail::to($user->email)->send(new PublisherRegistrationConfirmation($user));
+
+            // Step 7: login + redirect
             event(new Registered($user));
             Auth::login($user);
 
-            return redirect(RouteServiceProvider::HOME)
-                ->with('success', 'Publisher registered successfully!, You will receive a confirmation email from admin shortly.');
+            // Return JSON for AJAX requests, redirect for regular requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Publisher registered successfully! Your application is pending admin verification. Check your email for updates.',
+                    'redirect' => route('home')
+                ], 200);
+            }
 
+            return redirect(route('home'))
+                ->with('success', 'Publisher registered successfully! Your application is pending admin verification. Check your email for updates.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            Log::error('Publisher registration error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
 
+            if ($request->expectsJson()) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
 

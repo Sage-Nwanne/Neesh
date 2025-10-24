@@ -21,6 +21,64 @@
 
     let publisher_currentStep = 0;
 
+    // ===== FORM PERSISTENCE =====
+    const STORAGE_KEY = 'publisher_form_data';
+    const FILES_STORAGE_KEY = 'publisher_form_files';
+    let publisher_hasUnsavedChanges = false;
+
+    function publisher_saveFormData() {
+        const formData = new FormData(publisher_form);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'files') {
+                if (data[key]) {
+                    if (!Array.isArray(data[key])) {
+                        data[key] = [data[key]];
+                    }
+                    data[key].push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        publisher_hasUnsavedChanges = true;
+    }
+
+    function publisher_loadFormData() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+
+        const data = JSON.parse(saved);
+        for (let [key, value] of Object.entries(data)) {
+            const inputs = publisher_form.querySelectorAll(`[name="${key}"]`);
+            if (inputs.length === 1) {
+                // Skip file inputs - they cannot have their value set programmatically
+                if (inputs[0].type === 'file') continue;
+                inputs[0].value = value;
+            } else if (inputs.length > 1) {
+                // Handle checkboxes/radio buttons
+                inputs.forEach(input => {
+                    if (Array.isArray(value)) {
+                        input.checked = value.includes(input.value);
+                    } else {
+                        input.checked = input.value === value;
+                    }
+                });
+            }
+        }
+        publisher_hasUnsavedChanges = true;
+    }
+
+    function publisher_clearFormData() {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(FILES_STORAGE_KEY);
+        publisher_hasUnsavedChanges = false;
+    }
+
+    // Load form data on page load
+    publisher_loadFormData();
+
     function publisher_validateEmail(email) {
         const publisher_re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return publisher_re.test(String(email || '').toLowerCase());
@@ -52,7 +110,9 @@
     for (const publisher_field of publisher_fields) {
         const publisher_input = publisher_field.querySelector('input, textarea, select');
         const publisher_isVisible = publisher_field.offsetParent !== null;
-        const publisher_shouldValidate = publisher_input && publisher_input.hasAttribute('required') && publisher_isVisible;
+        // Check if the parent container is hidden
+        const publisher_parentContainer = publisher_field.closest('div[style*="display:none"]');
+        const publisher_shouldValidate = publisher_input && publisher_input.hasAttribute('required') && publisher_isVisible && !publisher_parentContainer;
 
         // Remove any old error message
         let oldError = publisher_field.querySelector('.error-message');
@@ -102,6 +162,60 @@
                 }
             } else {
                 publisher_field.classList.remove('showerror');
+            }
+        }
+
+        // Password length check on step 0
+        if (n === 0 && publisher_input && publisher_input.type === 'password') {
+            const oldPasswordError = publisher_field.querySelector('.error-message');
+            const passwordValue = publisher_input.value || '';
+            if (passwordValue.length < 6) {
+                publisher_field.classList.add('showerror');
+                publisher_valid = false;
+
+                if (oldPasswordError) oldPasswordError.remove();
+
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.style.color = 'red';
+                errorMsg.style.fontSize = '12px';
+                errorMsg.style.marginTop = '4px';
+                errorMsg.textContent = 'Password must be at least 6 characters';
+                publisher_field.appendChild(errorMsg);
+
+                if (!publisher_form._focusedInvalid) {
+                    publisher_input.focus();
+                    publisher_form._focusedInvalid = true;
+                }
+            } else {
+                publisher_field.classList.remove('showerror');
+            }
+        }
+
+        // Numeric field validation (min > 0)
+        if (publisher_input && publisher_input.type === 'number' && publisher_shouldValidate) {
+            const oldNumError = publisher_field.querySelector('.error-message');
+            const numValue = parseFloat(publisher_input.value || 0);
+            const fieldName = publisher_input.getAttribute('name') || 'This field';
+
+            if (numValue <= 0) {
+                publisher_field.classList.add('showerror');
+                publisher_valid = false;
+
+                if (oldNumError) oldNumError.remove();
+
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.style.color = 'red';
+                errorMsg.style.fontSize = '12px';
+                errorMsg.style.marginTop = '4px';
+                errorMsg.textContent = `${fieldName.replace(/_/g, ' ')} must be greater than 0`;
+                publisher_field.appendChild(errorMsg);
+
+                if (!publisher_form._focusedInvalid) {
+                    publisher_input.focus();
+                    publisher_form._focusedInvalid = true;
+                }
             }
         }
     }
@@ -177,7 +291,11 @@
         // Check total file count
         if (publisher_selectedFiles.length + publisher_files.length > publisher_MAX_FILES) {
             alert(`You can only upload up to ${publisher_MAX_FILES} images.`);
-            this.value = '';
+            try {
+                this.value = '';
+            } catch (e) {
+                // File input value cannot be set, ignore
+            }
             return;
         }
 
@@ -199,13 +317,21 @@
         });
 
         if (publisher_hasErrors && publisher_validImages.length === 0) {
-            this.value = '';
+            try {
+                this.value = '';
+            } catch (e) {
+                // File input value cannot be set, ignore
+            }
             return;
         }
 
         publisher_selectedFiles = publisher_selectedFiles.concat(publisher_validImages);
         publisher_renderPreviews();
-        this.value = '';
+        try {
+            this.value = '';
+        } catch (e) {
+            // File input value cannot be set, ignore
+        }
     });
 
     publisher_forgetLink?.addEventListener('click', function (publisher_e) {
@@ -227,14 +353,45 @@
         }
     });
 
+    // Track if form is being submitted
+    let publisher_isSubmitting = false;
+
+    // Warn user on page reload if form has data (but not on form submission)
+    window.addEventListener('beforeunload', (e) => {
+        // Don't warn if form is being submitted
+        if (publisher_isSubmitting) return;
+
+        // Only warn if there are unsaved changes
+        if (publisher_hasUnsavedChanges || publisher_selectedFiles.length > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+    });
+
+    // Clear localStorage when user actually leaves the page
+    function publisher_unloadHandler() {
+        // Only clear if NOT submitting (user clicked "Leave" on the alert)
+        if (!publisher_isSubmitting) {
+            publisher_clearFormData();
+            publisher_selectedFiles = [];
+        }
+    }
+    window.addEventListener('unload', publisher_unloadHandler);
+
     publisher_nextBtn?.addEventListener('click', () => {
         publisher_steps = Array.from(publisher_form.querySelectorAll('.form-step'));
         if (publisher_currentStep < publisher_steps.length - 1) {
             if (!publisher_validateStep(publisher_currentStep)) return;
+            publisher_saveFormData(); // Save before moving to next step
             publisher_currentStep++;
             publisher_showStep(publisher_currentStep);
         } else {
             if (!publisher_validateStep(publisher_currentStep)) return;
+            publisher_saveFormData(); // Save before submitting
+            // Disable the button to prevent double submission
+            publisher_nextBtn.disabled = true;
+            publisher_nextBtn.textContent = 'Submitting...';
             publisher_form.submit();
         }
     });
@@ -244,6 +401,13 @@
         if (publisher_field && publisher_field.classList.contains('showerror') && publisher_e.target.value.trim()) {
             publisher_field.classList.remove('showerror');
         }
+        // Mark that user has made changes
+        publisher_hasUnsavedChanges = true;
+    });
+
+    publisher_form.addEventListener('change', function (publisher_e) {
+        // Mark that user has made changes (for select, checkbox, radio)
+        publisher_hasUnsavedChanges = true;
     });
 
     publisher_form.addEventListener('keydown', function (publisher_e) {
@@ -253,10 +417,12 @@
             publisher_e.preventDefault();
             if (publisher_currentStep < publisher_steps.length - 1) {
                 if (!publisher_validateStep(publisher_currentStep)) return;
+                publisher_saveFormData(); // Save before moving to next step
                 publisher_currentStep++;
                 publisher_showStep(publisher_currentStep);
             } else {
                 if (!publisher_validateStep(publisher_currentStep)) return;
+                publisher_saveFormData(); // Save before submitting
                 publisher_form.submit();
             }
         }
@@ -271,23 +437,291 @@
     //         publisher_coverUpload.files = publisher_dt.files;
     //     }
     // });
+// Define this outside the event listener so we can reference it later
+let publisher_preventPageNavigation = null;
+
 publisher_form.addEventListener('submit', function (e) {
-    e.preventDefault(); // temporary rok do submit ko taake inspect kar sako
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (publisher_selectedFiles.length) {
-        const dt = new DataTransfer();
-        publisher_selectedFiles.forEach(file => dt.items.add(file));
-        publisher_coverUpload.files = dt.files;
-    }
+    console.log('=== FORM SUBMISSION STARTED ===');
+    console.log('Form action:', publisher_form.action);
+    console.log('Is submitting:', publisher_isSubmitting);
 
-    // 🔥 check what is going in the form
+    // Mark that we're submitting to prevent beforeunload warning
+    publisher_isSubmitting = true;
+
+    // Disable the unload listener temporarily so page doesn't clear data on error
+    window.removeEventListener('unload', publisher_unloadHandler);
+
+    // Prevent page navigation while waiting for response
+    publisher_preventPageNavigation = (e) => {
+        e.preventDefault();
+        console.log('Page navigation prevented during form submission');
+    };
+    window.addEventListener('beforeunload', publisher_preventPageNavigation);
+
+    // Submit via AJAX to handle errors without page reload
     const formData = new FormData(publisher_form);
 
-    for (let [key, value] of formData.entries()) {
-        console.log(key, value);
+    // Add selected files to FormData
+    if (publisher_selectedFiles.length) {
+        // Remove any existing files from FormData
+        formData.delete('files[]');
+        // Add our selected files
+        publisher_selectedFiles.forEach(file => {
+            formData.append('files[]', file);
+        });
     }
 
-    // agar file h
+    console.log('Sending AJAX request with X-Requested-With header');
+    console.log('Form data keys:', Array.from(formData.keys()));
+
+    const fetchPromise = fetch(publisher_form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    });
+
+    console.log('Fetch promise created:', fetchPromise);
+
+    fetchPromise
+    .then(response => {
+        console.log('=== RESPONSE RECEIVED ===');
+        console.log('Response status:', response.status, response.statusText);
+        console.log('Response ok:', response.ok);
+        console.log('Response type:', response.type);
+        console.log('Response url:', response.url);
+
+        if (response.ok) {
+            console.log('Response is OK (200-299)');
+            window.removeEventListener('beforeunload', publisher_preventPageNavigation);
+            // Success - parse JSON response
+            return response.json().then(data => {
+                console.log('Success response data:', data);
+                // Clear saved data ONLY on successful submission
+                publisher_clearFormData();
+
+                // Show success message
+                const successDiv = document.createElement('div');
+                successDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    border: 2px solid #27ae60;
+                    border-radius: 8px;
+                    padding: 24px;
+                    max-width: 500px;
+                    z-index: 10000;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    text-align: center;
+                `;
+                successDiv.innerHTML = `<strong style="font-size: 18px; color: #27ae60;">✅ Success!</strong><br><br>${data.message}<br><br><button id="closeSuccessBtn" style="margin-top: 16px; padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">OK</button>`;
+                document.body.appendChild(successDiv);
+
+                document.getElementById('closeSuccessBtn').addEventListener('click', () => {
+                    successDiv.remove();
+                    overlay.remove();
+                    // Redirect after user clicks OK
+                    window.location.href = data.redirect || '/';
+                });
+
+                // Also add overlay
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 9999;
+                `;
+                document.body.appendChild(overlay);
+            });
+        } else if (response.status === 422) {
+            console.log('Validation error (422)');
+            window.removeEventListener('beforeunload', publisher_preventPageNavigation);
+            // Validation errors - show them in a user-friendly way
+            // Re-enable the submit button
+            if (publisher_nextBtn) {
+                publisher_nextBtn.disabled = false;
+                publisher_nextBtn.textContent = 'Submit';
+            }
+
+            // Reset submitting flag so user can try again
+            publisher_isSubmitting = false;
+
+            // Re-enable the unload handler
+            window.addEventListener('unload', publisher_unloadHandler);
+
+            return response.json().then(data => {
+                console.log('Validation error data:', data);
+                let errorHtml = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
+                errorHtml += '<strong style="font-size: 16px;">Please fix the following errors:</strong><br><br>';
+
+                if (data.errors) {
+                    for (let field in data.errors) {
+                        const fieldName = publisher_formatFieldName(field);
+                        const errors = data.errors[field];
+                        errorHtml += `<strong>${fieldName}:</strong><br>`;
+                        errors.forEach(error => {
+                            errorHtml += `• ${error}<br>`;
+                        });
+                        errorHtml += '<br>';
+                    }
+                }
+                errorHtml += '</div>';
+
+                // Create overlay FIRST
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 9999;
+                `;
+                document.body.appendChild(overlay);
+
+                // Create a custom error dialog
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    border: 2px solid #e74c3c;
+                    border-radius: 8px;
+                    padding: 24px;
+                    max-width: 500px;
+                    z-index: 10000;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                `;
+                errorDiv.innerHTML = errorHtml + '<button id="closeErrorBtn" style="margin-top: 16px; padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>';
+                document.body.appendChild(errorDiv);
+
+                document.getElementById('closeErrorBtn').addEventListener('click', () => {
+                    console.log('Closing error dialog');
+                    errorDiv.remove();
+                    overlay.remove();
+                    // Reset to step 1 so user can fix errors
+                    publisher_currentStep = 0;
+                    publisher_showStep(publisher_currentStep);
+                });
+
+                overlay.addEventListener('click', () => {
+                    console.log('Closing error dialog via overlay');
+                    errorDiv.remove();
+                    overlay.remove();
+                    // Reset to step 1 so user can fix errors
+                    publisher_currentStep = 0;
+                    publisher_showStep(publisher_currentStep);
+                });
+            });
+        } else {
+            console.log('Other error:', response.status);
+            window.removeEventListener('beforeunload', publisher_preventPageNavigation);
+            // Other errors (500, etc.)
+            // Re-enable the submit button
+            if (publisher_nextBtn) {
+                publisher_nextBtn.disabled = false;
+                publisher_nextBtn.textContent = 'Submit';
+            }
+
+            // Reset the submitting flag so user can try again
+            publisher_isSubmitting = false;
+
+            // Re-enable the unload handler
+            window.addEventListener('unload', publisher_unloadHandler);
+
+            return response.json().then(data => {
+                console.log('Error response data:', data);
+
+                // Create overlay FIRST
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 9999;
+                `;
+                document.body.appendChild(overlay);
+
+                // Show error dialog
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    border: 2px solid #e74c3c;
+                    border-radius: 8px;
+                    padding: 24px;
+                    max-width: 500px;
+                    z-index: 10000;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                `;
+
+                let errorMessage = data.message || 'An error occurred while submitting the form.';
+                if (data.error) {
+                    errorMessage = data.error;
+                }
+
+                errorDiv.innerHTML = `
+                    <div style="text-align: left;">
+                        <strong style="font-size: 16px; color: #e74c3c;">Error:</strong><br><br>
+                        <p>${errorMessage}</p>
+                    </div>
+                    <button id="closeErrorBtn" style="margin-top: 16px; padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+                `;
+                document.body.appendChild(errorDiv);
+
+                document.getElementById('closeErrorBtn').addEventListener('click', () => {
+                    console.log('Closing error dialog');
+                    errorDiv.remove();
+                    overlay.remove();
+                });
+
+                overlay.addEventListener('click', () => {
+                    console.log('Closing error dialog via overlay');
+                    errorDiv.remove();
+                    overlay.remove();
+                });
+            }).catch(err => {
+                // If response is not JSON, show generic error
+                alert('Server Error: ' + response.status + ' ' + response.statusText);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Network/Fetch error:', error);
+        window.removeEventListener('beforeunload', publisher_preventPageNavigation);
+        // Re-enable the submit button
+        if (publisher_nextBtn) {
+            publisher_nextBtn.disabled = false;
+            publisher_nextBtn.textContent = 'Submit';
+        }
+
+        // Reset the submitting flag so user can try again
+        publisher_isSubmitting = false;
+
+        // Re-enable the unload handler
+        window.addEventListener('unload', publisher_unloadHandler);
+
+        alert('Error submitting form: ' + error.message);
+    });
 });
 
 
@@ -334,6 +768,8 @@ publisher_form.addEventListener('submit', function (e) {
         publisher_stepElems.forEach((publisher_stepElem, publisher_idx) => {
             if (publisher_stepElem === publisher_reviewStep) return;
             const publisher_title = publisher_stepElem.querySelector('.uptitle-section-title')?.textContent || (`Step ${publisher_idx + 1}`);
+            // Skip the Assets step
+            if (publisher_title === 'Assets') return;
             const publisher_sectionWrapper = document.createElement('div');
             publisher_sectionWrapper.style.display = 'flex';
             publisher_sectionWrapper.style.flexDirection = 'column';
@@ -443,13 +879,6 @@ publisher_form.addEventListener('submit', function (e) {
         const publisher_idx = Array.from(publisher_form.querySelectorAll('.form-step')).indexOf(publisher_reviewStep);
         if (publisher_idx === -1) return;
         if (!publisher_validateStep(publisher_idx)) return;
-            // console.log("publisher_coverUpload.files:", publisher_coverUpload.files);
-
-        if (publisher_coverUpload && publisher_selectedFiles.length) {
-            const publisher_dt = new DataTransfer();
-            publisher_selectedFiles.forEach(pf => publisher_dt.items.add(pf));
-            publisher_coverUpload.files = publisher_dt.files;
-        }
 
         publisher_form.submit();
     });

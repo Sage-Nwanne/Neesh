@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Mail\PublisherApprovalNotification;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -29,9 +31,13 @@ class AdminController extends Controller
         if (is_null($user->email_verified_at)) {
             $user->email_verified_at = now();
             $user->save();
+
+            // Send approval email to user
+            $dashboardUrl = route('dashboard');
+            Mail::to($user->email)->send(new PublisherApprovalNotification($user, $dashboardUrl));
         }
 
-        return redirect()->route('admin.users')->with('success', 'User verified successfully!');
+        return redirect()->route('admin.users')->with('success', 'User verified successfully! Approval email sent.');
     }
 
     public function dashboard()
