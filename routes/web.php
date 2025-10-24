@@ -24,6 +24,7 @@ Route::get('/checkout', fn() => view('checkout'))->name('checkout');
 Route::get('/termsandconditions', fn() => view('terms'))->name('terms');
 
 // Registration Pages
+Route::get('/start', fn() => view('start'))->name('start');
 Route::get('/register/publisher', fn() => view('publisher.auth.register'))->name('register.publisher');
 Route::get('/register/retailer', fn() => view('retailer.auth.register'))->name('register.retailer');
 
@@ -72,24 +73,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // user related routes
-
     Route::get('/users', [AdminController::class, 'usersList'])->name('users');
     Route::get('/users/{id}', [AdminController::class, 'viewUser'])->name('users.view');
     Route::post('/users/{id}/verify', [AdminController::class, 'verifyUser'])->name('users.verify');
-
-    // Add more admin routes here...
-    Route::get('/magazines/create', [MagazineController::class, 'create'])->name('magazines.create');
-    Route::get('/magazines/edit/{id}', [MagazineController::class, 'edit'])->name('magazines.edit');
-    Route::post('/magazines', [MagazineController::class, 'store'])->name('magazines.store');
-    Route::post('/magazines/{id}', [MagazineController::class, 'update'])->name('magazines.update');
 });
 
 
 // ---------------------
 // Publisher Routes
 // ---------------------
-Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->group(function () {
-    Route::get('/dashboard', [MagazineController::class, 'showByPublisher'])->name('publisher.dashboard');
+Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publisher.')->group(function () {
+    Route::get('/dashboard', [MagazineController::class, 'showByPublisher'])->name('dashboard');
 
     Route::get('/magazines/create', [MagazineController::class, 'create'])->name('magazines.create');
     Route::get('/magazines/edit/{id}', [MagazineController::class, 'edit'])->name('magazines.edit');
@@ -100,9 +94,9 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->group(functi
 // ---------------------
 // Retailer Routes
 // ---------------------
-Route::middleware(['auth', 'role:retailer'])->prefix('retailer')->group(function () {
+Route::middleware(['auth', 'role:retailer'])->prefix('retailer')->name('retailer.')->group(function () {
     Route::get('/dashboard', [RetailerController::class, 'dashboard'])->name('dashboard');
-    Route::put('/address/update', [RetailerController::class, 'updateaddress'])->name('retailer.address.update');
+    Route::put('/address/update', [RetailerController::class, 'updateaddress'])->name('address.update');
 });
 
 // ---------------------
