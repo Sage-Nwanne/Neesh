@@ -1,5 +1,7 @@
+console.log('=== PUBLISHER REGISTRATION FORM SCRIPT STARTING ===');
+
 (function () {
-    console.log('Publisher registration form script loading...');
+    console.log('Publisher registration form IIFE executing...');
 
     const publisher_form = document.getElementById('multiStepForm');
     console.log('Form element found:', publisher_form);
@@ -927,5 +929,5 @@ publisher_form.addEventListener('submit', function (e) {
         });
     });
 
-
+    console.log('=== PUBLISHER REGISTRATION FORM SCRIPT COMPLETED ===');
 })();
