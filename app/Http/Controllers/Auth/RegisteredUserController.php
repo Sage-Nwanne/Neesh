@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Models\MagazineImage; // add this on top
-use App\Models\PublisherPaymentDetail;
 use App\Mail\PublisherRegistrationConfirmation;
 use Illuminate\Support\Facades\Mail;
 
@@ -211,18 +210,6 @@ class RegisteredUserController extends Controller
                 'user_id' => $user->id,
                 'company_name' => $validated['bussinessname'],
                 'payout_email' => $validated['email'],
-            ]);
-            // Step 4: store payment & payout information
-            PublisherPaymentDetail::create([
-                'user_id' => $user->id,
-                'preferred_payout_method' => $validated['payout_method'] ?? null,
-                'account_holder_name' => $validated['account_holder_name'] ?? null,
-                'account_number_iban' => $validated['iban'] ?? null,
-                'routing_swift_code' => $validated['swift_code'] ?? null,
-                'business_address' => $validated['business_address'] ?? null,
-                'tax_id' => $validated['tax_id'] ?? null,
-                'currency_preference' => $validated['currency_preference'] ?? 'USD',
-                'payment_contact_email' => $validated['payment_contact_email'] ?? null,
             ]);
 
             // Step 4: create first magazine
