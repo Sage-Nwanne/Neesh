@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Product Gallery - Clone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -66,10 +67,17 @@
                         </a>
                           
                         @endhasrole
-                        <button class="action-btn">
+                        @auth
+                        <button class="action-btn bookmark-btn" data-magazine-id="{{ $magazine->id }}">
                             <span>Bookmark</span>
                             <img src="{{ asset('assets/image/black save icon.png') }}" alt="Bookmark Icon">
                         </button>
+                        @else
+                        <a href="{{ route('login') }}" class="action-btn">
+                            <span>Bookmark</span>
+                            <img src="{{ asset('assets/image/black save icon.png') }}" alt="Bookmark Icon">
+                        </a>
+                        @endauth
                         <button class="action-btn">
                             <span>Copy info</span>
                             <img src="{{ asset('assets/image/Qr code.png') }}" alt="Copy Icon">

@@ -454,3 +454,49 @@
         closeCart,
     };
 })();
+
+// Bookmark functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const bookmarkBtn = document.querySelector('.bookmark-btn');
+
+    if (!bookmarkBtn) return;
+
+    const magazineId = bookmarkBtn.dataset.magazineId;
+
+    // Check if magazine is already bookmarked
+    fetch(`/bookmarks/${magazineId}/check`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.bookmarked) {
+                bookmarkBtn.classList.add('bookmarked');
+                bookmarkBtn.querySelector('span').textContent = 'Bookmarked';
+            }
+        })
+        .catch(error => console.error('Error checking bookmark status:', error));
+
+    // Handle bookmark toggle
+    bookmarkBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        fetch(`/bookmarks/${magazineId}/toggle`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.bookmarked) {
+                    bookmarkBtn.classList.add('bookmarked');
+                    bookmarkBtn.querySelector('span').textContent = 'Bookmarked';
+                } else {
+                    bookmarkBtn.classList.remove('bookmarked');
+                    bookmarkBtn.querySelector('span').textContent = 'Bookmark';
+                }
+            }
+        })
+        .catch(error => console.error('Error toggling bookmark:', error));
+    });
+});

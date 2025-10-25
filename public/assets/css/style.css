@@ -2752,6 +2752,16 @@ button.action-btn span {
     color: #ffffff;
 }
 
+.action-btn.bookmarked {
+    background-color: #753bbd;
+    /* solid purple for bookmarked state */
+}
+
+.action-btn.bookmarked:hover {
+    background-color: #5a2d8a;
+    /* darker purple on hover */
+}
+
 .relative_product_title {
     font-size: 30px;
     line-height: 100%;
