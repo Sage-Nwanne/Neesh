@@ -143,7 +143,7 @@ class RegisteredUserController extends Controller
 //             ->withErrors(['error' => 'Something went wrong during registration: ' . $e->getMessage()]);
 //     }
 // }
-    public function store(Request $request): RedirectResponse|JsonResponse
+    public function publisherstore(Request $request): RedirectResponse|JsonResponse
     {
         // dd($request->all());
         // dd($request->file('files'));
