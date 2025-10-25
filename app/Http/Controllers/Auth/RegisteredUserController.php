@@ -198,7 +198,7 @@ class RegisteredUserController extends Controller
 
                 // files
                 'files' => ['nullable', 'array', 'max:6'],
-                // 'files.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // max 5MB
+                'files.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // max 5MB
             ]);
 
             Log::info('Validation passed', ['validated_keys' => array_keys($validated)]);
@@ -300,6 +300,12 @@ class RegisteredUserController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error in publisher registration', ['errors' => $e->errors()]);
+            if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
 
