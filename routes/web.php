@@ -6,6 +6,7 @@ use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RetailerController;
 use App\Http\Controllers\BookmarkController;
+use App\Http\Controllers\PublisherPageController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
@@ -117,6 +118,14 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     Route::get('/magazines/edit/{id}', [MagazineController::class, 'edit'])->name('magazines.edit');
     Route::post('/magazines', [MagazineController::class, 'store'])->name('magazines.store');
     Route::post('/magazines/{id}', [MagazineController::class, 'update'])->name('magazines.update');
+
+    // Publisher Pages
+    Route::get('/catalogue', [PublisherPageController::class, 'catalogue'])->name('catalogue');
+    Route::get('/orders', [PublisherPageController::class, 'orders'])->name('orders');
+    Route::get('/messages', [PublisherPageController::class, 'messages'])->name('messages');
+    Route::get('/account', [PublisherPageController::class, 'account'])->name('account');
+    Route::get('/help-center', [PublisherPageController::class, 'helpCenter'])->name('help-center');
+    Route::get('/faq', [PublisherPageController::class, 'faq'])->name('faq');
 });
 
 // ---------------------

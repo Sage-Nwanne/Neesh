@@ -16,13 +16,13 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
-                <a href="#">Dashboard</a>
-                <a href="#">Catalogue</a>
-                <a href="#">Orders</a>
-                <a href="#">Messages</a>
-                <a href="#">Account</a>
-                <a href="#">Help Center</a>
-                <a href="#">FAQ</a>
+                <a href="{{ route('publisher.dashboard') }}">Dashboard</a>
+                <a href="{{ route('publisher.catalogue') }}">Catalogue</a>
+                <a href="{{ route('publisher.orders') }}">Orders</a>
+                <a href="{{ route('publisher.messages') }}">Messages</a>
+                <a href="{{ route('publisher.account') }}">Account</a>
+                <a href="{{ route('publisher.help-center') }}">Help Center</a>
+                <a href="{{ route('publisher.faq') }}">FAQ</a>
             </div>
         </div>
     </div>
