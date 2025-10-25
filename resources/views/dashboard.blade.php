@@ -327,7 +327,7 @@
               </a>
 
               <!-- RIGHT -->
-              <a href="{{ route('magazines.create') }}" class="upload-btn">
+              <a href="{{ route('publisher.magazines.create') }}" class="upload-btn">
                   <span class="full">Upload Magazine</span>
                   <span class="short" aria-hidden="true">Upload</span>
               </a>
