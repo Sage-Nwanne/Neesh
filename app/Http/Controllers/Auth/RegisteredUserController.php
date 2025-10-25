@@ -144,10 +144,14 @@ class RegisteredUserController extends Controller
 // }
     public function publisherstore(Request $request): RedirectResponse|JsonResponse
     {
-        // dd($request->all());
-        // dd($request->file('files'));
+        // Debug: Log request headers and type
+        Log::info('Publisher registration request received', [
+            'expects_json' => $request->expectsJson(),
+            'x_requested_with' => $request->header('X-Requested-With'),
+            'accept_header' => $request->header('Accept'),
+            'content_type' => $request->header('Content-Type'),
+        ]);
 
-        // dd($request->all());
         try {
             // Step 1: validate everything
             $validated = $request->validate([
