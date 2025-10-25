@@ -168,57 +168,32 @@
 
             </div>
         </div>
+        @if($relatedMagazines->count() > 0)
         <div class="relative_collection-wrapper">
             <h2 class="relative_product_title">
                 Explore similar titles
             </h2>
             <div class="collection">
-                <a href="product2.html" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 1.png') }}" alt="Product 6">
+                @foreach($relatedMagazines as $relatedMagazine)
+                <a href="{{ route('magazines.show', $relatedMagazine->id) }}" class="product-card relative-product product-card-underline">
+                    @if ($relatedMagazine->images->first())
+                        <img src="{{ asset('storage/' . $relatedMagazine->images->first()->image_path) }}" alt="{{ $relatedMagazine->title_name }}">
+                    @else
+                        <img src="{{ asset('assets/image/placeholder.png') }}" alt="No Image">
+                    @endif
                     <div class="product_info">
-                        <span class="product_vendor">WW Issue 08</span>
+                        <span class="product_vendor">{{ $relatedMagazine->issue_identifier ?? 'Single Issue' }}</span>
                         <div class="title_and_country">
-                            <h3 class="product_title">Weird Walk</h3>
-                            <p>UK</p>
+                            <h3 class="product_title">{{ $relatedMagazine->title_name }}</h3>
+                            <p>{{ $relatedMagazine->warehouse ?? '' }}</p>
                         </div>
-                        <span class="product_price">$ 8.81</span>
+                        <span class="product_price">${{ number_format($relatedMagazine->msrp, 2) }}</span>
                     </div>
                 </a>
-                <a href="product2.html" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 6.png') }}" alt="Product 6">
-                    <div class="product_info">
-                        <span class="product_vendor">Catnip Vol 1</span>
-                        <div class="title_and_country">
-                            <h3 class="product_title">Broccoli</h3>
-                            <p>Portland, OR</p>
-                        </div>
-                        <span class="product_price">$ 28.00</span>
-                    </div>
-                </a>
-                <a href="#" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 6.png') }}" alt="Product 6">
-                    <div class="product_info">
-                        <span class="product_vendor">Mushroom People</span>
-                        <div class="title_and_country">
-                            <h3 class="product_title">Broccoli</h3>
-                            <p>Portland, OR</p>
-                        </div>
-                        <span class="product_price">$ 28.00</span>
-                    </div>
-                </a>
-                <a href="#" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 12.png') }}" alt="Product 6">
-                    <div class="product_info">
-                        <span class="product_vendor">Wild Alchemy Journal Issue No. 5: Aether</span>
-                        <div class="title_and_country">
-                            <h3 class="product_title">Mama Xanadu</h3>
-                            <p>UK</p>
-                        </div>
-                        <span class="product_price">$ 35.00</span>
-                    </div>
-                </a>
+                @endforeach
             </div>
         </div>
+        @endif
 
 
         <div id="cartOverlay" class="cart-overlay" aria-hidden="true"></div>
