@@ -392,7 +392,9 @@
             // Disable the button to prevent double submission
             publisher_nextBtn.disabled = true;
             publisher_nextBtn.textContent = 'Submitting...';
-            publisher_form.submit();
+            // Trigger the submit event instead of calling .submit() directly
+            // This ensures the form's submit event listener is called
+            publisher_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
         }
     });
 
@@ -423,7 +425,8 @@
             } else {
                 if (!publisher_validateStep(publisher_currentStep)) return;
                 publisher_saveFormData(); // Save before submitting
-                publisher_form.submit();
+                // Trigger the submit event instead of calling .submit() directly
+                publisher_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
             }
         }
     });
@@ -880,7 +883,9 @@ publisher_form.addEventListener('submit', function (e) {
         if (publisher_idx === -1) return;
         if (!publisher_validateStep(publisher_idx)) return;
 
-        publisher_form.submit();
+        // Trigger the submit event instead of calling .submit() directly
+        // This ensures the form's submit event listener is called
+        publisher_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
     publisher_steps = Array.from(publisher_form.querySelectorAll('.form-step'));
