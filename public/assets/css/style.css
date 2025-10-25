@@ -2718,10 +2718,10 @@ p.price_text {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f0f0f0;
-    /* very light gray */
-    color: #555555;
-    /* dark gray text */
+    background-color: #753bbde3;
+    /* purple with transparency */
+    color: #ffffff;
+    /* white text */
     border: none;
     border-radius: 10px;
     /* pill-shape */
@@ -2734,8 +2734,8 @@ p.price_text {
 }
 
 .action-btn:hover {
-    background-color: #e8e8e8;
-    /* hover effect */
+    background-color: #753bbd96;
+    /* hover effect - darker purple */
 }
 
 .action-btn img {
@@ -2749,7 +2749,7 @@ button.action-btn span {
     font-size: 14px;
     font-weight: 600;
     line-height: 100%;
-    color: #6E7180;
+    color: #ffffff;
 }
 
 .relative_product_title {
