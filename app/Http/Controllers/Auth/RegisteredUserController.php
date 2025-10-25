@@ -201,7 +201,7 @@ class RegisteredUserController extends Controller
                 'files.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // max 5MB
             ]);
 
-            Log::info('Validation passed', ['validated_keys' => array_keys($validated)]);
+            Log::info('Validation passed', ['validated_keys' => array_keys($validated), 'files_count' => count($validated['files'] ?? [])]);
 
             DB::beginTransaction();
 
@@ -306,6 +306,16 @@ class RegisteredUserController extends Controller
                 return response()->json(['errors' => $e->errors()], 422);
             }
             return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Unexpected error in publisher registration', [
+                'message' => $e->getMessage(),
+                'class' => get_class($e),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
 
