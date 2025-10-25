@@ -153,6 +153,8 @@ class RegisteredUserController extends Controller
         ]);
 
         try {
+            Log::info('Starting validation', ['all_data' => $request->all()]);
+
             // Step 1: validate everything
             $validated = $request->validate([
                 // user fields
@@ -199,6 +201,8 @@ class RegisteredUserController extends Controller
                 // 'files.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // max 5MB
             ]);
 
+            Log::info('Validation passed', ['validated_keys' => array_keys($validated)]);
+
             DB::beginTransaction();
 
             // Step 2: create user
@@ -208,6 +212,7 @@ class RegisteredUserController extends Controller
                 'password' => Hash::make($validated['password']),
             ]);
             $user->assignRole('publisher');
+            Log::info('User created and role assigned', ['user_id' => $user->id, 'email' => $user->email]);
 
             // Step 3: create publisher profile
             $publisher = PublisherProfile::create([
@@ -246,6 +251,7 @@ class RegisteredUserController extends Controller
                     : null,
                 'status' => 'pending',
             ]);
+            Log::info('Magazine created', ['magazine_id' => $magazine->id, 'title' => $magazine->title_name]);
             Log::info('request files', ['files' => $request->file('files')]);
             // Step 5: handle file uploads
             if ($request->hasFile('files')) {
@@ -259,6 +265,7 @@ class RegisteredUserController extends Controller
             }
 
             DB::commit();
+            Log::info('Database transaction committed successfully');
 
             // Step 6: Send confirmation email to user
             Mail::to($user->email)->send(new PublisherRegistrationConfirmation($user));
