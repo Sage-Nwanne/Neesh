@@ -125,7 +125,7 @@ class MagazineController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', 'Magazine uploaded successfully!');
+            return redirect()->route('publisher.dashboard')->with('success', 'Magazine uploaded successfully!');
         } catch (\Exception $e) {
             //throw $th;
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
@@ -203,7 +203,7 @@ class MagazineController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', 'Magazine updated successfully!');
+            return redirect()->route('magazines.show', $magazine->id)->with('success', 'Magazine updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
