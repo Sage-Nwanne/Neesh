@@ -8,6 +8,7 @@
       <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
       <script src="{{ asset('assets/js/menu.js') }}"></script>
+      <script src="{{ asset('assets/js/dashboard.js') }}" defer></script>
       <style>
           .collection {
               display: flex;
@@ -340,35 +341,83 @@
               Your Catalogue
           </div>
           <div class="home_page_catalogue_collection_icons">
-              <div class="home_page_catalogue_icon_contaienr">
+              <div class="home_page_catalogue_icon_contaienr" id="viewToggleBtn" title="Toggle view">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/Eye.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/Eye.png') }}" alt="View Toggle">
                   </div>
               </div>
-              <div class="home_page_catalogue_icon_contaienr">
+              <div class="home_page_catalogue_icon_contaienr" id="searchBtn" title="Search">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/Search.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/Search.png') }}" alt="Search">
                   </div>
               </div>
-              <div class="home_page_catalogue_icon_contaienr">
+              <div class="home_page_catalogue_icon_contaienr" id="sortBtn" title="Sort">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/top-bottom-arrrow.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/top-bottom-arrrow.png') }}" alt="Sort">
                   </div>
               </div>
-              <div class="home_page_catalogue_icon_contaienr">
+              <div class="home_page_catalogue_icon_contaienr" id="filterBtn" title="Filter">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/Left Right Filter.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/Left Right Filter.png') }}" alt="Filter">
                   </div>
               </div>
           </div>
       </div>
+
+      <!-- Search Bar (hidden by default) -->
+      <div id="searchBar" style="display: none; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee;">
+          <input type="text" id="searchInput" placeholder="Search magazines by title..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: 'Manrope', sans-serif;">
+      </div>
+
+      <!-- Sort Options (hidden by default) -->
+      <div id="sortOptions" style="display: none; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee;">
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="newest" checked> Newest First
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="oldest"> Oldest First
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="title-asc"> Title (A-Z)
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="title-desc"> Title (Z-A)
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="price-asc"> Price (Low to High)
+          </label>
+          <label style="display: block;">
+              <input type="radio" name="sort" value="price-desc"> Price (High to Low)
+          </label>
+      </div>
+
+      <!-- Filter Options (hidden by default) -->
+      <div id="filterOptions" style="display: none; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee;">
+          <div style="margin-bottom: 15px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 8px;">Genre</label>
+              <select id="genreFilter" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                  <option value="">All Genres</option>
+                  @php
+                      $genres = $magazines->pluck('genre')->filter()->unique();
+                  @endphp
+                  @foreach($genres as $genre)
+                      <option value="{{ $genre }}">{{ $genre }}</option>
+                  @endforeach
+              </select>
+          </div>
+          <div>
+              <label style="display: block; font-weight: 600; margin-bottom: 8px;">Type</label>
+              <label style="display: block; margin-bottom: 8px;">
+                  <input type="checkbox" class="typeFilter" value="single"> Single Issue
+              </label>
+              <label style="display: block;">
+                  <input type="checkbox" class="typeFilter" value="series"> Series
+              </label>
+          </div>
+      </div>
       <div class="collection" style="padding: 20px;">
           @forelse($magazines as $magazine)
-              <a href="{{ route('magazines.show', $magazine->id) }}" class="product-card product-card-underline">
+              <a href="{{ route('magazines.show', $magazine->id) }}" class="product-card product-card-underline" data-type="{{ $magazine->type }}" data-created="{{ $magazine->created_at }}">
                   {{-- Agar image hai to first image dikhao, warna placeholder --}}
                   @if ($magazine->images->first())
                       <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}"
