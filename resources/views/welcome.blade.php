@@ -37,7 +37,9 @@
             <!-- Unauthenticated users see the welcome screen -->
             <div style="text-align: center; max-width: 600px;">
                 <div style="margin-bottom: 40px;">
-                    <img src="{{asset('assets/image/Logo A1.png')}}" alt="Neesh Logo" style="max-width: 300px; height: auto;">
+                    <a href="{{ route('home') }}" style="text-decoration: none;">
+                        <img src="{{asset('assets/image/Logo A1.png')}}" alt="Neesh Logo" style="max-width: 300px; height: auto; cursor: pointer;">
+                    </a>
                 </div>
 
                 
