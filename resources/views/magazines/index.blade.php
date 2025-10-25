@@ -78,7 +78,7 @@
                             <img src="{{ asset('assets/image/black save icon.png') }}" alt="Bookmark Icon">
                         </a>
                         @endauth
-                        <button class="action-btn">
+                        <button class="action-btn share-btn" data-magazine-id="{{ $magazine->id }}" data-magazine-title="{{ $magazine->title_name }}">
                             <span>Copy info</span>
                             <img src="{{ asset('assets/image/Qr code.png') }}" alt="Copy Icon">
                         </button>

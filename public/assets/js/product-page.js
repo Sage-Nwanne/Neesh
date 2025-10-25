@@ -459,44 +459,124 @@
 document.addEventListener('DOMContentLoaded', function() {
     const bookmarkBtn = document.querySelector('.bookmark-btn');
 
-    if (!bookmarkBtn) return;
+    if (bookmarkBtn) {
+        const magazineId = bookmarkBtn.dataset.magazineId;
 
-    const magazineId = bookmarkBtn.dataset.magazineId;
-
-    // Check if magazine is already bookmarked
-    fetch(`/bookmarks/${magazineId}/check`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.bookmarked) {
-                bookmarkBtn.classList.add('bookmarked');
-                bookmarkBtn.querySelector('span').textContent = 'Bookmarked';
-            }
-        })
-        .catch(error => console.error('Error checking bookmark status:', error));
-
-    // Handle bookmark toggle
-    bookmarkBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        fetch(`/bookmarks/${magazineId}/toggle`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
+        // Check if magazine is already bookmarked
+        fetch(`/bookmarks/${magazineId}/check`)
+            .then(response => response.json())
+            .then(data => {
                 if (data.bookmarked) {
                     bookmarkBtn.classList.add('bookmarked');
                     bookmarkBtn.querySelector('span').textContent = 'Bookmarked';
-                } else {
-                    bookmarkBtn.classList.remove('bookmarked');
-                    bookmarkBtn.querySelector('span').textContent = 'Bookmark';
                 }
+            })
+            .catch(error => console.error('Error checking bookmark status:', error));
+
+        // Handle bookmark toggle
+        bookmarkBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            fetch(`/bookmarks/${magazineId}/toggle`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.bookmarked) {
+                        bookmarkBtn.classList.add('bookmarked');
+                        bookmarkBtn.querySelector('span').textContent = 'Bookmarked';
+                    } else {
+                        bookmarkBtn.classList.remove('bookmarked');
+                        bookmarkBtn.querySelector('span').textContent = 'Bookmark';
+                    }
+                }
+            })
+            .catch(error => console.error('Error toggling bookmark:', error));
+        });
+    }
+
+    // Share/Copy Info functionality
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const magazineId = this.dataset.magazineId;
+            const magazineTitle = this.dataset.magazineTitle;
+            const shareUrl = `${window.location.origin}/magazine/${magazineId}`;
+
+            // Try Web Share API first (for mobile and modern browsers)
+            if (navigator.share) {
+                navigator.share({
+                    title: magazineTitle,
+                    text: `Check out this magazine: ${magazineTitle}`,
+                    url: shareUrl
+                }).catch(err => console.log('Share cancelled or failed:', err));
+            } else {
+                // Fallback: Show modal with shareable link and copy button
+                showShareModal(magazineTitle, shareUrl);
             }
-        })
-        .catch(error => console.error('Error toggling bookmark:', error));
-    });
+        });
+    }
 });
+
+// Share modal functionality
+function showShareModal(title, url) {
+    // Create modal HTML
+    const modal = document.createElement('div');
+    modal.className = 'share-modal-overlay';
+    modal.innerHTML = `
+        <div class="share-modal">
+            <div class="share-modal-header">
+                <h3>Share "${title}"</h3>
+                <button class="share-modal-close">&times;</button>
+            </div>
+            <div class="share-modal-content">
+                <p>Share this magazine with others:</p>
+                <div class="share-link-container">
+                    <input type="text" class="share-link-input" value="${url}" readonly>
+                    <button class="share-copy-btn">Copy Link</button>
+                </div>
+                <div class="share-social">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" class="share-social-btn facebook">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent('Check out: ' + title)}" target="_blank" class="share-social-btn twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}" target="_blank" class="share-social-btn linkedin">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Handle close button
+    const closeBtn = modal.querySelector('.share-modal-close');
+    closeBtn.addEventListener('click', () => modal.remove());
+
+    // Handle overlay click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+
+    // Handle copy button
+    const copyBtn = modal.querySelector('.share-copy-btn');
+    const linkInput = modal.querySelector('.share-link-input');
+    copyBtn.addEventListener('click', () => {
+        linkInput.select();
+        document.execCommand('copy');
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => {
+            copyBtn.textContent = 'Copy Link';
+        }, 2000);
+    });
+}
