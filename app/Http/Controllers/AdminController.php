@@ -40,6 +40,17 @@ class AdminController extends Controller
         return redirect()->route('admin.users')->with('success', 'User verified successfully! Approval email sent.');
     }
 
+    // ✅ Reject user
+    public function rejectUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Delete the user and related data
+        $user->delete();
+
+        return redirect()->route('admin.users')->with('success', 'Publisher submission rejected and user account deleted.');
+    }
+
     public function dashboard()
     {
         // Fetch all users for admin overview

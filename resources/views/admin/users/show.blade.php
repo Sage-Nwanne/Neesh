@@ -92,12 +92,19 @@
 
     <div class="mt-4">
         @if(!$user->email_verified_at)
-        <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-success">Verify Now</button>
-        </form>
+        <div class="d-flex gap-2">
+            <form action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-success">✅ Approve Publisher</button>
+            </form>
+
+            <form action="{{ route('admin.users.reject', $user->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to reject this publisher? This action cannot be undone.');">
+                @csrf
+                <button type="submit" class="btn btn-danger">❌ Reject Publisher</button>
+            </form>
+        </div>
         @else
-            <button class="btn btn-secondary" disabled>Already Verified</button>
+            <button class="btn btn-secondary" disabled>✅ Already Verified</button>
         @endif
 
         <a href="{{ route('admin.users') }}" class="btn btn-link ms-3">← Back to Users List</a>
