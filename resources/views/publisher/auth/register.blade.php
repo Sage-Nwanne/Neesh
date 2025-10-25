@@ -133,7 +133,7 @@
                         <span class="progress" id="progressText">0% Complete</span>
                     </div>
 
-                    <form method="POST" id="multiStepForm" action="{{ route('register') }}"
+                    <form method="POST" id="multiStepForm" action="{{ route('register.submit.publisher') }}"
                         enctype="multipart/form-data">
                         @csrf
 
