@@ -29,22 +29,25 @@ Route::get('/register/publisher', fn() => view('publisher.auth.register'))->name
 Route::get('/register/retailer', fn() => view('retailer.auth.register'))->name('register.retailer');
 
 // Admin Panel Redirect (requires authentication)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin-laravel-redirect', function () {
-        // Check if user is admin
-        if (!auth()->user()->hasRole('admin')) {
-            abort(403, 'Unauthorized access to admin panel');
-        }
+Route::get('/admin-laravel-redirect', function () {
+    // Redirect to login if not authenticated
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
 
-        // If confirmed parameter is present, redirect to admin dashboard
-        if (request()->get('confirmed') === 'true') {
-            return redirect('https://app.neesh.art/admin/dashboard');
-        }
+    // Check if user is admin
+    if (!auth()->user()->hasRole('admin')) {
+        abort(403, 'Unauthorized access to admin panel');
+    }
 
-        // Show confirmation page
-        return view('admin.redirect');
-    })->name('admin.redirect');
-});
+    // If confirmed parameter is present, redirect to admin dashboard
+    if (request()->get('confirmed') === 'true') {
+        return redirect('https://app.neesh.art/admin/dashboard');
+    }
+
+    // Show confirmation page
+    return view('admin.redirect');
+})->name('admin.redirect');
 
 // Registration Handlers
 Route::post('/publisherregister', [RegisteredUserController::class, 'publisherstore'])->name('register.submit.publisher');
