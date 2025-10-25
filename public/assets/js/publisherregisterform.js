@@ -1,5 +1,14 @@
 (function () {
+    console.log('Publisher registration form script loading...');
+
     const publisher_form = document.getElementById('multiStepForm');
+    console.log('Form element found:', publisher_form);
+
+    if (!publisher_form) {
+        console.error('ERROR: multiStepForm not found in DOM!');
+        return;
+    }
+
     let publisher_steps = Array.from(publisher_form.querySelectorAll('.form-step'));
     const publisher_stepIndicator = document.getElementById('stepIndicator');
     const publisher_progressText = document.getElementById('progressText');
@@ -9,6 +18,12 @@
     const publisher_summaryList = document.getElementById('summaryList');
     const publisher_editAllBtn = document.getElementById('editAllBtn');
     const publisher_finalSubmitBtn = document.getElementById('finalSubmitBtn');
+
+    console.log('All form elements loaded:', {
+        form: !!publisher_form,
+        nextBtn: !!publisher_nextBtn,
+        finalSubmitBtn: !!publisher_finalSubmitBtn
+    });
 
     const publisher_coverUpload = document.getElementById('coverUpload');
     const publisher_previewContainer = document.getElementById('previewContainer');
@@ -379,7 +394,9 @@
     }
     window.addEventListener('unload', publisher_unloadHandler);
 
+    console.log('Attaching click listener to nextBtn...');
     publisher_nextBtn?.addEventListener('click', () => {
+        console.log('NEXT BUTTON CLICKED! Current step:', publisher_currentStep);
         publisher_steps = Array.from(publisher_form.querySelectorAll('.form-step'));
         if (publisher_currentStep < publisher_steps.length - 1) {
             if (!publisher_validateStep(publisher_currentStep)) return;
@@ -443,7 +460,9 @@
 // Define this outside the event listener so we can reference it later
 let publisher_preventPageNavigation = null;
 
+console.log('Attaching submit event listener to form...');
 publisher_form.addEventListener('submit', function (e) {
+    console.log('SUBMIT EVENT LISTENER TRIGGERED!');
     e.preventDefault();
     e.stopPropagation();
 
