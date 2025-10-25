@@ -25,9 +25,13 @@
 <body class="antialiased">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
         @auth
-            <!-- Authenticated users see dashboard link -->
-            <div style="position: absolute; top: 20px; right: 20px;">
+            <!-- Authenticated users see dashboard link and logout button -->
+            <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px;">
                 <a href="{{ url('/dashboard') }}" style="padding: 10px 20px; background: black; color: white; text-decoration: none; border-radius: 4px;">Dashboard</a>
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Logout</button>
+                </form>
             </div>
         @else
             <!-- Unauthenticated users see the welcome screen -->
