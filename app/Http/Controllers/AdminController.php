@@ -53,9 +53,24 @@ class AdminController extends Controller
 
     public function dashboard()
     {
+        // Fetch pending publisher applications (unverified publishers)
+        $publisherApplications = User::with(['publisherProfile.magazines.images', 'paymentDetails'])
+            ->whereHas('roles', fn($q) => $q->where('name', 'publisher'))
+            ->where('email_verified_at', null)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Fetch pending retailer applications (unverified retailers)
+        $retailerApplications = User::with('retailerProfile')
+            ->whereHas('roles', fn($q) => $q->where('name', 'retailer'))
+            ->where('email_verified_at', null)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         // Fetch all users for admin overview
         $users = User::all();
-        return view('admin.dashboard', compact('users'));
+
+        return view('admin.dashboard', compact('users', 'publisherApplications', 'retailerApplications'));
     }
     // public function verifyUser($id)
     // {
