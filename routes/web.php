@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RetailerController;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
@@ -81,6 +82,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Bookmark Routes
+    Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
+    Route::post('/bookmarks/{magazineId}/toggle', [BookmarkController::class, 'toggle'])->name('bookmarks.toggle');
+    Route::get('/bookmarks/{magazineId}/check', [BookmarkController::class, 'isBookmarked'])->name('bookmarks.check');
 });
 
 // ---------------------
