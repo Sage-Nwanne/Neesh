@@ -168,7 +168,7 @@ class MagazineController extends Controller
                 'payment_terms' => ['nullable', 'string'],
                 'files' => ['nullable', 'array', 'max:6'],
                 'restock_timeline' => ['nullable', 'string'],
-
+                'deleted_images' => ['nullable', 'string'],
             ]);
 
             $magazine->update([
@@ -191,6 +191,14 @@ class MagazineController extends Controller
                 'payment_terms' => $validated['payment_terms'] ?? null,
                 'restock_timeline' => $validated['restock_timeline'] ?? null,
             ]);
+
+            // Handle deleted images
+            if ($validated['deleted_images']) {
+                $deletedImageIds = array_filter(explode(',', $validated['deleted_images']));
+                if (!empty($deletedImageIds)) {
+                    MagazineImage::whereIn('id', $deletedImageIds)->delete();
+                }
+            }
 
             // handle new image uploads (optional append)
             if ($request->file('files')) {
