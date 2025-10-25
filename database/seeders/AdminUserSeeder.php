@@ -19,10 +19,10 @@ class AdminUserSeeder extends Seeder
 
         // Create default admin user
         $adminUser = User::firstOrCreate(
-            ['email' => 'admin@neesh.com'], // check if already exists
+            ['email' => 'gem@neesh.art'], // check if already exists
             [
-                'name' => 'Super Admin',
-                'password' => Hash::make('admin123'), // change later
+                'name' => 'Admin',
+                'password' => Hash::make('Neeshis@dmin'),
                 'email_verified_at' => now(), // mark as verified
             ]
         );
