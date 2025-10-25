@@ -15,7 +15,7 @@
     RewriteRule ^ %1 [L,R=301]
 
     # Exclude storage directory from rewriting
-    RewriteCond %{REQUEST_URI} ^/storage [L]
+    RewriteCond %{REQUEST_URI} ^/storage
     RewriteRule ^ - [L]
 
     # Send Requests To Front Controller...
