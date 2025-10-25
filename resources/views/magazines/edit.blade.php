@@ -42,7 +42,7 @@
       </div>
   @endif
 
-  <form method="POST" action="{{ route('magazines.update', $magazine->id) }}" enctype="multipart/form-data">
+  <form method="POST" action="{{ route('publisher.magazines.update', $magazine->id) }}" enctype="multipart/form-data">
       @csrf
       @method('POST')
 

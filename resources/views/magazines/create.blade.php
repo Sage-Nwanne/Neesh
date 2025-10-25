@@ -132,7 +132,7 @@
       </div>
       @endif
 
-      <form method="POST" action="{{ route('magazines.store') }}" enctype="multipart/form-data">
+      <form method="POST" action="{{ route('publisher.magazines.store') }}" enctype="multipart/form-data">
           @csrf
           <div class="uptitle-form-container">
               <div class="uptitle-left-col">

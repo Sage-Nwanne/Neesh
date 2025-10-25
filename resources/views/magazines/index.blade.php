@@ -59,7 +59,7 @@
 
                     <div class="action-buttons">
                         @hasrole('publisher')
-                        <a href="{{route('magazines.edit' , $magazine->id)}}" class="action-btn">
+                        <a href="{{route('publisher.magazines.edit' , $magazine->id)}}" class="action-btn">
                           <span>Edit</span>
                                 <img src="{{ asset('assets/image/pencil.png') }}" alt="Mail Icon">
                           
