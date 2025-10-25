@@ -264,7 +264,7 @@ class RegisteredUserController extends Controller
             Auth::login($user);
 
             // Return JSON for AJAX requests, redirect for regular requests
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json([
                     'success' => true,
                     'message' => 'Publisher registered successfully! Your application is pending admin verification. Check your email for updates.',
@@ -276,7 +276,7 @@ class RegisteredUserController extends Controller
                 ->with('success', 'Publisher registered successfully! Your application is pending admin verification. Check your email for updates.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json(['errors' => $e->errors()], 422);
             }
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -285,7 +285,7 @@ class RegisteredUserController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
