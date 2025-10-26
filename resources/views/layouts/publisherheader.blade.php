@@ -16,6 +16,7 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
+                <a href="{{ route('discover.index') }}">Discover</a>
                 <a href="{{ route('publisher.dashboard') }}">Dashboard</a>
                 <a href="{{ route('publisher.catalogue') }}">Catalogue</a>
                 <a href="{{ route('publisher.orders') }}">Orders</a>
