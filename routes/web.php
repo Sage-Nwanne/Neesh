@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RetailerController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\PublisherPageController;
+use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
@@ -147,6 +148,13 @@ Route::middleware(['auth', 'role:admin|publisher'])->group(function () {
 // Public Magazine Route
 // ---------------------
 Route::get('/magazine/{id}', [MagazineController::class, 'show'])->name('magazines.show');
+
+// ---------------------
+// Discover Routes (Public & Authenticated)
+// ---------------------
+Route::get('/discover', [DiscoverController::class, 'index'])->name('discover.index');
+Route::get('/publisher/{publisherId}', [DiscoverController::class, 'viewPublisher'])->name('publisher.profile');
+Route::post('/magazine/{magazineId}/track-view', [DiscoverController::class, 'trackView'])->name('magazine.track-view');
 
 // ---------------------
 // Auth Scaffolding Routes
