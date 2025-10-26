@@ -4,7 +4,8 @@
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Upload a Title Form</title>
+      <title>Your Dashboard </title>
+      <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
       <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
       <script src="{{ asset('assets/js/menu.js') }}"></script>
@@ -324,7 +325,7 @@
           <div class="uptitle-main-heading-container full-bleed">
               <!-- LEFT -->
               <a href="{{ route('dashboard') }}" class="left" style="color: #000;">
-                  <h1 class="my_title">Welcome back, {{ Auth::user()->name }} 👋</h1>
+                  <h1 class="my_title">Welcome back, {{ Auth::user()->name }} </h1>
               </a>
 
               <!-- RIGHT -->
@@ -341,26 +342,26 @@
               Your Catalogue
           </div>
           <div class="home_page_catalogue_collection_icons">
-              <div class="home_page_catalogue_icon_contaienr" id="viewToggleBtn" title="Toggle view">
+              <button class="home_page_catalogue_icon_contaienr" id="viewToggleBtn" title="Toggle view" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
                       <img src="{{ asset('assets/image/Eye.png') }}" alt="View Toggle">
                   </div>
-              </div>
-              <div class="home_page_catalogue_icon_contaienr" id="searchBtn" title="Search">
+              </button>
+              <button class="home_page_catalogue_icon_contaienr" id="searchBtn" title="Search" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
                       <img src="{{ asset('assets/image/Search.png') }}" alt="Search">
                   </div>
-              </div>
-              <div class="home_page_catalogue_icon_contaienr" id="sortBtn" title="Sort">
+              </button>
+              <button class="home_page_catalogue_icon_contaienr" id="sortBtn" title="Sort" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
                       <img src="{{ asset('assets/image/top-bottom-arrrow.png') }}" alt="Sort">
                   </div>
-              </div>
-              <div class="home_page_catalogue_icon_contaienr" id="filterBtn" title="Filter">
+              </button>
+              <button class="home_page_catalogue_icon_contaienr" id="filterBtn" title="Filter" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
                       <img src="{{ asset('assets/image/Left Right Filter.png') }}" alt="Filter">
                   </div>
-              </div>
+              </button>
           </div>
       </div>
 
@@ -433,7 +434,6 @@
 
                       <div class="title_and_country">
                           <h3 class="product_title">{{ $magazine->title_name }}</h3>
-                          <p>{{ $magazine->warehouse ?? '' }}</p>
                       </div>
 
                       <span class="product_price">

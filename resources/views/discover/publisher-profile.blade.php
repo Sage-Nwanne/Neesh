@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $publisher->company_name }} - NEESH</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/js/menu.js') }}"></script>
     <style>
@@ -241,9 +242,9 @@
     @include('layouts.publisherheader')
 
     <div class="profile-container">
-        <a href="{{ route('discover.index') }}" class="back-link">
+        <a href="{{ route('explore.index') }}" class="back-link">
             <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
-            <span>Back to Discover</span>
+            <span>Back to Explore</span>
         </a>
 
         <div class="profile-header">

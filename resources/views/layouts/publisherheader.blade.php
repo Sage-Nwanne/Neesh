@@ -16,7 +16,7 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
-                <a href="{{ route('discover.index') }}">Discover</a>
+                <a href="{{ route('explore.index') }}">Explore</a>
                 <a href="{{ route('publisher.dashboard') }}">Dashboard</a>
                 <a href="{{ route('publisher.catalogue') }}">Catalogue</a>
                 <a href="{{ route('publisher.orders') }}">Orders</a>
@@ -24,6 +24,13 @@
                 <a href="{{ route('publisher.account') }}">Account</a>
                 <a href="{{ route('publisher.help-center') }}">Help Center</a>
                 <a href="{{ route('publisher.faq') }}">FAQ</a>
+                <hr style="margin: 10px 0;">
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-size: 16px; padding: 10px 0; width: 100%; text-align: left;">
+                        🚪 Logout
+                    </button>
+                </form>
             </div>
         </div>
     </div>

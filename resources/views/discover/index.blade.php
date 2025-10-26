@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover - NEESH</title>
+    <title>Explore - NEESH</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/js/menu.js') }}"></script>
     <style>
@@ -204,8 +205,8 @@
 
     <div class="discover-container">
         <div class="discover-header">
-            <h1>Discover Magazines</h1>
-            <p>Explore thousands of magazines from publishers worldwide</p>
+            <h1>Explore Magazines</h1>
+            <p>Discover thousands of magazines from publishers worldwide</p>
         </div>
 
         @if(Auth::check())

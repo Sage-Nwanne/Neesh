@@ -150,9 +150,9 @@ Route::middleware(['auth', 'role:admin|publisher'])->group(function () {
 Route::get('/magazine/{id}', [MagazineController::class, 'show'])->name('magazines.show');
 
 // ---------------------
-// Discover Routes (Public & Authenticated)
+// Explore Routes (Public & Authenticated)
 // ---------------------
-Route::get('/discover', [DiscoverController::class, 'index'])->name('discover.index');
+Route::get('/explore', [DiscoverController::class, 'index'])->name('explore.index');
 Route::get('/publisher/{publisherId}', [DiscoverController::class, 'viewPublisher'])->name('publisher.profile');
 Route::post('/magazine/{magazineId}/track-view', [DiscoverController::class, 'trackView'])->name('magazine.track-view');
 

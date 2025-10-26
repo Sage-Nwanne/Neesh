@@ -5,6 +5,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Upload a Title Form</title>
+      <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
       <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
       <script src="{{asset('assets/js/menu.js')}}"></script>
       <style>

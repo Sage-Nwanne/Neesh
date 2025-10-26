@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/publisherregister.css') }}">
@@ -395,13 +396,14 @@
                             <div class="publisher_formfields">
                                 <label>Current Magazine Sources</label>
                                 <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; margin-top: 8px;">
-                                    <label><input type="checkbox" name="magazine_sources[]" value="ubiquity_distributors"> Ubiquity Distributors</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="tng"> TNG</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="local_distributors"> Local Distributors</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="ingram_periodicals"> Ingram Periodicals</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="small_changes"> Small Changes</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="antenne_books"> Antenne Books</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="ra_and_olly"> RA & Olly</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="boutique_mags"> Boutique Mags</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="ingram_periodicals"> Ingram </label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="direct_from_publishers"> Direct from Publishers</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="other" id="mag_other"> Other Distributors</label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="none_currently"> None Currently</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="other" id="mag_other"> Other</label>
                                 </div>
 
                                 <!-- Optional input for "Other" -->

@@ -4,6 +4,18 @@
 
     const STORAGE_KEY = 'retailer_form_data';
 
+    // Step navigation variables
+    let retailer_currentStep = 0;
+    let retailer_steps = Array.from(retailer_form.querySelectorAll('.form-step'));
+    const retailer_stepIndicator = document.getElementById('stepIndicator');
+    const retailer_progressText = document.getElementById('progressText');
+    const retailer_prevBtn = document.getElementById('prevBtn');
+    const retailer_nextBtn = document.getElementById('nextBtn');
+    const retailer_reviewStep = document.getElementById('review_step');
+    const retailer_summaryList = document.getElementById('summaryList');
+    const retailer_editAllBtn = document.getElementById('editAllBtn');
+    const retailer_finalSubmitBtn = document.getElementById('finalSubmitBtn');
+
     // ===== FORM PERSISTENCE =====
     function retailer_saveFormData() {
         const formData = new FormData(retailer_form);
@@ -54,6 +66,90 @@
     retailer_form.addEventListener('input', retailer_saveFormData);
     retailer_form.addEventListener('change', retailer_saveFormData);
 
+    // ===== STEP NAVIGATION FUNCTIONS =====
+    function retailer_showStep(n) {
+        retailer_steps = Array.from(retailer_form.querySelectorAll('.form-step'));
+        retailer_steps.forEach((retailer_s, retailer_i) => retailer_s.classList.toggle('active', retailer_i === n));
+        retailer_stepIndicator && (retailer_stepIndicator.textContent = `Step ${n + 1} of ${retailer_steps.length}`);
+        retailer_progressText && (retailer_progressText.textContent = `${Math.round(((n + 1) / retailer_steps.length) * 100)}% Complete`);
+        retailer_prevBtn && (retailer_prevBtn.style.display = n === 0 ? 'none' : 'inline-block');
+        if (retailer_nextBtn) {
+            retailer_nextBtn.textContent = (n === retailer_steps.length - 1) ? 'Submit' : 'Continue';
+            retailer_nextBtn.style.display = retailer_reviewStep && n === retailer_steps.length - 1 ? 'none' : 'inline-block';
+        }
+        // if reaching review step, populate
+        if (retailer_reviewStep && n === retailer_steps.length - 1) {
+            retailer_populateSummary();
+        }
+        const retailer_firstInput = retailer_steps[n].querySelector('input, textarea, select');
+        if (retailer_firstInput) retailer_firstInput.focus();
+    }
+
+    function retailer_validateStep(n) {
+        const retailer_fields = Array.from(retailer_steps[n].querySelectorAll('.publisher_formfields'));
+        let retailer_valid = true;
+
+        for (const retailer_field of retailer_fields) {
+            const retailer_input = retailer_field.querySelector('input, textarea, select');
+            const retailer_isVisible = retailer_field.offsetParent !== null;
+            const retailer_parentContainer = retailer_field.closest('div[style*="display:none"]');
+            const retailer_shouldValidate = retailer_input && retailer_input.hasAttribute('required') && retailer_isVisible && !retailer_parentContainer;
+
+            let oldError = retailer_field.querySelector('.error-message');
+            if (oldError) oldError.remove();
+
+            if (retailer_shouldValidate && !String(retailer_input.value || '').trim()) {
+                retailer_field.classList.add('showerror');
+                retailer_valid = false;
+
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.style.color = 'red';
+                errorMsg.style.fontSize = '12px';
+                errorMsg.style.marginTop = '0px';
+                errorMsg.textContent = `${retailer_input.getAttribute('name')?.replace(/_/g, ' ') || 'This field'} is required`;
+                retailer_field.appendChild(errorMsg);
+
+                if (!retailer_form._focusedInvalid) {
+                    retailer_input.focus();
+                    retailer_form._focusedInvalid = true;
+                }
+            } else {
+                retailer_field.classList.remove('showerror');
+            }
+        }
+
+        retailer_form._focusedInvalid = false;
+        return retailer_valid;
+    }
+
+    function retailer_populateSummary() {
+        if (!retailer_summaryList) return;
+        retailer_summaryList.innerHTML = '';
+        const formData = new FormData(retailer_form);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (data[key]) {
+                if (!Array.isArray(data[key])) {
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        }
+
+        for (let [key, value] of Object.entries(data)) {
+            if (key === 'role' || key === '_token') continue;
+            const fieldName = retailer_formatFieldName(key);
+            const displayValue = Array.isArray(value) ? value.join(', ') : value;
+            const summaryItem = document.createElement('div');
+            summaryItem.style.cssText = 'padding: 10px 0; border-bottom: 1px solid #eee;';
+            summaryItem.innerHTML = `<strong>${fieldName}:</strong> ${displayValue}`;
+            retailer_summaryList.appendChild(summaryItem);
+        }
+    }
+
     // ===== FIELD NAME FORMATTER =====
     function retailer_formatFieldName(fieldName) {
         const fieldNameMap = {
@@ -83,6 +179,63 @@
         };
         return fieldNameMap[fieldName] || fieldName.replace(/_/g, ' ');
     }
+
+    // ===== BUTTON EVENT LISTENERS =====
+    retailer_prevBtn?.addEventListener('click', () => {
+        if (retailer_currentStep > 0) {
+            retailer_currentStep--;
+            retailer_showStep(retailer_currentStep);
+        }
+    });
+
+    retailer_nextBtn?.addEventListener('click', () => {
+        retailer_steps = Array.from(retailer_form.querySelectorAll('.form-step'));
+        if (retailer_currentStep < retailer_steps.length - 1) {
+            if (!retailer_validateStep(retailer_currentStep)) return;
+            retailer_saveFormData();
+            retailer_currentStep++;
+            retailer_showStep(retailer_currentStep);
+        } else {
+            if (!retailer_validateStep(retailer_currentStep)) return;
+            retailer_saveFormData();
+            retailer_nextBtn.disabled = true;
+            retailer_nextBtn.textContent = 'Submitting...';
+            retailer_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        }
+    });
+
+    retailer_editAllBtn?.addEventListener('click', () => {
+        retailer_currentStep = 0;
+        retailer_showStep(retailer_currentStep);
+    });
+
+    retailer_form.addEventListener('input', function (retailer_e) {
+        const retailer_field = retailer_e.target.closest('.publisher_formfields');
+        if (retailer_field && retailer_field.classList.contains('showerror') && retailer_e.target.value.trim()) {
+            retailer_field.classList.remove('showerror');
+        }
+    });
+
+    retailer_form.addEventListener('keydown', function (retailer_e) {
+        if (retailer_e.key === 'Enter') {
+            const retailer_active = document.activeElement;
+            if (retailer_active && retailer_active.tagName.toLowerCase() === 'textarea') return;
+            retailer_e.preventDefault();
+            if (retailer_currentStep < retailer_steps.length - 1) {
+                if (!retailer_validateStep(retailer_currentStep)) return;
+                retailer_saveFormData();
+                retailer_currentStep++;
+                retailer_showStep(retailer_currentStep);
+            } else {
+                if (!retailer_validateStep(retailer_currentStep)) return;
+                retailer_saveFormData();
+                retailer_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            }
+        }
+    });
+
+    // Initialize the first step
+    retailer_showStep(retailer_currentStep);
 
     // ===== FORM SUBMISSION =====
     retailer_form.addEventListener('submit', function (e) {
