@@ -126,7 +126,7 @@
             <!-- Getting Started Section -->
             <div class="faq-section">
                 <div class="faq-section-title" onclick="this.nextElementSibling.classList.toggle('active'); this.querySelector('span:last-child').textContent = this.nextElementSibling.classList.contains('active') ? '−' : '+'">
-                    <span>🚀 Getting Started</span>
+                    <span>Getting Started</span>
                     <span>+</span>
                 </div>
                 <div class="faq-items">
@@ -154,7 +154,7 @@
             <!-- Publishing Section -->
             <div class="faq-section">
                 <div class="faq-section-title" onclick="this.nextElementSibling.classList.toggle('active'); this.querySelector('span:last-child').textContent = this.nextElementSibling.classList.contains('active') ? '−' : '+'">
-                    <span>📚 Publishing Your Magazines</span>
+                    <span>Publishing Your Magazines</span>
                     <span>+</span>
                 </div>
                 <div class="faq-items">
@@ -191,7 +191,7 @@
             <!-- Pricing & Payments Section -->
             <div class="faq-section">
                 <div class="faq-section-title" onclick="this.nextElementSibling.classList.toggle('active'); this.querySelector('span:last-child').textContent = this.nextElementSibling.classList.contains('active') ? '−' : '+'">
-                    <span>💰 Pricing & Payments</span>
+                    <span>Pricing & Payments</span>
                     <span>+</span>
                 </div>
                 <div class="faq-items">
@@ -228,7 +228,7 @@
             <!-- Support Section -->
             <div class="faq-section">
                 <div class="faq-section-title" onclick="this.nextElementSibling.classList.toggle('active'); this.querySelector('span:last-child').textContent = this.nextElementSibling.classList.contains('active') ? '−' : '+'">
-                    <span>🆘 Support & Troubleshooting</span>
+                    <span>Support & Troubleshooting</span>
                     <span>+</span>
                 </div>
                 <div class="faq-items">

@@ -159,7 +159,7 @@ class MagazineController extends Controller
                 'print_run' => ['required', 'integer'],
                 'warehouse' => ['nullable', 'string'],
                 'stock' => ['required', 'integer'],
-                'restock_time' => ['nullable', 'string'],
+                'restock_timeline' => ['nullable', 'string'],
                 'promotional_text' => ['nullable', 'string'],
                 'metadata' => ['nullable', 'string'],
                 'wholesale_price' => ['required', 'numeric'],
@@ -167,7 +167,6 @@ class MagazineController extends Controller
                 'discount' => ['nullable', 'string'],
                 'payment_terms' => ['nullable', 'string'],
                 'files' => ['nullable', 'array', 'max:6'],
-                'restock_timeline' => ['nullable', 'string'],
                 'deleted_images' => ['nullable', 'string'],
             ]);
 
@@ -182,14 +181,13 @@ class MagazineController extends Controller
                 'total_printed' => $validated['print_run'],
                 'warehouse' => $validated['warehouse'] ?? null,
                 'stock' => $validated['stock'],
-                'restock_time' => $validated['restock_time'] ?? null,
+                'restock_timeline' => $validated['restock_timeline'] ?? null,
                 'promotional_text' => $validated['promotional_text'] ?? null,
                 'metadata' => $validated['metadata'] ?? null,
                 'wholesale_price' => $validated['wholesale_price'],
                 'msrp' => $validated['retail_price'],
                 'discount' => $validated['discount'] ?? null,
                 'payment_terms' => $validated['payment_terms'] ?? null,
-                'restock_timeline' => $validated['restock_timeline'] ?? null,
             ]);
 
             // Handle deleted images
