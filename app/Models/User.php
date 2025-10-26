@@ -70,5 +70,10 @@ public function bookmarks()
     return $this->hasMany(Bookmark::class);
 }
 
+public function magazineViews()
+{
+    return $this->hasMany(MagazineView::class);
+}
+
 
 }
