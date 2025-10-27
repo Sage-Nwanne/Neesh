@@ -91,7 +91,7 @@
 
 <body>
     <div class="logo-image">
-        <a href="{{ route('home') }}" style="text-decoration: none;">
+        <a href="https://neesh.art/" style="text-decoration: none;">
             <img src="{{asset('assets/image/Logo A1.png')}}" alt="Logo Image" style="cursor: pointer;">
         </a>
     </div>

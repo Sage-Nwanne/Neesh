@@ -57,7 +57,9 @@
 
 <body>
     <div class="logo-image">
-        <img src="{{ asset('assets/image/Logo A1.png') }}" alt="Logo Image">
+        <a href="https://neesh.art/" style="text-decoration: none;">
+            <img src="{{ asset('assets/image/Logo A1.png') }}" alt="Logo Image" style="cursor: pointer;">
+        </a>
     </div>
 
     <div class="new_to_nessh_innerwhole_container">
