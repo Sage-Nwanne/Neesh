@@ -71,7 +71,7 @@
             <div class="start-button">
                 @auth
                 <div class="application-buttons">
-                    <a href="{{ route('register.publisher') }}">Go to Dashboard</a>
+                    <a href="{{ url('/dashboard') }}">Go to Dashboard</a>
                 </div>
                 @else
                 <div class="application-buttons">
