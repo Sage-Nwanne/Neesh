@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+
+// Redirect component for external URLs
+const ExternalRedirect: React.FC<{ url: string }> = ({ url }) => {
+  useEffect(() => {
+    window.location.href = url;
+  }, [url]);
+  return null;
+};
 
 // Lazy load pages for better performance
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
@@ -66,9 +74,9 @@ export const AppRouter: React.FC = () => {
         <Route path="/publisher-application" element={<PublisherLandingPage />} />
         <Route path="/retailer-application" element={<RetailerLandingPage />} />
 
-        {/* Application forms */}
-        <Route path="/publisher-application-form" element={<PublisherApplicationPage />} />
-        <Route path="/retailer-application-form" element={<AuthPage />} />
+        {/* Application forms - Redirect to Laravel backend */}
+        <Route path="/publisher-application-form" element={<ExternalRedirect url="https://app.neesh.art/register/publisher" />} />
+        <Route path="/retailer-application-form" element={<ExternalRedirect url="https://app.neesh.art/register/retailer" />} />
 
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/faq" element={<FAQPage />} />
