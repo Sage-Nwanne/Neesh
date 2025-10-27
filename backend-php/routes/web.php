@@ -104,6 +104,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/users', [AdminController::class, 'usersList'])->name('users');
     Route::get('/users/{id}', [AdminController::class, 'viewUser'])->name('users.view');
     Route::post('/users/{id}/verify', [AdminController::class, 'verifyUser'])->name('users.verify');
+    Route::post('/users/{id}/approve', [AdminController::class, 'approveUser'])->name('users.approve');
     Route::post('/users/{id}/reject', [AdminController::class, 'rejectUser'])->name('users.reject');
 });
 

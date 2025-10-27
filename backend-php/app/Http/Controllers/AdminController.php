@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApplicationApproved;
+use App\Mail\ApplicationRejected;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -40,15 +44,47 @@ class AdminController extends Controller
         $users = User::all();
         return view('admin.dashboard', compact('users'));
     }
-    // public function verifyUser($id)
-    // {
-    //     $user = User::findOrFail($id);
 
-    //     if (! $user->hasVerifiedEmail()) {
-    //         $user->markEmailAsVerified(); // Laravel built-in
-    //     }
+    // ✅ Approve user application
+    public function approveUser($id)
+    {
+        $user = User::findOrFail($id);
 
-    //     return redirect()->route('home') // or admin dashboard
-    //         ->with('status', 'User verified successfully!');
-    // }
+        // Mark email as verified
+        if (is_null($user->email_verified_at)) {
+            $user->email_verified_at = now();
+            $user->save();
+        }
+
+        // Get user role
+        $role = $user->roles->pluck('name')->first() ?? 'user';
+
+        // Send approval email
+        Mail::to($user->email)->send(new ApplicationApproved($user, $role));
+
+        return redirect()->route('admin.users.view', $user->id)
+            ->with('success', 'User approved successfully! Approval email sent.');
+    }
+
+    // ✅ Reject user application
+    public function rejectUser($id, Request $request)
+    {
+        $user = User::findOrFail($id);
+
+        // Get user role
+        $role = $user->roles->pluck('name')->first() ?? 'user';
+
+        // Get rejection reason from request
+        $reason = $request->input('reason', null);
+
+        // Send rejection email
+        Mail::to($user->email)->send(new ApplicationRejected($user, $role, $reason));
+
+        // Optionally delete the user or mark as rejected
+        // For now, we'll just send the email and keep the user record
+        // You can add a 'status' column to users table if needed
+
+        return redirect()->route('admin.users.view', $user->id)
+            ->with('success', 'User rejected. Rejection email sent.');
+    }
 }

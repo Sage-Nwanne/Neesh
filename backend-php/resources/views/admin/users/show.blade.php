@@ -92,15 +92,48 @@
 
     <div class="mt-4">
         @if(!$user->email_verified_at)
-        <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-success">Verify Now</button>
-        </form>
-        @else
-            <button class="btn btn-secondary" disabled>Already Verified</button>
-        @endif
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-success">Approve Application</button>
+            </form>
 
-        <a href="{{ route('admin.users') }}" class="btn btn-link ms-3">← Back to Users List</a>
+            <button class="btn btn-danger" onclick="showRejectModal()">Reject Application</button>
+        </div>
+        @else
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="btn btn-secondary" disabled>Already Approved</button>
+                <a href="{{ route('admin.users') }}" class="btn btn-link">← Back to Users List</a>
+            </div>
+        @endif
     </div>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%;">
+            <h4>Reject Application</h4>
+            <p>Are you sure you want to reject this application?</p>
+            <form action="{{ route('admin.users.reject', $user->id) }}" method="POST">
+                @csrf
+                <div style="margin-bottom: 15px;">
+                    <label for="reason" style="display: block; margin-bottom: 5px;">Reason (optional):</label>
+                    <textarea name="reason" id="reason" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: Arial, sans-serif;" rows="4" placeholder="Provide a reason for rejection..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="hideRejectModal()">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showRejectModal() {
+            document.getElementById('rejectModal').style.display = 'flex';
+        }
+        function hideRejectModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+        }
+    </script>
 </div>
 @endsection

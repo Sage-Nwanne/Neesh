@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApplicationConfirmation;
 
 
 class RetailerController extends Controller
@@ -93,11 +95,14 @@ class RetailerController extends Controller
             return $user;
         });
 
+        // Send confirmation email to user
+        Mail::to($user->email)->send(new ApplicationConfirmation($user, 'retailer'));
+
         event(new Registered($user));
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME)
-            ->with('success', 'Publisher registered successfully! You will receive a confirmation email from admin shortly.');
+            ->with('success', 'Retailer registered successfully! You will receive a confirmation email from admin shortly.');
 
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
