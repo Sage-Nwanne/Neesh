@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Login - NEESH</title>
+  <meta name="description" content="Log in to your NEESH account to manage your magazine titles and orders.">
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
   <style>
     .btn {
@@ -70,7 +72,7 @@
 
         <div class="log_in_container">
           <p class="log_in_text">New to Neesh?</p>
-          <a href="{{ route('start') }}" class="log_in">
+          <a href="{{ route('home') }}" class="log_in">
             <p>Apply</p>
             <div class="log_in_navigation_arrow">
               <img src="{{ asset('assets/image/right arrow.png') }}" alt="Right Navigation Arrow">
