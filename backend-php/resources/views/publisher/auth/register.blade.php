@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet" href="{{ asset('assets/css/publisherregister.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/js/publisherregisterform.js') }}">
 
     <style>
         select.uptitle-input-text {
@@ -363,12 +362,7 @@
                                 <div class="publisher_formfields">
                                     <label for="warehouse">Warehouse Address</label>
                                     <input type="text" class="uptitle-input-text" name="warehouse"
-                                        placeholder="e.g ,123 NEESH St, New York, NY 10001" required>
-                                </div>
-                                <div class="publisher_formfields">
-                                    <label for="shipping_city">Shipping City</label>
-                                    <input type="text" id="shipping_city" class="uptitle-input-text"
-                                        name="shipping_city" placeholder="Shipping City" required>
+                                        placeholder="Shipping Address" required>
                                 </div>
                                 <div class="publisher_formfields">
                                     <label for="shipping_city">Shipping City</label>

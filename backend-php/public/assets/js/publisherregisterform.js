@@ -263,6 +263,42 @@ publisher_form.addEventListener('submit', function (e) {
 });
 
 
+    // ===== FIELD NAME FORMATTER =====
+    function publisher_formatFieldName(fieldName) {
+        const fieldNameMap = {
+            'firstname': 'First Name',
+            'lastname': 'Last Name',
+            'email': 'Email',
+            'password': 'Password',
+            'bussinessname': 'Business / Publisher Name',
+            'magazine_title': 'Full Magazine Title',
+            'website_link': 'Website / Social Link',
+            'magazinedescription': 'Description',
+            'issue_type': 'Issue Type',
+            'series_issue_count': 'Issue Number or Seasonal ID',
+            'issue_frequency': 'Issue Frequency',
+            'print_run': 'Print Run',
+            'page_count': 'Page Count',
+            'genre': 'Genre(s)',
+            'dimensions': 'Dimensions',
+            'available_quantities': 'Available Quantities',
+            'wholesale_price': 'Wholesale Price (WSP)',
+            'retail_price': 'Suggested Retail Price',
+            'specs': 'Additional Specs',
+            'fulfillment_method': 'Fulfillment Method',
+            'warehouse': 'Warehouse Address',
+            'shipping_city': 'Shipping City',
+            'shipping_state': 'Shipping State',
+            'shipping_country': 'Shipping Country',
+            'return_policy': 'Return Policy',
+            'sales_experience': 'Have you sold this issue before?',
+            'distribution_channels': 'Distribution Channels',
+            'copies_sold': 'Estimated Copies Sold',
+            'sales_feedback': 'What feedback have you received?'
+        };
+        return fieldNameMap[fieldName] || fieldName.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2');
+    }
+
     function publisher_populateSummary() {
         if (!publisher_summaryList) return;
         publisher_summaryList.innerHTML = '';
@@ -280,7 +316,8 @@ publisher_form.addEventListener('submit', function (e) {
 
             const publisher_controls = Array.from(publisher_stepElem.querySelectorAll('input, textarea, select'));
             publisher_controls.forEach(publisher_ctrl => {
-                const publisher_key = publisher_ctrl.placeholder || publisher_ctrl.getAttribute('aria-label') || publisher_ctrl.name || publisher_ctrl.id || 'field';
+                const publisher_fieldName = publisher_ctrl.name || publisher_ctrl.id || 'field';
+                const publisher_key = publisher_formatFieldName(publisher_fieldName);
                 let publisher_value = '';
 
                 if (publisher_ctrl.type === 'radio') {
