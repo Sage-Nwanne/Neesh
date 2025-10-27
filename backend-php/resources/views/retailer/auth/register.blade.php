@@ -435,7 +435,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('assets/js/publisherregisterform.js') }}"></script>
+    <script src="{{ asset('assets/js/retailerregisterform.js') }}"></script>
     <script>
         (function() {
             const step = document.querySelector('.form-step.store-profile');
