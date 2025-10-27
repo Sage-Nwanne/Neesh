@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Product Gallery - Clone</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/js/product-page.js') }}" defer></script>
@@ -59,18 +61,25 @@
 
                     <div class="action-buttons">
                         @hasrole('publisher')
-                        <a href="{{route('magazines.edit' , $magazine->id)}}" class="action-btn">
+                        <a href="{{route('publisher.magazines.edit' , $magazine->id)}}" class="action-btn">
                           <span>Edit</span>
                                 <img src="{{ asset('assets/image/pencil.png') }}" alt="Mail Icon">
                           
                         </a>
                           
                         @endhasrole
-                        <button class="action-btn">
+                        @auth
+                        <button class="action-btn bookmark-btn" data-magazine-id="{{ $magazine->id }}">
                             <span>Bookmark</span>
                             <img src="{{ asset('assets/image/black save icon.png') }}" alt="Bookmark Icon">
                         </button>
-                        <button class="action-btn">
+                        @else
+                        <a href="{{ route('login') }}" class="action-btn">
+                            <span>Bookmark</span>
+                            <img src="{{ asset('assets/image/black save icon.png') }}" alt="Bookmark Icon">
+                        </a>
+                        @endauth
+                        <button class="action-btn share-btn" data-magazine-id="{{ $magazine->id }}" data-magazine-title="{{ $magazine->title_name }}">
                             <span>Copy info</span>
                             <img src="{{ asset('assets/image/Qr code.png') }}" alt="Copy Icon">
                         </button>
@@ -160,57 +169,32 @@
 
             </div>
         </div>
+        @if($relatedMagazines->count() > 0)
         <div class="relative_collection-wrapper">
             <h2 class="relative_product_title">
                 Explore similar titles
             </h2>
             <div class="collection">
-                <a href="product2.html" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 1.png') }}" alt="Product 6">
+                @foreach($relatedMagazines as $relatedMagazine)
+                <a href="{{ route('magazines.show', $relatedMagazine->id) }}" class="product-card relative-product product-card-underline">
+                    @if ($relatedMagazine->images->first())
+                        <img src="{{ asset('storage/' . $relatedMagazine->images->first()->image_path) }}" alt="{{ $relatedMagazine->title_name }}">
+                    @else
+                        <img src="{{ asset('assets/image/placeholder.png') }}" alt="No Image">
+                    @endif
                     <div class="product_info">
-                        <span class="product_vendor">WW Issue 08</span>
+                        <span class="product_vendor">{{ $relatedMagazine->issue_identifier ?? 'Single Issue' }}</span>
                         <div class="title_and_country">
-                            <h3 class="product_title">Weird Walk</h3>
-                            <p>UK</p>
+                            <h3 class="product_title">{{ $relatedMagazine->title_name }}</h3>
+                            <p>{{ $relatedMagazine->warehouse ?? '' }}</p>
                         </div>
-                        <span class="product_price">$ 8.81</span>
+                        <span class="product_price">${{ number_format($relatedMagazine->msrp, 2) }}</span>
                     </div>
                 </a>
-                <a href="product2.html" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 6.png') }}" alt="Product 6">
-                    <div class="product_info">
-                        <span class="product_vendor">Catnip Vol 1</span>
-                        <div class="title_and_country">
-                            <h3 class="product_title">Broccoli</h3>
-                            <p>Portland, OR</p>
-                        </div>
-                        <span class="product_price">$ 28.00</span>
-                    </div>
-                </a>
-                <a href="#" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 6.png') }}" alt="Product 6">
-                    <div class="product_info">
-                        <span class="product_vendor">Mushroom People</span>
-                        <div class="title_and_country">
-                            <h3 class="product_title">Broccoli</h3>
-                            <p>Portland, OR</p>
-                        </div>
-                        <span class="product_price">$ 28.00</span>
-                    </div>
-                </a>
-                <a href="#" class="product-card relative-product product-card-underline">
-                    <img src="{{ asset('assets/image/Catalogue 12.png') }}" alt="Product 6">
-                    <div class="product_info">
-                        <span class="product_vendor">Wild Alchemy Journal Issue No. 5: Aether</span>
-                        <div class="title_and_country">
-                            <h3 class="product_title">Mama Xanadu</h3>
-                            <p>UK</p>
-                        </div>
-                        <span class="product_price">$ 35.00</span>
-                    </div>
-                </a>
+                @endforeach
             </div>
         </div>
+        @endif
 
 
         <div id="cartOverlay" class="cart-overlay" aria-hidden="true"></div>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/publisherregister.css') }}">
@@ -88,17 +89,19 @@
 
 <body>
     <div class="logo-image">
-        <img src="{{asset('assets/image/Logo A1.png')}}" alt="Logo Image">
+        <a href="{{ route('home') }}" style="text-decoration: none;">
+            <img src="{{asset('assets/image/Logo A1.png')}}" alt="Logo Image" style="cursor: pointer;">
+        </a>
     </div>
 
     <div class="new_to_nessh_innerwhole_container">
-        <a href="{{route('start')}}" class="new_to_nessh_back_arrow">
+        <a href="{{route('home')}}" class="new_to_nessh_back_arrow">
             <img src="{{asset('assets/image/left arrow.png')}}" alt="Back Arrow">
         </a>
         <div class="new_to_nessh_container">
             <div class="heading_and_description_container">
-                <h1 class="new_to_nessh_heading">Welcome Back</h1>
-                <p class="new_to_nessh_description">Register to your account</p>
+                <h1 class="new_to_nessh_heading">Join Neesh as a Retailer</h1>
+                <p class="new_to_nessh_description">Apply to join our curated network</p>
             </div>
             @if (session('success'))
             <div style="
@@ -189,7 +192,7 @@
 
                                 <div class="publisher_formfields">
                                     <label for="password">Password</label>
-                                    <input type="password" id="password" class="uptitle-input-text" name="password" placeholder="Enter password" required>
+                                    <input type="password" id="password" class="uptitle-input-text" name="password" placeholder="Enter password" minlength="6" required>
                                 </div>
 
                             </div>
@@ -368,7 +371,7 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
-                                <!-- <div class="publisher_formfields">
+                                <div class="publisher_formfields">
                                     <label for="issue_frequency">Issue Frequency</label>
                                     <select class="uptitle-input-text" id="issue_frequency" name="issue_frequency" required>
                                         <option value="" disabled selected hidden>Issue Frequency</option>
@@ -378,10 +381,10 @@
                                         <option value="annual">Annual</option>
                                         <option value="irregular">Irregular</option>
                                     </select>
-                                </div> -->
+                                </div>
                                 <div class="publisher_formfields">
-                                    <label for="metadata">Monthly Magazine Budget ($)</label>
-                                    <input type="number" id="monthly_budget" class="uptitle-input-text" name="monthly_budget" placeholder="e.g , 500" required>
+                                    <label for="monthly_budget">Monthly Magazine Budget ($)</label>
+                                    <input type="number" id="monthly_budget" class="uptitle-input-text" name="monthly_budget" placeholder="e.g , 500" step="0.01" required>
                                 </div>
 
 
@@ -395,10 +398,10 @@
                                 <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; margin-top: 8px;">
                                     <label><input type="checkbox" name="magazine_sources[]" value="small_changes"> Small Changes</label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="antenne_books"> Antenne Books</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="ra_and_olly"> Ra & Olly</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="ra_and_olly"> RA & Olly</label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="boutique_mags"> Boutique Mags</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="ingram"> Ingram</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="direct_from_publishers"> Direct from Publishers</label> 
+                                    <label><input type="checkbox" name="magazine_sources[]" value="ingram_periodicals"> Ingram </label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="direct_from_publishers"> Direct from Publishers</label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="other" id="mag_other"> Other Distributors</label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="none_currently"> None Currently</label>
                                 </div>

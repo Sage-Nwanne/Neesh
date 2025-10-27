@@ -5,6 +5,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Upload a Title Form</title>
+      <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
       <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
       <script src="{{asset('assets/js/menu.js')}}"></script>
       <style>
@@ -132,7 +133,7 @@
       </div>
       @endif
 
-      <form method="POST" action="{{ route('magazines.store') }}" enctype="multipart/form-data">
+      <form method="POST" action="{{ route('publisher.magazines.store') }}" enctype="multipart/form-data">
           @csrf
           <div class="uptitle-form-container">
               <div class="uptitle-left-col">

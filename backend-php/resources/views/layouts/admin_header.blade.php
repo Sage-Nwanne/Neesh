@@ -25,6 +25,7 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
+                <a href="{{ route('explore.index') }}">Explore</a>
 <a href="{{ route('admin.users') }}">Users</a>
                 <a href="#">Catalogue</a>
                 <a href="#">Orders</a>
@@ -32,6 +33,13 @@
                 <a href="#">Account</a>
                 <a href="#">Help Center</a>
                 <a href="#">FAQ</a>
+                <hr style="margin: 10px 0;">
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-size: 16px; padding: 10px 0; width: 100%; text-align: left;">
+                        🚪 Logout
+                    </button>
+                </form>
             </div>
         </div>
     </div>

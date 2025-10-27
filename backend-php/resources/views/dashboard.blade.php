@@ -4,10 +4,12 @@
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Upload a Title Form</title>
+      <title>Your Dashboard </title>
+      <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
       <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
       <script src="{{ asset('assets/js/menu.js') }}"></script>
+      <script src="{{ asset('assets/js/dashboard.js') }}" defer></script>
       <style>
           .collection {
               display: flex;
@@ -323,11 +325,11 @@
           <div class="uptitle-main-heading-container full-bleed">
               <!-- LEFT -->
               <a href="{{ route('dashboard') }}" class="left" style="color: #000;">
-                  <h1 class="my_title">Welcome back, {{ Auth::user()->name }} 👋</h1>
+                  <h1 class="my_title">Welcome back, {{ Auth::user()->name }} </h1>
               </a>
 
               <!-- RIGHT -->
-              <a href="{{ route('magazines.create') }}" class="upload-btn">
+              <a href="{{ route('publisher.magazines.create') }}" class="upload-btn">
                   <span class="full">Upload Magazine</span>
                   <span class="short" aria-hidden="true">Upload</span>
               </a>
@@ -340,35 +342,83 @@
               Your Catalogue
           </div>
           <div class="home_page_catalogue_collection_icons">
-              <div class="home_page_catalogue_icon_contaienr">
+              <button class="home_page_catalogue_icon_contaienr" id="viewToggleBtn" title="Toggle view" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/Eye.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/Eye.png') }}" alt="View Toggle">
                   </div>
-              </div>
-              <div class="home_page_catalogue_icon_contaienr">
+              </button>
+              <button class="home_page_catalogue_icon_contaienr" id="searchBtn" title="Search" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/Search.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/Search.png') }}" alt="Search">
                   </div>
-              </div>
-              <div class="home_page_catalogue_icon_contaienr">
+              </button>
+              <button class="home_page_catalogue_icon_contaienr" id="sortBtn" title="Sort" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/top-bottom-arrrow.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/top-bottom-arrrow.png') }}" alt="Sort">
                   </div>
-              </div>
-              <div class="home_page_catalogue_icon_contaienr">
+              </button>
+              <button class="home_page_catalogue_icon_contaienr" id="filterBtn" title="Filter" style="background: none; border: none; cursor: pointer; padding: 0;">
                   <div class="home_page_catalogue_icon_innercontaienr">
-                      <img src="{{ asset('assets/image/Left Right Filter.png') }}" alt="Eye Icon">
-
+                      <img src="{{ asset('assets/image/Left Right Filter.png') }}" alt="Filter">
                   </div>
-              </div>
+              </button>
+          </div>
+      </div>
+
+      <!-- Search Bar (hidden by default) -->
+      <div id="searchBar" style="display: none; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee;">
+          <input type="text" id="searchInput" placeholder="Search magazines by title..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: 'Manrope', sans-serif;">
+      </div>
+
+      <!-- Sort Options (hidden by default) -->
+      <div id="sortOptions" style="display: none; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee;">
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="newest" checked> Newest First
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="oldest"> Oldest First
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="title-asc"> Title (A-Z)
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="title-desc"> Title (Z-A)
+          </label>
+          <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="sort" value="price-asc"> Price (Low to High)
+          </label>
+          <label style="display: block;">
+              <input type="radio" name="sort" value="price-desc"> Price (High to Low)
+          </label>
+      </div>
+
+      <!-- Filter Options (hidden by default) -->
+      <div id="filterOptions" style="display: none; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee;">
+          <div style="margin-bottom: 15px;">
+              <label style="display: block; font-weight: 600; margin-bottom: 8px;">Genre</label>
+              <select id="genreFilter" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                  <option value="">All Genres</option>
+                  @php
+                      $genres = $magazines->pluck('genre')->filter()->unique();
+                  @endphp
+                  @foreach($genres as $genre)
+                      <option value="{{ $genre }}">{{ $genre }}</option>
+                  @endforeach
+              </select>
+          </div>
+          <div>
+              <label style="display: block; font-weight: 600; margin-bottom: 8px;">Type</label>
+              <label style="display: block; margin-bottom: 8px;">
+                  <input type="checkbox" class="typeFilter" value="single"> Single Issue
+              </label>
+              <label style="display: block;">
+                  <input type="checkbox" class="typeFilter" value="series"> Series
+              </label>
           </div>
       </div>
       <div class="collection" style="padding: 20px;">
           @forelse($magazines as $magazine)
-              <a href="{{ route('magazines.show', $magazine->id) }}" class="product-card product-card-underline">
+              <a href="{{ route('magazines.show', $magazine->id) }}" class="product-card product-card-underline" data-type="{{ $magazine->type }}" data-created="{{ $magazine->created_at }}">
                   {{-- Agar image hai to first image dikhao, warna placeholder --}}
                   @if ($magazine->images->first())
                       <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}"
@@ -384,7 +434,6 @@
 
                       <div class="title_and_country">
                           <h3 class="product_title">{{ $magazine->title_name }}</h3>
-                          <p>{{ $magazine->warehouse ?? '' }}</p>
                       </div>
 
                       <span class="product_price">

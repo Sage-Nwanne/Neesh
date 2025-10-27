@@ -36,22 +36,37 @@
     function retailer_loadFormData() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (!saved) return;
+        
         const data = JSON.parse(saved);
         for (let [key, value] of Object.entries(data)) {
             const inputs = retailer_form.querySelectorAll(`[name="${key}"]`);
             if (inputs.length === 1) {
                 inputs[0].value = value;
             } else if (inputs.length > 1) {
-                if (Array.isArray(value)) {
-                    inputs.forEach(inp => {
-                        if (value.includes(inp.value)) inp.checked = true;
-                    });
-                }
+                // Handle checkboxes/radio buttons
+                inputs.forEach(input => {
+                    if (Array.isArray(value)) {
+                        input.checked = value.includes(input.value);
+                    } else {
+                        input.checked = input.value === value;
+                    }
+                });
             }
         }
     }
 
-    // ===== STEP DISPLAY =====
+    function retailer_clearFormData() {
+        localStorage.removeItem(STORAGE_KEY);
+    }
+
+    // Load form data on page load
+    retailer_loadFormData();
+
+    // Save form data on input
+    retailer_form.addEventListener('input', retailer_saveFormData);
+    retailer_form.addEventListener('change', retailer_saveFormData);
+
+    // ===== STEP NAVIGATION FUNCTIONS =====
     function retailer_showStep(n) {
         retailer_steps = Array.from(retailer_form.querySelectorAll('.form-step'));
         retailer_steps.forEach((retailer_s, retailer_i) => retailer_s.classList.toggle('active', retailer_i === n));
@@ -62,6 +77,7 @@
             retailer_nextBtn.textContent = (n === retailer_steps.length - 1) ? 'Submit' : 'Continue';
             retailer_nextBtn.style.display = retailer_reviewStep && n === retailer_steps.length - 1 ? 'none' : 'inline-block';
         }
+        // if reaching review step, populate
         if (retailer_reviewStep && n === retailer_steps.length - 1) {
             retailer_populateSummary();
         }
@@ -69,7 +85,6 @@
         if (retailer_firstInput) retailer_firstInput.focus();
     }
 
-    // ===== VALIDATION =====
     function retailer_validateStep(n) {
         const retailer_fields = Array.from(retailer_steps[n].querySelectorAll('.publisher_formfields'));
         let retailer_valid = true;
@@ -77,7 +92,8 @@
         for (const retailer_field of retailer_fields) {
             const retailer_input = retailer_field.querySelector('input, textarea, select');
             const retailer_isVisible = retailer_field.offsetParent !== null;
-            const retailer_shouldValidate = retailer_input && retailer_input.hasAttribute('required') && retailer_isVisible;
+            const retailer_parentContainer = retailer_field.closest('div[style*="display:none"]');
+            const retailer_shouldValidate = retailer_input && retailer_input.hasAttribute('required') && retailer_isVisible && !retailer_parentContainer;
 
             let oldError = retailer_field.querySelector('.error-message');
             if (oldError) oldError.remove();
@@ -102,98 +118,216 @@
                 retailer_field.classList.remove('showerror');
             }
         }
+
         retailer_form._focusedInvalid = false;
         return retailer_valid;
     }
 
-    // ===== SUMMARY POPULATION =====
     function retailer_populateSummary() {
         if (!retailer_summaryList) return;
         retailer_summaryList.innerHTML = '';
         const formData = new FormData(retailer_form);
-        const summary = {};
-
+        const data = {};
         for (let [key, value] of formData.entries()) {
-            if (!summary[key]) summary[key] = [];
-            summary[key].push(value);
+            if (data[key]) {
+                if (!Array.isArray(data[key])) {
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
         }
 
-        for (let [key, values] of Object.entries(summary)) {
-            const displayKey = key.replace(/_/g, ' ').toUpperCase();
-            const displayValue = values.length === 1 ? values[0] : values.join(', ');
+        for (let [key, value] of Object.entries(data)) {
+            if (key === 'role' || key === '_token') continue;
+            const fieldName = retailer_formatFieldName(key);
+            const displayValue = Array.isArray(value) ? value.join(', ') : value;
             const summaryItem = document.createElement('div');
-            summaryItem.style.cssText = 'padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;';
-            summaryItem.innerHTML = `<strong>${displayKey}:</strong> <span>${displayValue}</span>`;
+            summaryItem.style.cssText = 'padding: 10px 0; border-bottom: 1px solid #eee;';
+            summaryItem.innerHTML = `<strong>${fieldName}:</strong> ${displayValue}`;
             retailer_summaryList.appendChild(summaryItem);
         }
     }
 
-    // ===== NAVIGATION =====
-    function retailer_nextStep() {
-        retailer_form._focusedInvalid = false;
-        if (retailer_validateStep(retailer_currentStep)) {
-            retailer_saveFormData();
-            if (retailer_currentStep < retailer_steps.length - 1) {
-                retailer_currentStep++;
-                retailer_showStep(retailer_currentStep);
-                window.scrollTo(0, 0);
-            }
-        }
+    // ===== FIELD NAME FORMATTER =====
+    function retailer_formatFieldName(fieldName) {
+        const fieldNameMap = {
+            'buyer_name': 'Buyer Name',
+            'email_address': 'Email Address',
+            'phone_number': 'Phone Number',
+            'password': 'Password',
+            'storename': 'Store Name',
+            'bussinesyears': 'Years In Business',
+            'storecategory': 'Store Category',
+            'store_type': 'Store Type',
+            'store_size': 'Store Size',
+            'address_line1': 'Address Line 1',
+            'address_line2': 'Address Line 2',
+            'city': 'City',
+            'state': 'State',
+            'zip_code': 'Zip Code',
+            'target_customers': 'Target Customers',
+            'store_aesthetic': 'Store Aesthetic',
+            'interested_genres': 'Interested Genres',
+            'pos_system': 'POS System',
+            'issue_frequency': 'Issue Frequency',
+            'monthly_budget': 'Monthly Budget',
+            'magazine_titles': 'Magazine Titles',
+            'magazine_sources': 'Magazine Sources',
+            'mag_other_input': 'Other Magazine Source',
+        };
+        return fieldNameMap[fieldName] || fieldName.replace(/_/g, ' ');
     }
 
-    function retailer_prevStep() {
-        retailer_saveFormData();
+    // ===== BUTTON EVENT LISTENERS =====
+    retailer_prevBtn?.addEventListener('click', () => {
         if (retailer_currentStep > 0) {
             retailer_currentStep--;
             retailer_showStep(retailer_currentStep);
-            window.scrollTo(0, 0);
         }
-    }
-
-    // ===== EVENT LISTENERS =====
-    retailer_nextBtn && retailer_nextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        retailer_nextStep();
     });
 
-    retailer_prevBtn && retailer_prevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        retailer_prevStep();
+    retailer_nextBtn?.addEventListener('click', () => {
+        retailer_steps = Array.from(retailer_form.querySelectorAll('.form-step'));
+        if (retailer_currentStep < retailer_steps.length - 1) {
+            if (!retailer_validateStep(retailer_currentStep)) return;
+            retailer_saveFormData();
+            retailer_currentStep++;
+            retailer_showStep(retailer_currentStep);
+        } else {
+            if (!retailer_validateStep(retailer_currentStep)) return;
+            retailer_saveFormData();
+            retailer_nextBtn.disabled = true;
+            retailer_nextBtn.textContent = 'Submitting...';
+            retailer_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        }
     });
 
-    retailer_editAllBtn && retailer_editAllBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    retailer_editAllBtn?.addEventListener('click', () => {
         retailer_currentStep = 0;
         retailer_showStep(retailer_currentStep);
-        window.scrollTo(0, 0);
     });
 
-    retailer_form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (retailer_validateStep(retailer_currentStep)) {
-            retailer_saveFormData();
-            retailer_form.submit();
+    retailer_form.addEventListener('input', function (retailer_e) {
+        const retailer_field = retailer_e.target.closest('.publisher_formfields');
+        if (retailer_field && retailer_field.classList.contains('showerror') && retailer_e.target.value.trim()) {
+            retailer_field.classList.remove('showerror');
         }
     });
 
-    // ===== INITIALIZATION =====
-    retailer_loadFormData();
-    retailer_showStep(retailer_currentStep);
-
-    // Warn before leaving if form has data
-    window.addEventListener('beforeunload', (e) => {
-        const formData = new FormData(retailer_form);
-        let hasData = false;
-        for (let [key, value] of formData.entries()) {
-            if (value) {
-                hasData = true;
-                break;
+    retailer_form.addEventListener('keydown', function (retailer_e) {
+        if (retailer_e.key === 'Enter') {
+            const retailer_active = document.activeElement;
+            if (retailer_active && retailer_active.tagName.toLowerCase() === 'textarea') return;
+            retailer_e.preventDefault();
+            if (retailer_currentStep < retailer_steps.length - 1) {
+                if (!retailer_validateStep(retailer_currentStep)) return;
+                retailer_saveFormData();
+                retailer_currentStep++;
+                retailer_showStep(retailer_currentStep);
+            } else {
+                if (!retailer_validateStep(retailer_currentStep)) return;
+                retailer_saveFormData();
+                retailer_form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
             }
         }
-        if (hasData) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
+    });
+
+    // Initialize the first step
+    retailer_showStep(retailer_currentStep);
+
+    // ===== FORM SUBMISSION =====
+    retailer_form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Save form data before submitting
+        retailer_saveFormData();
+
+        // Submit via AJAX to handle errors without page reload
+        const formData = new FormData(retailer_form);
+        
+        fetch(retailer_form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Success - clear saved data and redirect
+                retailer_clearFormData();
+                window.location.href = response.url || '/dashboard';
+            } else if (response.status === 422) {
+                // Validation errors - show them in a user-friendly way
+                return response.json().then(data => {
+                    let errorHtml = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
+                    errorHtml += '<strong style="font-size: 16px;">Please fix the following errors:</strong><br><br>';
+                    
+                    if (data.errors) {
+                        for (let field in data.errors) {
+                            const fieldName = retailer_formatFieldName(field);
+                            const errors = data.errors[field];
+                            errorHtml += `<strong>${fieldName}:</strong><br>`;
+                            errors.forEach(error => {
+                                errorHtml += `• ${error}<br>`;
+                            });
+                            errorHtml += '<br>';
+                        }
+                    }
+                    errorHtml += '</div>';
+                    
+                    // Create a custom error dialog
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        border: 2px solid #e74c3c;
+                        border-radius: 8px;
+                        padding: 24px;
+                        max-width: 500px;
+                        z-index: 10000;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    `;
+                    errorDiv.innerHTML = errorHtml + '<button id="closeErrorBtn" style="margin-top: 16px; padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>';
+                    document.body.appendChild(errorDiv);
+                    
+                    document.getElementById('closeErrorBtn').addEventListener('click', () => {
+                        errorDiv.remove();
+                        overlay.remove();
+                    });
+                    
+                    // Also add overlay
+                    const overlay = document.createElement('div');
+                    overlay.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(0,0,0,0.5);
+                        z-index: 9999;
+                    `;
+                    overlay.addEventListener('click', () => {
+                        errorDiv.remove();
+                        overlay.remove();
+                    });
+                    document.body.appendChild(overlay);
+                });
+            } else {
+                // Other errors
+                return response.text().then(text => {
+                    alert('Error: ' + text);
+                });
+            }
+        })
+        .catch(error => {
+            alert('Error submitting form: ' + error.message);
+        });
     });
 })();
 
