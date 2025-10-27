@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>register</title>
+    <title>Publisher Registration - NEESH</title>
+    <meta name="description" content="Register as a publisher on NEESH - The OS for Indie Print. Manage your magazine titles and reach readers worldwide.">
+    <meta name="keywords" content="publisher registration, indie print, magazine platform">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -22,6 +25,10 @@
 
         select.uptitle-input-text:invalid {
             color: #999;
+        }
+
+        textarea.uptitle-input-text {
+            font-family: 'Manrope', sans-serif;
         }
 
         .publisher_and_retailer_conatiner {
@@ -55,7 +62,7 @@
     </div>
 
     <div class="new_to_nessh_innerwhole_container">
-        <a href="{{ route('start') }}" class="new_to_nessh_back_arrow">
+        <a href="{{ route('home') }}" class="new_to_nessh_back_arrow">
             <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back Arrow">
         </a>
         <div class="new_to_nessh_container">
@@ -302,6 +309,17 @@
                         </div>
                         <div class="form-step">
                             <div class="uptitle-section-title">Assets</div>
+                            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <p style="margin: 0; font-size: 14px; color: #333;">
+                                    <strong>Image Requirements:</strong><br>
+                                    • Minimum size: 500 x 500 pixels<br>
+                                    • Maximum size: 5000 x 5000 pixels<br>
+                                    • Maximum file size: 5 MB per image<br>
+                                    • Supported formats: JPG, PNG, GIF<br>
+                                    • High Resolution Images (300DPI recommended)<br>
+                                    • You can upload up to 6 images
+                                </p>
+                            </div>
                             <label for="coverUploadimage" class="uptitle-upload-box">
                                 <h2>Upload Images</h2>
                                 <p>High Resolution Images (300DPI)</p>
@@ -311,6 +329,7 @@
                             </label>
                             <div id="previewContainer" class="formimagesshow"></div>
                             <div class="limit_telling">You can only upload 6 images.</div>
+                            <div id="imageErrorMessage" style="color: #c00; margin-top: 10px; display: none;"></div>
 
                             {{-- <div class="publisher_form_input_display">
                                 <div class="publisher_formfields">
@@ -378,78 +397,6 @@
                         </div>
 
                         <!-- Step 5 -->
-                        <div class="form-step">
-                            <div class="uptitle-section-title">Payment & Payout Information</div>
-                            <div class="publisher_form_input_display" style="display:flex; flex-wrap:wrap; gap:12px;">
-
-                                <div class="publisher_formfields">
-                                    <label for="payout_method">Preferred Payout Method</label>
-                                    <select id="payout_method" name="payout_method" class="uptitle-input-text"
-                                        required>
-                                        <option value="" disabled selected hidden>Select Payout Method</option>
-                                        <option value="stripe">Stripe Connect</option>
-                                        <option value="bank_transfer">Bank Transfer</option>
-                                    </select>
-                                    <small>Helper: Stripe Connect recommended for fastest payouts</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="account_holder_name">Account Holder Name</label>
-                                    <input type="text" id="account_holder_name" name="account_holder_name"
-                                        class="uptitle-input-text" placeholder="Enter Account Holder Name" required>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="iban">Account Number / IBAN</label>
-                                    <input type="text" id="iban" name="iban" class="uptitle-input-text"
-                                        placeholder="Enter IBAN or Account Number" required>
-                                    <small>Validation: Enter a valid account or IBAN number</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="swift_code">Routing Number / SWIFT Code</label>
-                                    <input type="text" id="swift_code" name="swift_code"
-                                        class="uptitle-input-text" placeholder="Enter Routing or SWIFT Code" required>
-                                </div>
-
-                                <div class="publisher_formfields" style="flex:1 1 100%;">
-                                    <label for="business_address">Business Address</label>
-                                    <textarea id="business_address" name="business_address" class="uptitle-input-text"
-                                        placeholder="Enter Business Address" rows="3" required></textarea>
-                                    <small>Helper: Must match tax records</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="tax_id">Tax ID / EIN / VAT</label>
-                                    <input type="text" id="tax_id" name="tax_id" class="uptitle-input-text"
-                                        placeholder="Enter Tax ID (if applicable)">
-                                    <small>Required if registered entity</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="currency_preference">Currency Preference</label>
-                                    <select id="currency_preference" name="currency_preference"
-                                        class="uptitle-input-text" required>
-                                        <option value="USD" selected>USD</option>
-                                        <option value="EUR">EUR</option>
-                                        <option value="GBP">GBP</option>
-                                        <option value="AED">AED</option>
-                                        <option value="PKR">PKR</option>
-                                    </select>
-                                    <small>Default: USD</small>
-                                </div>
-
-                                <div class="publisher_formfields">
-                                    <label for="payment_contact_email">Payment Contact Email</label>
-                                    <input type="email" id="payment_contact_email" name="payment_contact_email"
-                                        class="uptitle-input-text" placeholder="Enter alternate contact email">
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <!-- Step 6 -->
                         <div class="form-step">
                             <div class="uptitle-section-title">Sales Experience</div>
                             <label class="password_label" for="salesexperience">Have you sold this issue
@@ -529,22 +476,69 @@
 
     <script src="{{ asset('assets/js/publisherregisterform.js') }}"></script>
     <script>
+        const MIN_WIDTH = 500;
+        const MAX_WIDTH = 5000;
+        const MIN_HEIGHT = 500;
+        const MAX_HEIGHT = 5000;
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
         document.getElementById('coverUploadimage').addEventListener('change', function(event) {
             const previewContainer = document.getElementById('previewContainer');
+            const errorMessage = document.getElementById('imageErrorMessage');
             previewContainer.innerHTML = ""; // clear old previews
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+
+            let hasErrors = false;
+            let validFiles = [];
 
             Array.from(event.target.files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.classList.add('preview-image');
-                        previewContainer.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
+                if (!file.type.startsWith('image/')) {
+                    return;
                 }
+
+                // Check file size
+                if (file.size > MAX_FILE_SIZE) {
+                    hasErrors = true;
+                    errorMessage.textContent = `⚠️ Image "${file.name}" exceeds maximum file size of 5 MB. Please upload a smaller image.`;
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Check dimensions
+                        if (img.width < MIN_WIDTH || img.height < MIN_HEIGHT) {
+                            hasErrors = true;
+                            errorMessage.textContent = `⚠️ Image "${file.name}" is too small. Minimum size is ${MIN_WIDTH}x${MIN_HEIGHT} pixels. Your image is ${img.width}x${img.height} pixels.`;
+                            errorMessage.style.display = 'block';
+                            return;
+                        }
+                        if (img.width > MAX_WIDTH || img.height > MAX_HEIGHT) {
+                            hasErrors = true;
+                            errorMessage.textContent = `⚠️ Image "${file.name}" is too large. Maximum size is ${MAX_WIDTH}x${MAX_HEIGHT} pixels. Your image is ${img.width}x${img.height} pixels.`;
+                            errorMessage.style.display = 'block';
+                            return;
+                        }
+
+                        // Valid image - add to preview
+                        const previewImg = document.createElement('img');
+                        previewImg.src = e.target.result;
+                        previewImg.classList.add('preview-image');
+                        previewContainer.appendChild(previewImg);
+                        validFiles.push(file);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             });
+
+            // Prevent form submission if there are errors
+            if (hasErrors) {
+                event.target.value = ''; // Clear the input
+            }
         });
     </script>
     <script>
