@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
 import styles from './PublisherLandingPage.module.css';
@@ -22,9 +21,9 @@ const PublisherLandingPage: React.FC = () => {
             <p className={styles.heroDescription}>
               Distributors get you into stores but take hefty cuts and decide where you go. Self-distribution means better margins but endless logistics and limited reach. Neesh gives you both: widespread discovery through our curated marketplace and full control over pricing, placement, and payouts.
             </p>
-            <Link to="/publisher-application-form" className={styles.ctaButton}>
+            <a href="https://app.neesh.art/register/publisher" className={styles.ctaButton}>
               Apply to List Your Magazine
-            </Link>
+            </a>
           </div>
           <div className={styles.heroVisual}>
             <img style={{width:'600px', height:'400px' }} src="/For_Publishers_image.png" alt="Magazine upload icon" />

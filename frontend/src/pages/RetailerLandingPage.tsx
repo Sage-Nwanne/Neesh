@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
 import styles from './RetailerLandingPage.module.css';
@@ -22,9 +21,9 @@ const RetailerLandingPage: React.FC = () => {
             <p className={styles.heroDescription}>
               Curated magazines extend dwell time, create Instagrammable moments, and tell customers who you are before you say a word. Start with a trial order today. 
             </p>
-            <Link to="/retailer-application-form" className={styles.ctaButton}>
+            <a href="https://app.neesh.art/register/retailer" className={styles.ctaButton}>
               Request Access for Your Shop
-            </Link>
+            </a>
           </div>
           <div className={styles.heroVisual}>
             <img src="/For_Retailers_Image.jpg" style={{ width:'100%', height:'420px', objectFit: 'cover', objectPosition: 'center 55%', overflow: 'hidden' }} alt="Retailer icon" className={styles.heroIcon} />
