@@ -368,7 +368,7 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
-                                <div class="publisher_formfields">
+                                <!-- <div class="publisher_formfields">
                                     <label for="issue_frequency">Issue Frequency</label>
                                     <select class="uptitle-input-text" id="issue_frequency" name="issue_frequency" required>
                                         <option value="" disabled selected hidden>Issue Frequency</option>
@@ -378,7 +378,7 @@
                                         <option value="annual">Annual</option>
                                         <option value="irregular">Irregular</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="publisher_formfields">
                                     <label for="metadata">Monthly Magazine Budget ($)</label>
                                     <input type="number" id="monthly_budget" class="uptitle-input-text" name="monthly_budget" placeholder="e.g , 500" required>
@@ -393,13 +393,14 @@
                             <div class="publisher_formfields">
                                 <label>Current Magazine Sources</label>
                                 <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; margin-top: 8px;">
-                                    <label><input type="checkbox" name="magazine_sources[]" value="ubiquity_distributors"> Ubiquity Distributors</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="tng"> TNG</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="local_distributors"> Local Distributors</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="ingram_periodicals"> Ingram Periodicals</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="direct_from_publishers"> Direct from Publishers</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="small_changes"> Small Changes</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="antenne_books"> Antenne Books</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="ra_and_olly"> Ra & Olly</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="boutique_mags"> Boutique Mags</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="ingram"> Ingram</label>
+                                    <label><input type="checkbox" name="magazine_sources[]" value="direct_from_publishers"> Direct from Publishers</label> 
+                                    <label><input type="checkbox" name="magazine_sources[]" value="other" id="mag_other"> Other Distributors</label>
                                     <label><input type="checkbox" name="magazine_sources[]" value="none_currently"> None Currently</label>
-                                    <label><input type="checkbox" name="magazine_sources[]" value="other" id="mag_other"> Other</label>
                                 </div>
 
                                 <!-- Optional input for "Other" -->
