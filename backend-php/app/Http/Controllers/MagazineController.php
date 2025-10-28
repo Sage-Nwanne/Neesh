@@ -305,16 +305,16 @@ class MagazineController extends Controller
             $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
 
             if ($magazine->publisher_id !== $publisherProfile->id) {
-                return redirect()->back()->with('error', 'Unauthorized action.');
+                return redirect()->route('publisher.catalogue')->with('error', 'Unauthorized action.');
             }
 
             // Archive the magazine
             $magazine->update(['archived_at' => now()]);
 
-            return redirect()->back()->with('success', 'Magazine archived successfully!');
+            return redirect()->route('publisher.catalogue')->with('success', 'Magazine archived successfully!');
         } catch (\Exception $e) {
             Log::error('Magazine archive error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to archive magazine.');
+            return redirect()->route('publisher.catalogue')->with('error', 'Failed to archive magazine.');
         }
     }
 
@@ -328,16 +328,16 @@ class MagazineController extends Controller
             $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
 
             if ($magazine->publisher_id !== $publisherProfile->id) {
-                return redirect()->back()->with('error', 'Unauthorized action.');
+                return redirect()->route('publisher.archived-titles')->with('error', 'Unauthorized action.');
             }
 
             // Unarchive the magazine
             $magazine->update(['archived_at' => null]);
 
-            return redirect()->back()->with('success', 'Magazine unarchived successfully!');
+            return redirect()->route('publisher.archived-titles')->with('success', 'Magazine unarchived successfully!');
         } catch (\Exception $e) {
             Log::error('Magazine unarchive error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to unarchive magazine.');
+            return redirect()->route('publisher.archived-titles')->with('error', 'Failed to unarchive magazine.');
         }
     }
 

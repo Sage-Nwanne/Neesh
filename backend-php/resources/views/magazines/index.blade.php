@@ -313,8 +313,8 @@
                         const form = document.createElement('form');
                         form.method = 'POST';
                         form.action = action === 'archive'
-                            ? `{{ route('publisher.magazines.archive', '') }}/${magazineId}`
-                            : `{{ route('publisher.magazines.unarchive', '') }}/${magazineId}`;
+                            ? `/publisher/magazines/${magazineId}/archive`
+                            : `/publisher/magazines/${magazineId}/unarchive`;
 
                         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                         const csrfInput = document.createElement('input');
