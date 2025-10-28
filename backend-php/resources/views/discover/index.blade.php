@@ -210,7 +210,7 @@
             @include('layouts.header')
         @endif
     @else
-        @include('layouts.publisherheader')
+        @include('layouts.guest_header')
     @endauth
 
     <div class="discover-container">

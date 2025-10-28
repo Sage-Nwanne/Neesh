@@ -25,6 +25,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('/checkout', fn() => view('checkout'))->name('checkout');
 Route::get('/termsandconditions', fn() => view('terms'))->name('terms');
+Route::get('/help-center', [PublisherPageController::class, 'helpCenter'])->name('help-center');
+Route::get('/faq', [PublisherPageController::class, 'faq'])->name('faq');
 
 // Registration Pages
 Route::get('/register/publisher', fn() => view('publisher.auth.register'))->name('register.publisher');
