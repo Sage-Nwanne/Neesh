@@ -465,6 +465,11 @@
 
                         </div>
                     </form>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="font-size: 14px; color: #666; font-family: 'Manrope', sans-serif;">
+                            Wrong form? <a href="https://app.neesh.art" style="color: #753bbd; text-decoration: none; font-weight: 600;">Switch forms or sign in</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

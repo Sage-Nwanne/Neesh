@@ -253,6 +253,12 @@
     <div class="support-section">
       <p>Have any questions? <a href="mailto:hi@neesh.art">Talk to the team</a></p>
     </div>
+
+    <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e0e0e0; margin-top: 20px;">
+      <p style="font-size: 14px; color: #666;">
+        <a href="https://neesh.art" style="color: #000; text-decoration: none; font-weight: 600;">← Back to Neesh</a>
+      </p>
+    </div>
   </div>
 
   <script>

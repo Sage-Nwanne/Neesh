@@ -25,8 +25,8 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
-                <a href="{{ route('explore.index') }}">Explore</a>
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <a href="{{ route('explore.index') }}" id="exploreLink">Explore</a>
+                <a href="{{ route('admin.dashboard') }}" id="dashboardLink">Dashboard</a>
                 <a href="{{ route('admin.users') }}">Users</a>
                 <a href="{{ route('admin.messages') }}">Messages</a>
                 <a href="{{ route('admin.account') }}">Account</a>
@@ -37,5 +37,11 @@
                     </button>
                 </form>
             </div>
+            <script>
+                // Hide Dashboard link when on dashboard page
+                if (window.location.pathname.includes('/admin/dashboard')) {
+                    document.getElementById('dashboardLink').style.display = 'none';
+                }
+            </script>
         </div>
     </div>

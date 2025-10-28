@@ -15,6 +15,7 @@
 
         <div id="sideMenu" class="side-menu">
             <span class="closeBtn" id="closeMenu">✕</span>
+            <a href="https://neesh.art">Home</a>
             <a href="{{ route('explore.index') }}">Explore</a>
             <a href="{{ route('help-center') }}">Help Center</a>
             <a href="{{ route('faq') }}">FAQ</a>

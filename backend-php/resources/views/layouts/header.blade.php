@@ -25,8 +25,8 @@
 
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
-                <a href="{{ route('explore.index') }}">Explore</a>
-                <a href="{{ route('retailer.dashboard') }}">Dashboard</a>
+                <a href="{{ route('explore.index') }}" id="exploreLink">Explore</a>
+                <a href="{{ route('retailer.dashboard') }}" id="dashboardLink">Dashboard</a>
                 <a href="{{ route('retailer.catalogue') }}">Catalogue</a>
                 <a href="{{ route('retailer.orders') }}">Orders</a>
                 <a href="{{ route('retailer.messages') }}">Messages</a>
@@ -41,5 +41,11 @@
                     </button>
                 </form>
             </div>
+            <script>
+                // Hide Dashboard link when on dashboard page
+                if (window.location.pathname.includes('/retailer/dashboard')) {
+                    document.getElementById('dashboardLink').style.display = 'none';
+                }
+            </script>
         </div>
     </div>
