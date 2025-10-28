@@ -18,7 +18,7 @@ class DiscoverController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $allMagazines = Magazine::with(['publisher', 'images'])->where('status', 'approved')->get();
+        $allMagazines = Magazine::with(['publisher', 'images'])->where('status', 'approved')->whereNull('archived_at')->get();
         
         // Get personalized recommendations
         $recommendedMagazines = $this->getRecommendedMagazines($user);
@@ -29,6 +29,7 @@ class DiscoverController extends Controller
         // Get new magazines
         $newMagazines = Magazine::with(['publisher', 'images'])
             ->where('status', 'approved')
+            ->whereNull('archived_at')
             ->orderBy('created_at', 'desc')
             ->limit(12)
             ->get();
@@ -164,6 +165,7 @@ class DiscoverController extends Controller
         $publisher = PublisherProfile::findOrFail($publisherId);
         $magazines = $publisher->magazines()
             ->where('status', 'approved')
+            ->whereNull('archived_at')
             ->with(['images'])
             ->get();
         

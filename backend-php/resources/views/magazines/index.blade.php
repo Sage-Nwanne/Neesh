@@ -79,10 +79,24 @@
                             <img src="{{ asset('assets/image/black save icon.png') }}" alt="Bookmark Icon">
                         </a>
                         @endauth
-                        <button class="action-btn share-btn" data-magazine-id="{{ $magazine->id }}" data-magazine-title="{{ $magazine->title_name }}">
-                            <span>Copy info</span>
-                            <img src="{{ asset('assets/image/Qr code.png') }}" alt="Copy Icon">
-                        </button>
+                        @hasrole('publisher')
+                            @if($magazine->archived_at)
+                                <button class="action-btn archive-btn" data-magazine-id="{{ $magazine->id }}" data-action="unarchive">
+                                    <span>Unarchive</span>
+                                    <img src="{{ asset('assets/image/Qr code.png') }}" alt="Unarchive Icon">
+                                </button>
+                            @else
+                                <button class="action-btn archive-btn" data-magazine-id="{{ $magazine->id }}" data-action="archive">
+                                    <span>Archive</span>
+                                    <img src="{{ asset('assets/image/Qr code.png') }}" alt="Archive Icon">
+                                </button>
+                            @endif
+                        @else
+                            <button class="action-btn share-btn" data-magazine-id="{{ $magazine->id }}" data-magazine-title="{{ $magazine->title_name }}">
+                                <span>Copy info</span>
+                                <img src="{{ asset('assets/image/Qr code.png') }}" alt="Copy Icon">
+                            </button>
+                        @endhasrole
                         @hasrole('retailer')
                             <button class="action-btn">
                                 <span>Contact Publisher</span>
@@ -221,6 +235,114 @@
             </div>
         </aside>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const archiveButtons = document.querySelectorAll('.archive-btn');
+
+            archiveButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const magazineId = this.dataset.magazineId;
+                    const action = this.dataset.action;
+                    const actionText = action === 'archive' ? 'archive' : 'unarchive';
+                    const confirmText = action === 'archive'
+                        ? 'Are you sure you want to archive this title?'
+                        : 'Unarchive?';
+                    const confirmBtn = action === 'archive' ? 'Im sure' : 'Im sure';
+                    const cancelBtn = action === 'archive' ? 'Cancel Archive' : 'Keep Archived';
+
+                    // Create modal
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 9999;
+                    `;
+
+                    const modalContent = document.createElement('div');
+                    modalContent.style.cssText = `
+                        background: white;
+                        padding: 30px;
+                        border-radius: 8px;
+                        text-align: center;
+                        max-width: 400px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    `;
+
+                    const title = document.createElement('h3');
+                    title.textContent = confirmText;
+                    title.style.cssText = 'margin-bottom: 20px; font-size: 18px; color: #333;';
+
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.style.cssText = 'display: flex; gap: 10px; justify-content: center;';
+
+                    const confirmBtnEl = document.createElement('button');
+                    confirmBtnEl.textContent = confirmBtn;
+                    confirmBtnEl.style.cssText = `
+                        padding: 10px 20px;
+                        background: #000;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    `;
+
+                    const cancelBtnEl = document.createElement('button');
+                    cancelBtnEl.textContent = cancelBtn;
+                    cancelBtnEl.style.cssText = `
+                        padding: 10px 20px;
+                        background: #ccc;
+                        color: #333;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    `;
+
+                    confirmBtnEl.addEventListener('click', function() {
+                        // Submit the form
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = action === 'archive'
+                            ? `{{ route('publisher.magazines.archive', '') }}/${magazineId}`
+                            : `{{ route('publisher.magazines.unarchive', '') }}/${magazineId}`;
+
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_token';
+                        csrfInput.value = csrfToken;
+
+                        form.appendChild(csrfInput);
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+
+                    cancelBtnEl.addEventListener('click', function() {
+                        document.body.removeChild(modal);
+                    });
+
+                    buttonContainer.appendChild(confirmBtnEl);
+                    buttonContainer.appendChild(cancelBtnEl);
+
+                    modalContent.appendChild(title);
+                    modalContent.appendChild(buttonContainer);
+                    modal.appendChild(modalContent);
+
+                    document.body.appendChild(modal);
+                });
+            });
+        });
+    </script>
 
 </body>
 

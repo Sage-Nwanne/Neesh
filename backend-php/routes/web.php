@@ -127,6 +127,9 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     Route::get('/magazines/edit/{id}', [MagazineController::class, 'edit'])->name('magazines.edit');
     Route::post('/magazines', [MagazineController::class, 'store'])->name('magazines.store');
     Route::post('/magazines/{id}', [MagazineController::class, 'update'])->name('magazines.update');
+    Route::post('/magazines/{id}/archive', [MagazineController::class, 'archive'])->name('magazines.archive');
+    Route::post('/magazines/{id}/unarchive', [MagazineController::class, 'unarchive'])->name('magazines.unarchive');
+    Route::get('/archived-titles', [MagazineController::class, 'archivedTitles'])->name('archived-titles');
 
     // Publisher Pages
     Route::get('/catalogue', [PublisherPageController::class, 'catalogue'])->name('catalogue');

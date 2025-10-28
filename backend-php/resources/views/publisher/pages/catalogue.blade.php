@@ -119,7 +119,7 @@
         </div>
 
         <div class="catalogue-grid">
-            @forelse(Auth::user()->publisherProfile->magazines ?? [] as $magazine)
+            @forelse(Auth::user()->publisherProfile->magazines()->whereNull('archived_at')->get() ?? [] as $magazine)
                 <a href="{{ route('magazines.show', $magazine->id) }}" class="catalogue-card">
                     @if ($magazine->images->first())
                         <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}" class="catalogue-card-image" onerror="this.src='{{ asset('magazine-placeholder.png') }}'">

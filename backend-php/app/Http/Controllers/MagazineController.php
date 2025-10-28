@@ -27,9 +27,10 @@ class MagazineController extends Controller
             return redirect()->back()->with('error', 'Publisher profile not found.');
         }
 
-        // us publisher ki magazines load karo + unki images
+        // us publisher ki magazines load karo + unki images (exclude archived)
         $magazines = Magazine::with('images')
             ->where('publisher_id', $publisherProfile->id)
+            ->whereNull('archived_at')
             ->get();
 
         // Fetch analytics data
@@ -94,11 +95,12 @@ class MagazineController extends Controller
     }
     public function show($id)
     {
-        $magazine = Magazine::with('images', 'publisher')->findOrFail($id);
+        $magazine = Magazine::withTrashed()->with('images', 'publisher')->findOrFail($id);
 
-        // For related products, show others from same publisher or same genre
+        // For related products, show others from same publisher or same genre (exclude archived for non-publishers)
         $relatedMagazines = Magazine::where('publisher_id', $magazine->publisher_id)
             ->where('id', '!=', $magazine->id)
+            ->whereNull('archived_at')
             ->take(4)
             ->get();
 
@@ -290,6 +292,75 @@ class MagazineController extends Controller
             }
 
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        }
+    }
+
+    public function archive($id)
+    {
+        try {
+            $magazine = Magazine::findOrFail($id);
+
+            // Check if user owns this magazine
+            $publisher = auth()->user();
+            $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
+
+            if ($magazine->publisher_id !== $publisherProfile->id) {
+                return redirect()->back()->with('error', 'Unauthorized action.');
+            }
+
+            // Archive the magazine (soft delete)
+            $magazine->delete();
+
+            return redirect()->back()->with('success', 'Magazine archived successfully!');
+        } catch (\Exception $e) {
+            Log::error('Magazine archive error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to archive magazine.');
+        }
+    }
+
+    public function unarchive($id)
+    {
+        try {
+            $magazine = Magazine::withTrashed()->findOrFail($id);
+
+            // Check if user owns this magazine
+            $publisher = auth()->user();
+            $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
+
+            if ($magazine->publisher_id !== $publisherProfile->id) {
+                return redirect()->back()->with('error', 'Unauthorized action.');
+            }
+
+            // Restore the magazine
+            $magazine->restore();
+
+            return redirect()->back()->with('success', 'Magazine unarchived successfully!');
+        } catch (\Exception $e) {
+            Log::error('Magazine unarchive error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to unarchive magazine.');
+        }
+    }
+
+    public function archivedTitles()
+    {
+        try {
+            $publisher = auth()->user();
+            $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
+
+            if (!$publisherProfile) {
+                return redirect()->back()->with('error', 'Publisher profile not found.');
+            }
+
+            // Get only archived magazines
+            $archivedMagazines = Magazine::onlyTrashed()
+                ->with('images')
+                ->where('publisher_id', $publisherProfile->id)
+                ->get();
+
+            return view('publisher.pages.archived-titles', compact('archivedMagazines', 'publisherProfile'));
+        } catch (\Exception $e) {
+            Log::error('Archived titles error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to load archived titles.');
         }
     }
 

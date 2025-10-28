@@ -151,6 +151,12 @@
             </div>
 
             <div class="account-card">
+                <h3>📦 Archived Titles</h3>
+                <p style="font-size: 14px; color: #666; margin-bottom: 20px;">View and manage your archived magazine titles.</p>
+                <a href="{{ route('publisher.archived-titles') }}" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">View Archived Titles</a>
+            </div>
+
+            <div class="account-card">
                 <h3>🗑️ Danger Zone</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Permanently delete your account and all associated data.</p>
                 <button class="btn-danger" onclick="alert('Account deletion feature coming soon!')">Delete Account</button>
