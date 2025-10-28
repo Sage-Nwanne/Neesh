@@ -179,19 +179,29 @@ class MagazineController extends Controller
             // dd($request->file('files'));
             if ($request->file('files')) {
                 foreach ($request->file('files') as $file) {
-                    $path = $file->store('magazines', 'public');
-                    MagazineImage::create([
-                        'magazine_id' => $magazine->id,
-                        'image_path' => $path,
-                    ]);
+                    try {
+                        $path = $file->store('magazines', 'public');
+                        MagazineImage::create([
+                            'magazine_id' => $magazine->id,
+                            'image_path' => $path,
+                        ]);
+                    } catch (\Exception $imageError) {
+                        Log::error('Image upload error: ' . $imageError->getMessage());
+                        // Continue with other images even if one fails
+                    }
                 }
             }
 
-            return redirect()->back()->with('success', 'Magazine uploaded successfully!');
+            return redirect()->route('publisher.dashboard')->with('success', 'Magazine uploaded successfully!');
         } catch (\Exception $e) {
-            //throw $th;
-            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            Log::error('Magazine creation error: ' . $e->getMessage());
 
+            // Check if it's an image-related error
+            if (strpos($e->getMessage(), 'file') !== false || strpos($e->getMessage(), 'image') !== false) {
+                return redirect()->back()->with('error', 'Error with uploaded image. Please try another one!');
+            }
+
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
 
 
@@ -257,17 +267,29 @@ class MagazineController extends Controller
             // handle new image uploads (optional append)
             if ($request->file('files')) {
                 foreach ($request->file('files') as $file) {
-                    $path = $file->store('magazines', 'public');
-                    MagazineImage::create([
-                        'magazine_id' => $magazine->id,
-                        'image_path' => $path,
-                    ]);
+                    try {
+                        $path = $file->store('magazines', 'public');
+                        MagazineImage::create([
+                            'magazine_id' => $magazine->id,
+                            'image_path' => $path,
+                        ]);
+                    } catch (\Exception $imageError) {
+                        Log::error('Image upload error: ' . $imageError->getMessage());
+                        // Continue with other images even if one fails
+                    }
                 }
             }
 
             return redirect()->route('magazines.show', $magazine->id)->with('success', 'Magazine updated successfully!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            Log::error('Magazine update error: ' . $e->getMessage());
+
+            // Check if it's an image-related error
+            if (strpos($e->getMessage(), 'file') !== false || strpos($e->getMessage(), 'image') !== false) {
+                return redirect()->back()->with('error', 'Error with uploaded image. Please try another one!');
+            }
+
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 

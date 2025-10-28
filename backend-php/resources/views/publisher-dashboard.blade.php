@@ -7,6 +7,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('assets/js/menu.js') }}"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Manrope', sans-serif; background: #f8f9fa; }
@@ -25,7 +26,7 @@
         .metric-value { font-size: 28px; font-weight: 700; color: #000; }
         .metric-subtext { font-size: 12px; color: #999; margin-top: 8px; }
         .growth-indicator { color: #10B981; font-weight: 600; }
-        .transfer-btn { width: 100%; margin-top: 15px; padding: 10px; background: #753bbd; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .transfer-btn { width: 100%; margin-top: 15px; padding: 10px; background: #000; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
         
         /* Analytics Chart */
         .analytics-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px; }
@@ -129,9 +130,9 @@
                 @forelse($magazines as $magazine)
                     <div class="title-card">
                         @if ($magazine->images->first())
-                            <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}">
+                            <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}" onerror="this.src='{{ asset('magazine-placeholder.png') }}'">
                         @else
-                            <img src="{{ asset('assets/image/placeholder.png') }}" alt="No Image">
+                            <img src="{{ asset('magazine-placeholder.png') }}" alt="No Image">
                         @endif
                         <div class="title-info">
                             <div class="title-name">{{ $magazine->title_name }}</div>
