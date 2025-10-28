@@ -10,10 +10,50 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function usersList()
+    public function usersList(Request $request)
     {
-        $users = User::with('roles')->get(); // includes role info from spatie
-        return view('admin.users.index', compact('users'));
+        $query = User::with('roles');
+
+        // Filter by verification status
+        $verificationFilter = $request->get('verification', 'all');
+        if ($verificationFilter === 'verified') {
+            $query->whereNotNull('email_verified_at');
+        } elseif ($verificationFilter === 'pending') {
+            $query->whereNull('email_verified_at');
+        }
+
+        // Filter by verification date range
+        $dateFilter = $request->get('date_filter', 'all');
+        if ($dateFilter !== 'all') {
+            $now = now();
+            switch ($dateFilter) {
+                case 'this_week':
+                    $query->whereNotNull('email_verified_at')
+                        ->whereBetween('email_verified_at', [$now->startOfWeek(), $now->endOfWeek()]);
+                    break;
+                case 'this_month':
+                    $query->whereNotNull('email_verified_at')
+                        ->whereBetween('email_verified_at', [$now->startOfMonth(), $now->endOfMonth()]);
+                    break;
+                case 'last_6_months':
+                    $query->whereNotNull('email_verified_at')
+                        ->where('email_verified_at', '>=', $now->subMonths(6));
+                    break;
+                case 'this_year':
+                    $query->whereNotNull('email_verified_at')
+                        ->whereBetween('email_verified_at', [$now->startOfYear(), $now->endOfYear()]);
+                    break;
+            }
+        }
+
+        // Search by email
+        $searchEmail = $request->get('search_email');
+        if ($searchEmail) {
+            $query->where('email', 'like', '%' . $searchEmail . '%');
+        }
+
+        $users = $query->get();
+        return view('admin.users.index', compact('users', 'verificationFilter', 'dateFilter', 'searchEmail'));
     }
 
     // ✅ View single user details
@@ -94,6 +134,25 @@ class AdminController extends Controller
         // TODO: Implement messaging functionality
         // This page will show messages sent to hi@neesh.art and message threads
         return view('admin.messages');
+    }
+
+    // ✅ Revoke/Unverify user account
+    public function revokeUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Get user role
+        $role = $user->roles->pluck('name')->first() ?? 'user';
+
+        // Unverify the user
+        $user->email_verified_at = null;
+        $user->save();
+
+        // Send account revoked email
+        Mail::to($user->email)->send(new \App\Mail\AccountRevoked($user, $role));
+
+        return redirect()->route('admin.users.view', $user->id)
+            ->with('success', 'User account revoked successfully! Revocation email sent.');
     }
 
     // ✅ Admin Account Page

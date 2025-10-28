@@ -26,6 +26,7 @@
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
                 <a href="{{ route('explore.index') }}">Explore</a>
+                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                 <a href="{{ route('admin.users') }}">Users</a>
                 <a href="{{ route('admin.messages') }}">Messages</a>
                 <a href="{{ route('admin.account') }}">Account</a>

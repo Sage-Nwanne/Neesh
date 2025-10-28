@@ -101,8 +101,12 @@
             <button class="btn btn-danger" onclick="showRejectModal()">Reject Application</button>
         </div>
         @else
-            <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <button class="btn btn-secondary" disabled>Already Approved</button>
+                <form action="{{ route('admin.users.revoke', $user->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to revoke this user\'s account? They will lose access to their dashboard.');">
+                    @csrf
+                    <button type="submit" class="btn btn-warning">Revoke Account</button>
+                </form>
                 <a href="{{ route('admin.users') }}" class="btn btn-link">← Back to Users List</a>
             </div>
         @endif

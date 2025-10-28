@@ -201,7 +201,17 @@
     </style>
 </head>
 <body>
-    @include('layouts.publisherheader')
+    @auth
+        @if(auth()->user()->hasRole('admin'))
+            @include('layouts.admin_header')
+        @elseif(auth()->user()->hasRole('publisher'))
+            @include('layouts.publisherheader')
+        @elseif(auth()->user()->hasRole('retailer'))
+            @include('layouts.header')
+        @endif
+    @else
+        @include('layouts.publisherheader')
+    @endauth
 
     <div class="discover-container">
         <div class="discover-header">
