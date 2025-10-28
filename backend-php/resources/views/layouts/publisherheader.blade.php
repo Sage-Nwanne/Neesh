@@ -27,8 +27,8 @@
                 <hr style="margin: 10px 0;">
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-size: 16px; padding: 10px 0; width: 100%; text-align: left;">
-                        🚪 Logout
+                    <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font-size: inherit; padding: 0; margin-left: 20px; width: auto; text-align: left; font-family: inherit; text-decoration: none;">
+                        Logout
                     </button>
                 </form>
             </div>
