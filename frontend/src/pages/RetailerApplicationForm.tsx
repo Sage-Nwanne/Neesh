@@ -43,9 +43,9 @@ const RetailerSchema = z.object({
   business_zip_code: z.string().min(1, 'ZIP code is required'),
   business_country: z.string().default('US'),
 
-  store_category: z.enum(STORE_CATEGORIES, { required_error: 'Select a category' }),
-  store_type: z.enum(STORE_TYPES, { required_error: 'Select a store type' }),
-  store_size: z.enum(STORE_SIZES, { required_error: 'Select a store size' }),
+  store_category: z.enum(STORE_CATEGORIES, { message: 'Select a category' }),
+  store_type: z.enum(STORE_TYPES, { message: 'Select a store type' }),
+  store_size: z.enum(STORE_SIZES, { message: 'Select a store size' }),
 
   target_customers: z.array(z.enum(TARGET_CUSTOMERS)).min(1, 'Select at least one target customer'),
   aesthetic_preferences: z.array(z.enum(AESTHETIC_PREFERENCES)).min(1, 'Select at least one aesthetic'),

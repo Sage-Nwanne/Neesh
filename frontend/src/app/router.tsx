@@ -1,18 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
-// Redirect component for external URLs
-const ExternalRedirect: React.FC<{ url: string }> = ({ url }) => {
-  useEffect(() => {
-    window.location.href = url;
-  }, [url]);
-  return null;
-};
+// ExternalRedirect component removed - using direct href links instead
 
 // Lazy load pages for better performance
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const AuthPage = React.lazy(() => import('@/features/auth/pages/AuthPage'));
+const LoginPage = React.lazy(() => import('@/pages/LoginPage'));
 const PublisherLandingPage = React.lazy(() => import('@/pages/PublisherLandingPage'));
 const RetailerLandingPage = React.lazy(() => import('@/pages/RetailerLandingPage'));
 const PublisherApplicationPage = React.lazy(() => import('@/features/publisher/pages/ApplicationPage'));
@@ -69,14 +64,14 @@ export const AppRouter: React.FC = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         {/* Landing pages */}
         <Route path="/publisher-application" element={<PublisherLandingPage />} />
         <Route path="/retailer-application" element={<RetailerLandingPage />} />
 
         {/* Application forms - Redirect to Laravel backend */}
-        <Route path="/publisher-application-form" element={<ExternalRedirect url="https://app.neesh.art/register/publisher" />} />
-        <Route path="/retailer-application-form" element={<ExternalRedirect url="https://app.neesh.art/register/retailer" />} />
+        {/* Removed redirects to prevent redirect loops */}
 
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/faq" element={<FAQPage />} />

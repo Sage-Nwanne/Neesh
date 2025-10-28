@@ -65,5 +65,9 @@ public function paymentDetails()
     return $this->hasOne(PublisherPaymentDetail::class, 'user_id');
 }
 
+public function bookmarks()
+{
+    return $this->hasMany(Bookmark::class);
+}
 
 }

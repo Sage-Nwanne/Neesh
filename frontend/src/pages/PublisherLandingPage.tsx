@@ -123,9 +123,9 @@ const PublisherLandingPage: React.FC = () => {
           <div className={styles.ctaContent}>
             <h2>Stop chasing invoices. Start reaching more stores.</h2>
             <p>Join independent publishers using Neesh to get stocked in cultural retailers across the country.</p>
-            <Link to="/publisher-application-form" className={styles.ctaButton}>
+            <a href="https://app.neesh.art/register/publisher" className={styles.ctaButton}>
               Apply to List Your Magazine
-            </Link>
+            </a>
 
           </div>        
         </div>

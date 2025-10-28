@@ -158,9 +158,9 @@ const RetailerLandingPage: React.FC = () => {
           <div className={styles.ctaContent}>
             <h2>Ready to make your space worth staying for?</h2>
             <p>Join independent retailers discovering magazines that turn counters, walls, and waiting areas into conversation starters and casual browsers into loyal customers.</p>
-            <Link to="/retailer-application-form" className={styles.ctaButton}>
+            <a href="https://app.neesh.art/register/retailer" className={styles.ctaButton}>
               Request Access for Your Shop
-            </Link>
+            </a>
 
           </div>
         </div>

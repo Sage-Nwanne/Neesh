@@ -47,6 +47,24 @@
   color: #000;
 }
 
+.loginBtn {
+  text-decoration: none;
+  color: white;
+  background-color: #000;
+  font-size: 0.9rem;
+  font-weight: 900;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.loginBtn:hover {
+  background-color: #333;
+  color: white;
+  transform: translateY(-1px);
+}
+
 /* Mobile Menu Button */
 .mobileMenuBtn {
   display: none;

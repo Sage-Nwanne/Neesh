@@ -28,6 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ showMobileMenu = true }) => {
           <Link to="/retailer-application" className={styles.navLink}>For Retailers</Link>
           <Link to="/faq" className={styles.navLink}>FAQ</Link>
           <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link>
+          <Link to="/login" className={styles.loginBtn}>Login</Link>
         </nav>
 
         {/* Mobile Hamburger Button */}
@@ -51,6 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ showMobileMenu = true }) => {
           <Link to="/retailer-application" className={styles.mobileNavLink} onClick={toggleMobileMenu}>For Retailers</Link>
           <Link to="/faq" className={styles.mobileNavLink} onClick={toggleMobileMenu}>FAQ</Link>
           <Link to="/why-neesh" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Why Neesh</Link>
+          <Link to="/login" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Login</Link>
         </div>
       )}
     </header>
