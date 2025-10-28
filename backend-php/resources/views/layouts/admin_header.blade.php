@@ -26,13 +26,9 @@
             <div id="sideMenu" class="side-menu">
                 <span class="closeBtn" id="closeMenu">✕</span>
                 <a href="{{ route('explore.index') }}">Explore</a>
-<a href="{{ route('admin.users') }}">Users</a>
-                <a href="#">Catalogue</a>
-                <a href="#">Orders</a>
-                <a href="#">Messages</a>
-                <a href="#">Account</a>
-                <a href="#">Help Center</a>
-                <a href="#">FAQ</a>
+                <a href="{{ route('admin.users') }}">Users</a>
+                <a href="{{ route('admin.messages') }}">Messages</a>
+                <a href="{{ route('admin.account') }}">Account</a>
                 <hr style="margin: 10px 0;">
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf

@@ -106,6 +106,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/users/{id}/verify', [AdminController::class, 'verifyUser'])->name('users.verify');
     Route::post('/users/{id}/approve', [AdminController::class, 'approveUser'])->name('users.approve');
     Route::post('/users/{id}/reject', [AdminController::class, 'rejectUser'])->name('users.reject');
+
+    // Admin messages and account routes
+    Route::get('/messages', [AdminController::class, 'messages'])->name('messages');
+    Route::get('/account', [AdminController::class, 'account'])->name('account');
 });
 
 

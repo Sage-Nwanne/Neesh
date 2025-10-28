@@ -87,4 +87,20 @@ class AdminController extends Controller
         return redirect()->route('admin.users.view', $user->id)
             ->with('success', 'User rejected. Rejection email sent.');
     }
+
+    // ✅ Admin Messages Page
+    public function messages()
+    {
+        // TODO: Implement messaging functionality
+        // This page will show messages sent to hi@neesh.art and message threads
+        return view('admin.messages');
+    }
+
+    // ✅ Admin Account Page
+    public function account()
+    {
+        // TODO: Implement admin account settings
+        // This page will show admin account details and settings
+        return view('admin.account');
+    }
 }
