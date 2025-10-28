@@ -157,12 +157,20 @@ body {
 }
 
 @media (min-width:1440px) {
+    .side-menu {
+        max-width: 90% !important;
+    }
+
     .side-menu a {
         font-size: 32px;
     }
 }
 
 @media (max-width:1100px) and (min-width:1024px) {
+    .side-menu {
+        max-width: 90% !important;
+    }
+
     .side-menu a {
         font-size: 16px;
         padding: 10px 20px;
