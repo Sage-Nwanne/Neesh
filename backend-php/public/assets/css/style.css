@@ -215,26 +215,27 @@ body {
 .start-logo-center,
 .start-text,
 .start-button {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1s ease-in;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: none !important;
+    display: block !important;
 }
 
 .startpage_logoshow,
 .startpage_buttonshow,
 .startpage_textshow {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .startpage_textfadeout {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1s ease-out;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: none !important;
 }
 
 .startpage_texthide {
-    display: none;
+    display: block !important;
 }
 
 .start-logo-center img {
@@ -260,14 +261,14 @@ body {
     background: black;
     color: white;
     text-decoration: none;
-    font-size: 35.5px;
+    font-size: 16px;
     transition: background 0.3s ease;
-    width: 284px;
-    height: 111px;
+    width: 200px;
+    height: 50px;
     text-align: center;
     justify-content: center;
     align-items: center;
-    font-weight: 800;
+    font-weight: 600;
     font-family: "Manrope", sans-serif;
 }
 
@@ -287,9 +288,9 @@ body {
     }
 
     .start-button a {
-        width: 250px;
-        height: 100px;
-        font-size: 25.5px;
+        width: 180px;
+        height: 45px;
+        font-size: 14px;
     }
 }
 

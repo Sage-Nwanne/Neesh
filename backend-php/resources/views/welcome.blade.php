@@ -12,7 +12,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v={{ time() }}">
     <!-- Styles -->
     <style>
         .application-buttons {
@@ -73,14 +73,17 @@
                     <a href="{{ route('register.publisher') }}">Apply as Publisher</a>
                     <a href="{{ route('register.retailer') }}">Apply as Retailer</a>
                 </div>
-                <p style="text-align: center; margin-top: 20px; color: #666; font-size: 24px;">
-                    Already have an account? <a href="https://app.neesh.art/login" style="color: #fff; text-decoration: none; background: #000; padding: 8px 16px; border-radius: 4px; font-weight: 600; position: relative; left: 104px;">Log in</a>
+                <p style="text-align: center; margin-top: 20px; color: #666;">
+                    Already have an account?
                 </p>
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="https://app.neesh.art/login" style="color: #fff; text-decoration: none; background: #000; padding: 12px 24px; border-radius: 4px; font-weight: 600; display: inline-block;">Log in</a>
+                </div>
                 @endauth
             </div>
         </div>
     </div>
-    <script src="{{asset('assets/js/start.js')}}"></script>
+    <script src="{{asset('assets/js/start.js')}}?v={{ time() }}"></script>
 
 </body>
 
