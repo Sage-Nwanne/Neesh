@@ -271,11 +271,9 @@
                         <div class="magazine-card">
                             <div class="magazine-image">
                                 @if($magazine->images->count() > 0)
-                                    <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}">
+                                    <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}" onerror="this.src='{{ asset('magazine-placeholder.png') }}'">
                                 @else
-                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #753bbd 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
-                                        No Image
-                                    </div>
+                                    <img src="{{ asset('magazine-placeholder.png') }}" alt="No Image">
                                 @endif
                             </div>
                             <div class="magazine-info">

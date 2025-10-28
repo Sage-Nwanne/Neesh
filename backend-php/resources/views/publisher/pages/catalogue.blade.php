@@ -122,9 +122,9 @@
             @forelse(Auth::user()->publisherProfile->magazines ?? [] as $magazine)
                 <a href="{{ route('magazines.show', $magazine->id) }}" class="catalogue-card">
                     @if ($magazine->images->first())
-                        <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}" class="catalogue-card-image">
+                        <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}" alt="{{ $magazine->title_name }}" class="catalogue-card-image" onerror="this.src='{{ asset('magazine-placeholder.png') }}'">
                     @else
-                        <img src="{{ asset('assets/image/placeholder.png') }}" alt="No Image" class="catalogue-card-image">
+                        <img src="{{ asset('magazine-placeholder.png') }}" alt="No Image" class="catalogue-card-image">
                     @endif
                     <div class="catalogue-card-content">
                         <h3 class="catalogue-card-title">{{ $magazine->title_name }}</h3>

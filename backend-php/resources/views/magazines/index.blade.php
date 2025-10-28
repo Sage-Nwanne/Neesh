@@ -178,9 +178,9 @@
                 @foreach($relatedMagazines as $relatedMagazine)
                 <a href="{{ route('magazines.show', $relatedMagazine->id) }}" class="product-card relative-product product-card-underline">
                     @if ($relatedMagazine->images->first())
-                        <img src="{{ asset('storage/' . $relatedMagazine->images->first()->image_path) }}" alt="{{ $relatedMagazine->title_name }}">
+                        <img src="{{ asset('storage/' . $relatedMagazine->images->first()->image_path) }}" alt="{{ $relatedMagazine->title_name }}" onerror="this.src='{{ asset('magazine-placeholder.png') }}'">
                     @else
-                        <img src="{{ asset('assets/image/placeholder.png') }}" alt="No Image">
+                        <img src="{{ asset('magazine-placeholder.png') }}" alt="No Image">
                     @endif
                     <div class="product_info">
                         <span class="product_vendor">{{ $relatedMagazine->issue_identifier ?? 'Single Issue' }}</span>

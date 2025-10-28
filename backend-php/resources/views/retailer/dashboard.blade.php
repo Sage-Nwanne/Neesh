@@ -180,9 +180,9 @@
                   {{-- Agar image hai to first image dikhao, warna placeholder --}}
                   @if ($magazine->images->first())
                       <img src="{{ asset('storage/' . $magazine->images->first()->image_path) }}"
-                          alt="{{ $magazine->title_name }}">
+                          alt="{{ $magazine->title_name }}" onerror="this.src='{{ asset('magazine-placeholder.png') }}'">
                   @else
-                      <img src="{{ asset('assets/image/placeholder.png') }}" alt="No Image">
+                      <img src="{{ asset('magazine-placeholder.png') }}" alt="No Image">
                   @endif
 
                   <div class="product_info">
