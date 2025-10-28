@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ showMobileMenu = true }) => {
           <Link to="/retailer-application" className={styles.navLink}>For Retailers</Link>
           <Link to="/faq" className={styles.navLink}>FAQ</Link>
           <Link to="/why-neesh" className={styles.navLink}>Why Neesh</Link>
-          <Link to="/login" className={styles.loginBtn}>Login</Link>
+          <a href="https://app.neesh.art/login" className={styles.loginBtn} target="_blank" rel="noopener noreferrer">Login</a>
         </nav>
 
         {/* Mobile Hamburger Button */}
@@ -52,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ showMobileMenu = true }) => {
           <Link to="/retailer-application" className={styles.mobileNavLink} onClick={toggleMobileMenu}>For Retailers</Link>
           <Link to="/faq" className={styles.mobileNavLink} onClick={toggleMobileMenu}>FAQ</Link>
           <Link to="/why-neesh" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Why Neesh</Link>
-          <Link to="/login" className={styles.mobileNavLink} onClick={toggleMobileMenu}>Login</Link>
+          <a href="https://app.neesh.art/login" className={styles.mobileNavLink} target="_blank" rel="noopener noreferrer">Login</a>
         </div>
       )}
     </header>

@@ -81,6 +81,16 @@
             font-size: .95rem;
         }
 
+        /* Make submit button black on review step */
+        #review_step #finalSubmitBtn {
+            background: #000 !important;
+            color: #fff !important;
+        }
+
+        #review_step #finalSubmitBtn:hover {
+            background: #222 !important;
+        }
+
         @media (max-width: 900px) {
             .store-profile-grid {
                 grid-template-columns: 1fr;

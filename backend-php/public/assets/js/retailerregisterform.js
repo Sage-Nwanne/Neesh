@@ -142,7 +142,7 @@
         for (let [key, value] of Object.entries(data)) {
             if (key === 'role' || key === '_token') continue;
             const fieldName = retailer_formatFieldName(key);
-            const displayValue = Array.isArray(value) ? value.join(', ') : value;
+            const displayValue = retailer_formatDisplayValue(value);
             const summaryItem = document.createElement('div');
             summaryItem.style.cssText = 'padding: 10px 0; border-bottom: 1px solid #eee;';
             summaryItem.innerHTML = `<strong>${fieldName}:</strong> ${displayValue}`;
@@ -178,6 +178,19 @@
             'mag_other_input': 'Other Magazine Source',
         };
         return fieldNameMap[fieldName] || fieldName.replace(/_/g, ' ');
+    }
+
+    // ===== FORMAT DISPLAY VALUE =====
+    function retailer_formatDisplayValue(value) {
+        if (Array.isArray(value)) {
+            // Remove [] and format each value
+            return value.map(v => {
+                // Convert snake_case to Title Case
+                return v.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            }).join(', ');
+        }
+        // Convert snake_case to Title Case for single values
+        return value.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
 
     // ===== BUTTON EVENT LISTENERS =====

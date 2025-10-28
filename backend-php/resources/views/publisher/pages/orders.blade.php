@@ -104,7 +104,7 @@
         </div>
 
         <div class="empty-state">
-            <h2>📦 No Orders Yet</h2>
+            <h2>No Orders Yet</h2>
             <p>Orders from retailers will appear here once they start purchasing your magazines.</p>
             <p style="margin-top: 20px; color: #999; font-size: 14px;">This feature is coming soon with full order management capabilities.</p>
         </div>

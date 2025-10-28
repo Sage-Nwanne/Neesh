@@ -203,7 +203,7 @@ class MagazineController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', 'Magazine updated successfully!');
+            return redirect()->route('magazines.show', $magazine->id)->with('success', 'Magazine updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }

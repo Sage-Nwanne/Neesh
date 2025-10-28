@@ -111,7 +111,7 @@
             display: block;
         }
         .contact-section {
-            background: linear-gradient(135deg, #753bbd 0%, #5a2d8a 100%);
+            background: black;
             color: white;
             border-radius: 8px;
             padding: 40px;
@@ -130,7 +130,7 @@
         .btn-white {
             display: inline-block;
             background: white;
-            color: #753bbd;
+            color: #ffffffff;
             padding: 12px 24px;
             border-radius: 6px;
             text-decoration: none;

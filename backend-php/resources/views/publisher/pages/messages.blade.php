@@ -84,7 +84,7 @@
         </div>
 
         <div class="empty-state">
-            <h2>💬 No Messages Yet</h2>
+            <h2> No Messages Yet</h2>
             <p>Messages from retailers will appear here. You'll be able to respond to inquiries about your magazines.</p>
             <p style="margin-top: 20px; color: #999; font-size: 14px;">This feature is coming soon with full messaging capabilities.</p>
         </div>
