@@ -244,7 +244,7 @@
     //     }
     // });
 publisher_form.addEventListener('submit', function (e) {
-    e.preventDefault(); // temporary rok do submit ko taake inspect kar sako
+    e.preventDefault();
 
     if (publisher_selectedFiles.length) {
         const dt = new DataTransfer();
@@ -252,14 +252,89 @@ publisher_form.addEventListener('submit', function (e) {
         publisher_coverUpload.files = dt.files;
     }
 
-    // 🔥 check what is going in the form
+    // Submit via AJAX to handle errors without page reload
     const formData = new FormData(publisher_form);
 
-    for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-    }
+    fetch(publisher_form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        credentials: 'same-origin',
+        redirect: 'follow'
+    })
+    .then(response => {
+        // Check if response is a redirect (status 200-299 after following redirect)
+        if (response.ok && response.status !== 422) {
+            // Success - redirect to the final URL after following redirects
+            window.location.href = response.url || '/publisher/dashboard';
+        } else if (response.status === 422) {
+            // Validation errors - show them in a user-friendly way
+            return response.json().then(data => {
+                let errorHtml = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
+                errorHtml += '<strong style="font-size: 16px;">Please fix the following errors:</strong><br><br>';
 
-    // agar file h
+                if (data.errors) {
+                    for (let [field, messages] of Object.entries(data.errors)) {
+                        errorHtml += `<strong>${field}:</strong><br>`;
+                        if (Array.isArray(messages)) {
+                            messages.forEach(msg => {
+                                errorHtml += `• ${msg}<br>`;
+                            });
+                        } else {
+                            errorHtml += `• ${messages}<br>`;
+                        }
+                        errorHtml += '<br>';
+                    }
+                }
+                errorHtml += '</div>';
+
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 30px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    max-width: 500px;
+                    width: 90%;
+                `;
+                errorDiv.innerHTML = errorHtml;
+                document.body.appendChild(errorDiv);
+
+                // Also add overlay
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 9999;
+                `;
+                overlay.addEventListener('click', () => {
+                    errorDiv.remove();
+                    overlay.remove();
+                });
+                document.body.appendChild(overlay);
+            });
+        } else {
+            // Other errors
+            return response.text().then(text => {
+                alert('Error: ' + text);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Form submission error:', error);
+        alert('Error submitting form: ' + error.message);
+    });
 });
 
 

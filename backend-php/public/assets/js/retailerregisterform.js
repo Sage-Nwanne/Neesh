@@ -21,6 +21,9 @@
         const formData = new FormData(retailer_form);
         const data = {};
         for (let [key, value] of formData.entries()) {
+            // Skip CSRF token - it should never be persisted
+            if (key === '_token') continue;
+
             if (data[key]) {
                 if (!Array.isArray(data[key])) {
                     data[key] = [data[key]];
@@ -266,6 +269,7 @@
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             },
+            credentials: 'same-origin',
             redirect: 'follow'
         })
         .then(response => {
