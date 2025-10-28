@@ -35,10 +35,7 @@
             background-color: #333;
         }
         .login-link {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
+            display: none;
         }
         .login-link a {
             color: #000;
@@ -63,11 +60,9 @@
             </div>
 
             <div class="start-logo-center">
-                <img src="{{asset('assets/image/Logo A1.png')}}" alt="NEESH Logo">
+                <img style="width: 80%;" src="{{asset('assets/image/Logo A1.png')}}" alt="NEESH Logo">
             </div>
-            <div class="start-text">
-                <h1>The OS for Indie Print</h1>
-            </div>
+           
             <div class="start-button">
                 @auth
                 <div class="application-buttons">
@@ -78,8 +73,8 @@
                     <a href="{{ route('register.publisher') }}">Apply as Publisher</a>
                     <a href="{{ route('register.retailer') }}">Apply as Retailer</a>
                 </div>
-                <p style="text-align: center; margin-top: 20px; color: #666;">
-                    Already have an account? <a href="{{ url('/login') }}" style="color: #000; text-decoration: underline;">Log in</a>
+                <p style="text-align: center; margin-top: 20px; color: #666; font-size: 24px;">
+                    Already have an account? <a href="https://app.neesh.art/login" style="color: #fff; text-decoration: none; background: #000; padding: 8px 16px; border-radius: 4px; font-weight: 600; position: relative; left: 104px;">Log in</a>
                 </p>
                 @endauth
             </div>

@@ -7,92 +7,214 @@
   <title>Login - NEESH</title>
   <meta name="description" content="Log in to your NEESH account to manage your magazine titles and orders.">
   <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-  <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=manrope:400,500,600,700,800&display=swap" rel="stylesheet" />
   <style>
-    .btn {
-            padding: 10px 18px;
-            border-radius: 6px;
-            border: 0;
-            cursor: pointer;
-            font-weight: 600;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .btn-back {
-            background: #eee;
-            color: #222;
-        }
+    body {
+      font-family: "Manrope", sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-        .btn-next {
-            background: #222;
-            color: #fff;
-        }
+    .login-container {
+      background: white;
+      border-radius: 8px;
+      padding: 60px 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-section img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    .heading-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .heading-section h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    .heading-section p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: "Manrope", sans-serif;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #000;
+      background-color: #fff;
+    }
+
+    .form-group input::placeholder {
+      color: #999;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: #000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: "Manrope", sans-serif;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-button:hover {
+      background-color: #333;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 30px 0;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: #e0e0e0;
+    }
+
+    .divider::before {
+      margin-right: 15px;
+    }
+
+    .divider::after {
+      margin-left: 15px;
+    }
+
+    .signup-section {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .signup-section p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .signup-section a {
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+
+    .signup-section a:hover {
+      text-decoration: underline;
+    }
+
+    .support-section {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .support-section p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .support-section a {
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+
+    .support-section a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .login-container {
+        padding: 40px 20px;
+      }
+
+      .heading-section h1 {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="logo-image">
-    <img src="{{ asset('assets/image/Logo A1.png') }}" alt="Logo Image">
-  </div>
+  <div class="login-container">
+    <div class="logo-section">
+      <img src="{{ asset('assets/image/Logo A1.png') }}" alt="NEESH Logo">
+    </div>
 
-  <div class="new_to_nessh_innerwhole_container">
-    <a href="{{ url()->previous() }}" class="new_to_nessh_back_arrow">
-      <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back Arrow">
-    </a>
-    <div class="new_to_nessh_container">
-      <div class="heading_and_description_container">
-        <h1 class="new_to_nessh_heading">
-          Welcome Back
-        </h1>
-        <p class="new_to_nessh_description">
-          Log in to your account
-        </p>
+    <div class="heading-section">
+      <h1>Welcome Back</h1>
+      <p>Log in to your account</p>
+    </div>
+
+    <form method="POST" action="{{ route('login') }}">
+      @csrf
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Email" required autofocus>
       </div>
-
-      <div class="publisher_and_retailer_conatiner">
-        <form method="POST" action="{{ route('login') }}">
-          @csrf
-          <div class="name_and_password_inputs">
-            <div class="email_container">
-              <input type="email" name="email" placeholder="Email" class="input_innerclass" required autofocus>
-            </div>
-            <div class="password_container">
-              <input type="password" name="password" placeholder="Password" class="input_innerclass" required>
-            </div>
-          </div>
-          <div style="display:flex; justify-content:flex-end; margin-top:10px; margin-bottom:20px;">
-          <button type="submit" class="btn btn-next" id="nextBtn">Login</button>
-
-
-          </div>
-        </form>
-
-        <div class="or-divider_login">
-          <span>OR</span>
-        </div>
-
-        <div class="log_in_container">
-          <p class="log_in_text">New to Neesh?</p>
-          <a href="{{ route('home') }}" class="log_in">
-            <p>Apply</p>
-            <div class="log_in_navigation_arrow">
-              <img src="{{ asset('assets/image/right arrow.png') }}" alt="Right Navigation Arrow">
-            </div>
-          </a>
-        </div>
-
-        <div class="talking_with_team_container">
-          <div class="only_border"></div>
-          <div class="talking_with_team_inner">
-            <p>Have any questions?</p>
-            <a href="#" class="team_call_and_image">
-              <h3>Talk to the team</h3>
-              <div class="team_call_navigation_arrow">
-                <img src="{{ asset('assets/image/right arrow.png') }}" alt="Right Navigation Arrow">
-              </div>
-            </a>
-          </div>
-        </div>
+      <div class="form-group">
+        <input type="password" name="password" placeholder="Password" required>
       </div>
+      <button type="submit" class="login-button">Login</button>
+    </form>
+
+    <div class="divider">OR</div>
+
+    <div class="signup-section">
+      <p>New to Neesh? <a href="https://app.neesh.art/">Apply</a></p>
+    </div>
+
+    <div class="support-section">
+      <p>Have any questions? <a href="#">Talk to the team</a></p>
     </div>
   </div>
 </body>
