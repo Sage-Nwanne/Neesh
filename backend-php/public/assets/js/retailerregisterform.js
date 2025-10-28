@@ -259,25 +259,28 @@
 
         // Submit via AJAX to handle errors without page reload
         const formData = new FormData(retailer_form);
-        
+
         fetch(retailer_form.action, {
             method: 'POST',
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-            }
+            },
+            redirect: 'follow'
         })
         .then(response => {
-            if (response.ok) {
+            // Check if response is a redirect (status 200-299 after following redirect)
+            if (response.ok && response.status !== 422) {
                 // Success - clear saved data and redirect
                 retailer_clearFormData();
-                window.location.href = response.url || '/dashboard';
+                // Redirect to the final URL after following redirects
+                window.location.href = response.url || '/retailer/dashboard';
             } else if (response.status === 422) {
                 // Validation errors - show them in a user-friendly way
                 return response.json().then(data => {
                     let errorHtml = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
                     errorHtml += '<strong style="font-size: 16px;">Please fix the following errors:</strong><br><br>';
-                    
+
                     if (data.errors) {
                         for (let field in data.errors) {
                             const fieldName = retailer_formatFieldName(field);
@@ -290,7 +293,7 @@
                         }
                     }
                     errorHtml += '</div>';
-                    
+
                     // Create a custom error dialog
                     const errorDiv = document.createElement('div');
                     errorDiv.style.cssText = `
@@ -308,12 +311,12 @@
                     `;
                     errorDiv.innerHTML = errorHtml + '<button id="closeErrorBtn" style="margin-top: 16px; padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>';
                     document.body.appendChild(errorDiv);
-                    
+
                     document.getElementById('closeErrorBtn').addEventListener('click', () => {
                         errorDiv.remove();
                         overlay.remove();
                     });
-                    
+
                     // Also add overlay
                     const overlay = document.createElement('div');
                     overlay.style.cssText = `
@@ -339,6 +342,7 @@
             }
         })
         .catch(error => {
+            console.error('Form submission error:', error);
             alert('Error submitting form: ' + error.message);
         });
     });
