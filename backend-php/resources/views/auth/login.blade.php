@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - NEESH</title>
   <meta name="description" content="Log in to your NEESH account to manage your magazine titles and orders.">
-  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
   <link rel="preconnect" href="https://fonts.bunny.net">
   <link href="https://fonts.bunny.net/css?family=manrope:400,500,600,700,800&display=swap" rel="stylesheet" />
   <style>
@@ -214,7 +214,7 @@
     </div>
 
     <div class="support-section">
-      <p>Have any questions? <a href="#">Talk to the team</a></p>
+      <p>Have any questions? <a href="mailto:hi@neesh.art">Talk to the team</a></p>
     </div>
   </div>
 </body>

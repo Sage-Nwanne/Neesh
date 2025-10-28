@@ -7,7 +7,7 @@
     <title>Retailer Registration - NEESH</title>
     <meta name="description" content="Register as a retailer on NEESH - The OS for Indie Print. Discover and sell independent magazines.">
     <meta name="keywords" content="retailer registration, indie print, magazine marketplace">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/publisherregister.css') }}">

@@ -7,7 +7,7 @@
 
     <title>NEESH - The OS for Indie Print</title>
     <meta name="description" content="NEESH - The OS for Indie Print. A platform for independent publishers and retailers to manage and distribute magazines.">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
