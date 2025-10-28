@@ -110,13 +110,30 @@
     </style>
 </head>
 <body>
-    @include('layouts.publisherheader')
+    @if(auth()->check())
+        @if(auth()->user()->hasRole('admin'))
+            @include('layouts.admin_header')
+        @elseif(auth()->user()->hasRole('publisher'))
+            @include('layouts.publisherheader')
+        @elseif(auth()->user()->hasRole('retailer'))
+            @include('layouts.header')
+        @endif
+    @else
+        @include('layouts.guest_header')
+    @endif
 
     <div class="page-container">
-        <a href="{{ route('publisher.dashboard') }}" class="back-link">
-            <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
-            <span>Back to Dashboard</span>
-        </a>
+        @if(auth()->check())
+            <a href="{{ route('dashboard') }}" class="back-link">
+                <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
+                <span>Back to Dashboard</span>
+            </a>
+        @else
+            <a href="{{ route('explore.index') }}" class="back-link">
+                <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
+                <span>Back to Explore</span>
+            </a>
+        @endif
 
         <div class="page-header">
             <h1>Frequently Asked Questions</h1>

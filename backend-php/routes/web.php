@@ -27,6 +27,7 @@ Route::get('/checkout', fn() => view('checkout'))->name('checkout');
 Route::get('/termsandconditions', fn() => view('terms'))->name('terms');
 Route::get('/help-center', [PublisherPageController::class, 'helpCenter'])->name('help-center');
 Route::get('/faq', [PublisherPageController::class, 'faq'])->name('faq');
+Route::get('/explore', [DiscoverController::class, 'index'])->name('explore.index');
 
 // Registration Pages
 Route::get('/register/publisher', fn() => view('publisher.auth.register'))->name('register.publisher');
@@ -142,6 +143,10 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
 Route::middleware(['auth', 'role:retailer'])->prefix('retailer')->name('retailer.')->group(function () {
     Route::get('/dashboard', [RetailerController::class, 'dashboard'])->name('dashboard');
     Route::put('/address/update', [RetailerController::class, 'updateaddress'])->name('address.update');
+    Route::get('/catalogue', [PublisherPageController::class, 'catalogue'])->name('catalogue');
+    Route::get('/orders', [PublisherPageController::class, 'orders'])->name('orders');
+    Route::get('/messages', [PublisherPageController::class, 'messages'])->name('messages');
+    Route::get('/account', [PublisherPageController::class, 'account'])->name('account');
 });
 
 // ---------------------
@@ -157,9 +162,8 @@ Route::middleware(['auth', 'role:admin|publisher'])->group(function () {
 Route::get('/magazine/{id}', [MagazineController::class, 'show'])->name('magazines.show');
 
 // ---------------------
-// Explore Routes (Public & Authenticated)
+// Public Publisher Profile Route
 // ---------------------
-Route::get('/explore', [DiscoverController::class, 'index'])->name('explore.index');
 Route::get('/publisher/{publisherId}', [DiscoverController::class, 'viewPublisher'])->name('publisher.profile');
 Route::post('/magazine/{magazineId}/track-view', [DiscoverController::class, 'trackView'])->name('magazine.track-view');
 

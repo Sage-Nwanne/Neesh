@@ -27,10 +27,10 @@
                 <span class="closeBtn" id="closeMenu">✕</span>
                 <a href="{{ route('explore.index') }}">Explore</a>
                 <a href="{{ route('retailer.dashboard') }}">Dashboard</a>
-                <a href="{{ route('retailer.dashboard') }}">Catalogue</a>
-                <a href="{{ route('retailer.dashboard') }}">Orders</a>
-                <a href="{{ route('retailer.dashboard') }}">Messages</a>
-                <a href="{{ route('retailer.dashboard') }}">Account</a>
+                <a href="{{ route('retailer.catalogue') }}">Catalogue</a>
+                <a href="{{ route('retailer.orders') }}">Orders</a>
+                <a href="{{ route('retailer.messages') }}">Messages</a>
+                <a href="{{ route('retailer.account') }}">Account</a>
                 <a href="{{ route('help-center') }}">Help Center</a>
                 <a href="{{ route('faq') }}">FAQ</a>
                 <hr style="margin: 10px 0;">
