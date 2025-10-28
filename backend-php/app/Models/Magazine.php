@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Magazine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'publisher_id',
@@ -42,6 +41,7 @@ class Magazine extends Model
         'restock_timeline',
         'status',
         'payment_terms',
+        'archived_at',
     ];
 
     protected $casts = [

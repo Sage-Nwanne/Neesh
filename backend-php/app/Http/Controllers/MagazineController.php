@@ -95,7 +95,7 @@ class MagazineController extends Controller
     }
     public function show($id)
     {
-        $magazine = Magazine::withTrashed()->with('images', 'publisher')->findOrFail($id);
+        $magazine = Magazine::with('images', 'publisher')->findOrFail($id);
 
         // For related products, show others from same publisher or same genre (exclude archived for non-publishers)
         $relatedMagazines = Magazine::where('publisher_id', $magazine->publisher_id)
@@ -308,8 +308,8 @@ class MagazineController extends Controller
                 return redirect()->back()->with('error', 'Unauthorized action.');
             }
 
-            // Archive the magazine (soft delete)
-            $magazine->delete();
+            // Archive the magazine
+            $magazine->update(['archived_at' => now()]);
 
             return redirect()->back()->with('success', 'Magazine archived successfully!');
         } catch (\Exception $e) {
@@ -321,7 +321,7 @@ class MagazineController extends Controller
     public function unarchive($id)
     {
         try {
-            $magazine = Magazine::withTrashed()->findOrFail($id);
+            $magazine = Magazine::findOrFail($id);
 
             // Check if user owns this magazine
             $publisher = auth()->user();
@@ -331,8 +331,8 @@ class MagazineController extends Controller
                 return redirect()->back()->with('error', 'Unauthorized action.');
             }
 
-            // Restore the magazine
-            $magazine->restore();
+            // Unarchive the magazine
+            $magazine->update(['archived_at' => null]);
 
             return redirect()->back()->with('success', 'Magazine unarchived successfully!');
         } catch (\Exception $e) {
@@ -352,7 +352,7 @@ class MagazineController extends Controller
             }
 
             // Get only archived magazines
-            $archivedMagazines = Magazine::onlyTrashed()
+            $archivedMagazines = Magazine::whereNotNull('archived_at')
                 ->with('images')
                 ->where('publisher_id', $publisherProfile->id)
                 ->get();
