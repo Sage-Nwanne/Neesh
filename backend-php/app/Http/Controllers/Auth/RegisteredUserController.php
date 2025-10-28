@@ -290,5 +290,12 @@ class RegisteredUserController extends Controller
         }
     }
 
+    /**
+     * Handle publisher registration (alias for store method)
+     */
+    public function publisherstore(Request $request): RedirectResponse
+    {
+        return $this->store($request);
+    }
 
 }
