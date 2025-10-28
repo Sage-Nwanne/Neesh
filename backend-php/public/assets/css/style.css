@@ -100,12 +100,12 @@ body {
 }
 
 .logo-image {
-    width: 190px;
+    width: 80%;
     height: 80px;
 }
 
 .logo-image img {
-    width: 100%;
+    width: 80%;
     height: auto;
 }
 
@@ -114,7 +114,7 @@ body {
     width: 0;
     position: absolute;
     top: 0;
-    right: 0;
+    right: 20px;
     background-color: #fff;
     overflow-x: hidden;
     transition: 0.4s;
@@ -149,7 +149,8 @@ body {
 
 .side-menu .closeBtn {
     position: absolute;
-    left: 20px;
+    right: 97%;
+    top: 10px;
     font-size: 22px;
     cursor: pointer;
 }
