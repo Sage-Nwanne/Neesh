@@ -7,6 +7,9 @@ use App\Models\MagazineImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\PublisherProfile;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Carbon\Carbon;
 
 class MagazineController extends Controller
 {
@@ -23,12 +26,71 @@ class MagazineController extends Controller
         if (!$publisherProfile) {
             return redirect()->back()->with('error', 'Publisher profile not found.');
         }
+
         // us publisher ki magazines load karo + unki images
         $magazines = Magazine::with('images')
             ->where('publisher_id', $publisherProfile->id)
             ->get();
 
-        return view('dashboard', compact('magazines', 'publisherProfile'));
+        // Fetch analytics data
+        $orders = Order::where('publisher_id', $publisherProfile->id)
+            ->with(['items', 'payment'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Calculate financial metrics
+        $totalSales = Order::where('publisher_id', $publisherProfile->id)
+            ->where('status', 'submitted')
+            ->sum('subtotal');
+
+        $totalVolume = OrderItem::whereIn('order_id',
+            Order::where('publisher_id', $publisherProfile->id)->pluck('id')
+        )->sum('quantity');
+
+        // Calculate sales growth (compare this month vs last month)
+        $thisMonthSales = Order::where('publisher_id', $publisherProfile->id)
+            ->where('status', 'submitted')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->sum('subtotal');
+
+        $lastMonthSales = Order::where('publisher_id', $publisherProfile->id)
+            ->where('status', 'submitted')
+            ->whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('created_at', Carbon::now()->subMonth()->year)
+            ->sum('subtotal');
+
+        $salesGrowth = $lastMonthSales > 0
+            ? (($thisMonthSales - $lastMonthSales) / $lastMonthSales) * 100
+            : 0;
+
+        // Get daily sales data for chart (last 30 days)
+        $dailySalesData = Order::where('publisher_id', $publisherProfile->id)
+            ->where('status', 'submitted')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->selectRaw('DATE(created_at) as date, SUM(subtotal) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Account balance (total sales - commission fees)
+        $accountBalance = Order::where('publisher_id', $publisherProfile->id)
+            ->where('status', 'submitted')
+            ->selectRaw('SUM(subtotal - COALESCE(commission_fee, 0)) as balance')
+            ->first()
+            ->balance ?? 0;
+
+        return view('publisher-dashboard', compact(
+            'magazines',
+            'publisherProfile',
+            'orders',
+            'totalSales',
+            'totalVolume',
+            'salesGrowth',
+            'dailySalesData',
+            'accountBalance'
+        ));
     }
     public function show($id)
     {
