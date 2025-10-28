@@ -149,7 +149,7 @@ body {
 
 .side-menu .closeBtn {
     position: absolute;
-    right: 20px;
+    left: 20px;
     font-size: 22px;
     cursor: pointer;
 }

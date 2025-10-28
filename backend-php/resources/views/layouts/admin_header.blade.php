@@ -23,8 +23,8 @@
                             @endauth
 
 
-            <div id="sideMenu" class="side-menu" style="position: absolute; right: 45px;">
-                <span class="closeBtn" id="closeMenu" style="position: absolute; right: 750px;">✕</span>
+            <div id="sideMenu" class="side-menu">
+                <span class="closeBtn" id="closeMenu">✕</span>
                 <a href="{{ route('explore.index') }}">Explore</a>
                 <a href="{{ route('admin.users') }}">Users</a>
                 <a href="{{ route('admin.messages') }}">Messages</a>

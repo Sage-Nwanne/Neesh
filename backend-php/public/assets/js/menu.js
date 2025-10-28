@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   menuToggle.onclick = function() {
     if (window.innerWidth >= 1024) {
-      sideMenu.style.maxWidth = "80%";
+      sideMenu.style.maxWidth = "85%";
       sideMenu.style.width = "100%";
       menuToggle.style.display = "none";
       sideMenu.style.setProperty("z-index", "1000", "important");
