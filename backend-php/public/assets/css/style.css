@@ -105,7 +105,7 @@ body {
 }
 
 .logo-image img {
-    width: 80%;
+    width: 145px;
     height: auto;
 }
 
@@ -124,6 +124,7 @@ body {
     height: 80px;
     align-items: center;
     justify-content: flex-end;
+    max-width: 90%;
 }
 
 .side-menu a {
@@ -150,7 +151,7 @@ body {
 .side-menu .closeBtn {
     position: absolute;
     right: 97%;
-    top: 10px;
+    top: 25px;
     font-size: 22px;
     cursor: pointer;
 }
