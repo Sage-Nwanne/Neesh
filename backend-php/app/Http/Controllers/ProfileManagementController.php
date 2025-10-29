@@ -60,7 +60,16 @@ class ProfileManagementController extends Controller
     {
         try {
             $user = auth()->user();
-            $publisher = PublisherProfile::where('user_id', $user->id)->firstOrFail();
+            $publisher = PublisherProfile::where('user_id', $user->id)->first();
+
+            // If publisher profile doesn't exist, create one
+            if (!$publisher) {
+                $publisher = PublisherProfile::create([
+                    'user_id' => $user->id,
+                    'company_name' => $user->name,
+                    'payout_email' => $user->email,
+                ]);
+            }
 
             return view('profile.publisher-settings', compact('publisher'));
         } catch (\Exception $e) {
@@ -123,7 +132,15 @@ class ProfileManagementController extends Controller
     {
         try {
             $user = auth()->user();
-            $retailer = RetailerProfile::where('user_id', $user->id)->firstOrFail();
+            $retailer = RetailerProfile::where('user_id', $user->id)->first();
+
+            // If retailer profile doesn't exist, create one
+            if (!$retailer) {
+                $retailer = RetailerProfile::create([
+                    'user_id' => $user->id,
+                    'store_name' => $user->name,
+                ]);
+            }
 
             return view('profile.retailer-settings', compact('retailer'));
         } catch (\Exception $e) {
