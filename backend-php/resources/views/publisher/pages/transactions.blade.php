@@ -260,7 +260,11 @@
     </style>
 
     <div class="page-header">
-        <h1>💳 Transaction History</h1>
+        <a href="{{ route('publisher.dashboard') }}" style="text-decoration: none; color: #666; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+            <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
+            <span>Back to Dashboard</span>
+        </a>
+        <h1>Transaction History</h1>
         <p>View all your financial transactions and transfers</p>
     </div>
 
@@ -308,7 +312,7 @@
             @endforeach
         @else
             <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-icon">📬</div>
                 <div class="empty-state-text">No transactions yet</div>
                 <div class="empty-state-subtext">Your transaction history will appear here</div>
             </div>

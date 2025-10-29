@@ -111,7 +111,7 @@
 
         <div class="account-grid">
             <div class="account-card">
-                <h3>👤 Profile Information</h3>
+                <h3>Profile Information</h3>
                 <div class="account-field">
                     <label>Name</label>
                     <p>{{ $user->name }}</p>
@@ -124,7 +124,7 @@
             </div>
 
             <div class="account-card">
-                <h3>🔐 Security</h3>
+                <h3>Security</h3>
                 <div class="account-field">
                     <label>Password</label>
                     <p>••••••••</p>
@@ -133,7 +133,7 @@
             </div>
 
             <div class="account-card">
-                <h3>🔔 Notifications</h3>
+                <h3>Notifications</h3>
                 <div class="account-field">
                     <label>Email Notifications</label>
                     <p>Enabled</p>
@@ -142,7 +142,7 @@
             </div>
 
             <div class="account-card">
-                <h3>📋 Billing</h3>
+                <h3>Billing</h3>
                 <div class="account-field">
                     <label>Subscription Status</label>
                     <p>Active</p>
@@ -151,25 +151,25 @@
             </div>
 
             <div class="account-card">
-                <h3>🎨 Profile Settings</h3>
+                <h3>Profile Settings</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Customize your publisher profile, branding, and social media links.</p>
                 <a href="{{ route('profile.publisher-settings') }}" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">Manage Profile Settings</a>
             </div>
 
             <div class="account-card">
-                <h3>📦 Archived Titles</h3>
+                <h3>Archived Titles</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 20px;">View and manage your archived magazine titles.</p>
                 <a href="{{ route('publisher.archived-titles') }}" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">View Archived Titles</a>
             </div>
 
             <div class="account-card">
-                <h3>🗑️ Danger Zone</h3>
+                <h3>Danger Zone</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Permanently delete your account and all associated data.</p>
                 <button class="btn-danger" onclick="alert('Account deletion feature coming soon!')">Delete Account</button>
             </div>
 
             <div class="account-card">
-                <h3>🚪 Session</h3>
+                <h3>Session</h3>
                 <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Sign out from your account.</p>
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf

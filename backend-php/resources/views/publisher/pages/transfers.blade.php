@@ -298,7 +298,11 @@
     </style>
 
     <div class="page-header">
-        <h1>💰 Transfer Funds</h1>
+        <a href="{{ route('publisher.dashboard') }}" style="text-decoration: none; color: #666; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+            <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
+            <span>Back to Dashboard</span>
+        </a>
+        <h1>Transfer Funds</h1>
         <p>Manage your earnings and request transfers to your bank account</p>
     </div>
 
@@ -376,7 +380,7 @@
             {{ $transfers->links() }}
         @else
             <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-icon">📬</div>
                 <div class="empty-state-text">No transfers yet</div>
                 <div class="empty-state-subtext">Your transfer history will appear here</div>
             </div>

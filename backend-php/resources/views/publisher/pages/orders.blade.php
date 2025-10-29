@@ -1,6 +1,15 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - NEESH Publisher</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <script src="{{ asset('assets/js/menu.js') }}"></script>
+</head>
+<body>
+    @include('layouts.publisherheader')
 <div class="orders-container">
     <style>
         * {
@@ -253,7 +262,11 @@
     </style>
 
     <div class="page-header">
-        <h1>📦 Order Management</h1>
+        <a href="{{ route('publisher.dashboard') }}" style="text-decoration: none; color: #666; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+            <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
+            <span>Back to Dashboard</span>
+        </a>
+        <h1>Order Management</h1>
     </div>
 
     <!-- Statistics -->
@@ -345,7 +358,7 @@
             </table>
         @else
             <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-icon">📬</div>
                 <div class="empty-state-text">No orders found</div>
             </div>
         @endif
@@ -380,5 +393,5 @@
         window.location.href = '{{ route("publisher.orders") }}?' + params.toString();
     });
 </script>
-@endsection
-
+</body>
+</html>
