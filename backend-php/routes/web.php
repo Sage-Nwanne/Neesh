@@ -9,6 +9,7 @@ use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\PublisherPageController;
 use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\PublisherFinancialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,11 +135,17 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
 
     // Publisher Pages
     Route::get('/catalogue', [PublisherPageController::class, 'catalogue'])->name('catalogue');
-    Route::get('/orders', [PublisherPageController::class, 'orders'])->name('orders');
     Route::get('/messages', [PublisherPageController::class, 'messages'])->name('messages');
     Route::get('/account', [PublisherPageController::class, 'account'])->name('account');
     Route::get('/help-center', [PublisherPageController::class, 'helpCenter'])->name('help-center');
     Route::get('/faq', [PublisherPageController::class, 'faq'])->name('faq');
+
+    // Financial Management Routes
+    Route::get('/transfers', [PublisherFinancialController::class, 'transfers'])->name('transfers');
+    Route::post('/transfers', [PublisherFinancialController::class, 'storeTransfer'])->name('transfers.store');
+    Route::get('/orders', [PublisherFinancialController::class, 'orders'])->name('orders');
+    Route::get('/orders/{id}', [PublisherFinancialController::class, 'orderDetail'])->name('orders.detail');
+    Route::get('/transactions', [PublisherFinancialController::class, 'transactions'])->name('transactions');
 });
 
 // ---------------------
