@@ -187,12 +187,12 @@ Route::get('/profile/publisher/{publisherId}', [ProfileManagementController::cla
 Route::get('/profile/retailer/{retailerId}', [ProfileManagementController::class, 'retailerProfile'])->name('profile.retailer');
 
 Route::middleware(['auth', 'role:publisher'])->group(function () {
-    Route::get('/profile/settings', [ProfileManagementController::class, 'publisherSettings'])->name('profile.publisher-settings');
+    Route::get('/profile/publisher/settings', [ProfileManagementController::class, 'publisherSettings'])->name('profile.publisher-settings');
     Route::post('/profile/update-publisher', [ProfileManagementController::class, 'updatePublisherProfile'])->name('profile.update-publisher');
 });
 
 Route::middleware(['auth', 'role:retailer'])->group(function () {
-    Route::get('/profile/settings', [ProfileManagementController::class, 'retailerSettings'])->name('profile.retailer-settings');
+    Route::get('/profile/retailer/settings', [ProfileManagementController::class, 'retailerSettings'])->name('profile.retailer-settings');
     Route::post('/profile/update-retailer', [ProfileManagementController::class, 'updateRetailerProfile'])->name('profile.update-retailer');
 });
 
