@@ -364,4 +364,60 @@ class MagazineController extends Controller
         }
     }
 
+    public function analytics($id)
+    {
+        try {
+            $magazine = Magazine::with(['images', 'publisher'])->findOrFail($id);
+
+            // Check if user owns this magazine
+            $publisher = auth()->user();
+            $publisherProfile = PublisherProfile::where('user_id', $publisher->id)->first();
+
+            if ($magazine->publisher_id !== $publisherProfile->id) {
+                return redirect()->back()->with('error', 'Unauthorized access.');
+            }
+
+            // Get sales data for this magazine
+            // For now, we'll calculate based on copies_sold and total_printed
+            $unitsSold = $magazine->copies_sold ?? 0;
+            $unitsReturned = 0; // TODO: Calculate from returns table when implemented
+            $totalPrinted = $magazine->total_printed ?? 0;
+            $currentStock = $magazine->stock ?? 0;
+
+            // Calculate growth percentage (placeholder - would need historical data)
+            $growthPercentage = 0;
+
+            // Calculate margin
+            $margin = $magazine->msrp - $magazine->wholesale_price;
+            $marginPercentage = $magazine->wholesale_price > 0
+                ? (($margin / $magazine->msrp) * 100)
+                : 0;
+
+            // Get time period data (placeholder - would need sales_analytics table)
+            $timePeriodData = [
+                'daily' => [],
+                'weekly' => [],
+                'monthly' => [],
+                'quarterly' => [],
+                'yearly' => [],
+            ];
+
+            return view('publisher.pages.magazine-analytics', compact(
+                'magazine',
+                'publisherProfile',
+                'unitsSold',
+                'unitsReturned',
+                'totalPrinted',
+                'currentStock',
+                'growthPercentage',
+                'margin',
+                'marginPercentage',
+                'timePeriodData'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Magazine analytics error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to load magazine analytics.');
+        }
+    }
+
 }
