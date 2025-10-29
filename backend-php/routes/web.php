@@ -12,6 +12,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PublisherFinancialController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileManagementController;
+use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\StripePayoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,6 +209,24 @@ Route::middleware(['auth', 'role:retailer'])->group(function () {
 });
 
 Route::post('/checkout/cart', [CheckoutController::class, 'getCart'])->name('checkout.cart');
+
+// ---------------------
+// Stripe Payment Routes (Retailer)
+// ---------------------
+Route::middleware(['auth', 'role:retailer'])->prefix('stripe')->name('stripe.')->group(function () {
+    Route::post('/payment-intent', [StripePaymentController::class, 'createPaymentIntent'])->name('payment-intent');
+    Route::post('/confirm-payment', [StripePaymentController::class, 'confirmPayment'])->name('confirm-payment');
+    Route::get('/payment-status', [StripePaymentController::class, 'getPaymentStatus'])->name('payment-status');
+});
+
+// ---------------------
+// Stripe Payout Routes (Publisher)
+// ---------------------
+Route::middleware(['auth', 'role:publisher'])->prefix('stripe')->name('stripe.')->group(function () {
+    Route::get('/onboarding', [StripePayoutController::class, 'getOnboardingLink'])->name('onboarding');
+    Route::post('/payout', [StripePayoutController::class, 'createPayout'])->name('payout');
+    Route::get('/payouts', [StripePayoutController::class, 'listPayouts'])->name('payouts');
+});
 
 // ---------------------
 // Auth Scaffolding Routes
