@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('stripe_customer_id')->nullable()->after('email_verified_at');
-            $table->string('stripe_account_id')->nullable()->after('stripe_customer_id');
+            if (!Schema::hasColumn('users', 'stripe_customer_id')) {
+                $table->string('stripe_customer_id')->nullable()->after('email_verified_at');
+            }
         });
     }
 
@@ -23,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['stripe_customer_id', 'stripe_account_id']);
+            if (Schema::hasColumn('users', 'stripe_customer_id')) {
+                $table->dropColumn('stripe_customer_id');
+            }
         });
     }
 };
