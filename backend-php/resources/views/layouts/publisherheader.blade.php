@@ -20,6 +20,8 @@
                 <a href="{{ route('publisher.dashboard') }}" id="dashboardLink">Dashboard</a>
                 <a href="{{ route('publisher.catalogue') }}">Catalogue</a>
                 <a href="{{ route('publisher.orders') }}">Orders</a>
+                <a href="{{ route('publisher.transfers') }}">Transfers</a>
+                <a href="{{ route('publisher.transactions') }}">Transactions</a>
                 <a href="{{ route('publisher.messages') }}">Messages</a>
                 <a href="{{ route('publisher.account') }}">Account</a>
                 <a href="{{ route('publisher.help-center') }}">Help Center</a>
