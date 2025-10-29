@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RetailerController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\PublisherPageController;
+use App\Http\Controllers\RetailerPageController;
 use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PublisherFinancialController;
@@ -158,10 +159,13 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
 Route::middleware(['auth', 'role:retailer'])->prefix('retailer')->name('retailer.')->group(function () {
     Route::get('/dashboard', [RetailerController::class, 'dashboard'])->name('dashboard');
     Route::put('/address/update', [RetailerController::class, 'updateaddress'])->name('address.update');
-    Route::get('/catalogue', [PublisherPageController::class, 'catalogue'])->name('catalogue');
-    Route::get('/orders', [PublisherPageController::class, 'orders'])->name('orders');
-    Route::get('/messages', [PublisherPageController::class, 'messages'])->name('messages');
-    Route::get('/account', [PublisherPageController::class, 'account'])->name('account');
+    Route::get('/catalogue', [RetailerPageController::class, 'catalogue'])->name('catalogue');
+    Route::get('/orders', [RetailerPageController::class, 'orders'])->name('orders');
+    Route::get('/messages', [RetailerPageController::class, 'messages'])->name('messages');
+    Route::get('/account', [RetailerPageController::class, 'account'])->name('account');
+    Route::get('/help-center', [RetailerPageController::class, 'helpCenter'])->name('help-center');
+    Route::get('/faq', [RetailerPageController::class, 'faq'])->name('faq');
+    Route::get('/payment-shipping', [RetailerPageController::class, 'paymentShipping'])->name('payment-shipping');
 });
 
 // ---------------------

@@ -124,7 +124,7 @@
 
     <div class="page-container">
         @if(auth()->check())
-            <a href="{{ route('dashboard') }}" class="back-link">
+            <a href="{{ \App\Helpers\RouteHelper::getDashboardRoute() }}" class="back-link">
                 <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
                 <span>Back to Dashboard</span>
             </a>

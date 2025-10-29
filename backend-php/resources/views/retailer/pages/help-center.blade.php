@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help Center - NEESH Publisher</title>
+    <title>Help Center - NEESH Retailer</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/js/menu.js') }}"></script>
     <style>
         .page-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
         .page-header {
             margin-bottom: 40px;
-            text-align: center;
         }
         .page-header h1 {
             font-size: 32px;
@@ -26,17 +25,6 @@
         .page-header p {
             font-size: 16px;
             color: #666;
-            font-family: 'Manrope', sans-serif;
-        }
-        .search-box {
-            margin-bottom: 40px;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #eee;
-            border-radius: 8px;
-            font-size: 16px;
             font-family: 'Manrope', sans-serif;
         }
         .help-categories {
@@ -55,8 +43,8 @@
             transition: all 0.3s ease;
         }
         .help-category:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
+            border-color: #753bbd;
+            box-shadow: 0 4px 12px rgba(117, 59, 189, 0.1);
         }
         .help-category-icon {
             font-size: 40px;
@@ -75,50 +63,55 @@
         }
         .faq-section {
             background: white;
-            border: 1px solid #eee;
             border-radius: 8px;
             padding: 30px;
+            margin-bottom: 30px;
+        }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 20px;
+            font-family: 'Manrope', sans-serif;
         }
         .faq-item {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
             border-bottom: 1px solid #eee;
+            padding: 20px 0;
         }
         .faq-item:last-child {
             border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
         }
         .faq-question {
             font-size: 16px;
             font-weight: 600;
-            color: #333;
             cursor: pointer;
-            font-family: 'Manrope', sans-serif;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-family: 'Manrope', sans-serif;
+        }
+        .faq-question:hover {
+            color: #753bbd;
         }
         .faq-answer {
             font-size: 14px;
             color: #666;
             margin-top: 10px;
-            font-family: 'Manrope', sans-serif;
             display: none;
+            font-family: 'Manrope', sans-serif;
         }
         .faq-answer.active {
             display: block;
         }
         .contact-section {
-            background: black;
+            background: linear-gradient(135deg, #753bbd 0%, #5a2d8a 100%);
             color: white;
             border-radius: 8px;
             padding: 40px;
             text-align: center;
         }
         .contact-section h2 {
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 10px;
             font-family: 'Manrope', sans-serif;
         }
@@ -144,17 +137,7 @@
     </style>
 </head>
 <body>
-    @if(auth()->check())
-        @if(auth()->user()->hasRole('admin'))
-            @include('layouts.admin_header')
-        @elseif(auth()->user()->hasRole('publisher'))
-            @include('layouts.publisherheader')
-        @elseif(auth()->user()->hasRole('retailer'))
-            @include('layouts.header')
-        @endif
-    @else
-        @include('layouts.guest_header')
-    @endif
+    @include('layouts.header')
 
     <div class="page-container">
         <div class="page-header">
@@ -170,86 +153,77 @@
                 </a>
             @endif
             <h1>Help Center</h1>
-            <p>Find answers and get support for your publisher account</p>
-        </div>
-
-        <div class="search-box">
-            <input type="text" placeholder="Search for help articles...">
+            <p>Find answers to common questions about ordering and managing your account</p>
         </div>
 
         <div class="help-categories">
             <div class="help-category">
                 <div class="help-category-icon">📚</div>
                 <h3>Getting Started</h3>
-                <p>Learn the basics of publishing on NEESH</p>
+                <p>Learn the basics of browsing and ordering magazines</p>
             </div>
             <div class="help-category">
-                <div class="help-category-icon">📤</div>
-                <h3>Uploading Magazines</h3>
-                <p>Step-by-step guide to upload your titles</p>
+                <div class="help-category-icon">🛒</div>
+                <h3>Ordering</h3>
+                <p>How to place and manage your magazine orders</p>
             </div>
             <div class="help-category">
-                <div class="help-category-icon">💰</div>
-                <h3>Pricing & Payments</h3>
-                <p>Understand pricing and payment options</p>
+                <div class="help-category-icon">💳</div>
+                <h3>Payment</h3>
+                <p>Payment methods and billing information</p>
             </div>
             <div class="help-category">
-                <div class="help-category-icon">📊</div>
-                <h3>Analytics</h3>
-                <p>Track your sales and performance</p>
+                <div class="help-category-icon">📦</div>
+                <h3>Shipping</h3>
+                <p>Shipping options and delivery information</p>
             </div>
         </div>
 
         <div class="faq-section">
-            <h2 style="font-size: 24px; margin-bottom: 30px; font-family: 'Manrope', sans-serif;">Frequently Asked Questions</h2>
-            
+            <h2>Frequently Asked Questions</h2>
             <div class="faq-item">
                 <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
-                    <span>How do I upload my first magazine?</span>
+                    <span>How do I place an order?</span>
                     <span>+</span>
                 </div>
                 <div class="faq-answer">
-                    Go to your Dashboard and click "Upload Magazine". Fill in all the required information about your publication, upload cover images, and set your pricing. Once submitted, your magazine will be reviewed and published.
+                    Browse our catalogue, select the magazines you want, add them to your cart, and proceed to checkout. You can pay using our secure payment system.
                 </div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
-                    <span>What image formats are supported?</span>
+                    <span>What payment methods do you accept?</span>
                     <span>+</span>
                 </div>
                 <div class="faq-answer">
-                    We support JPEG, PNG, GIF, and WebP formats. Images should be at least 500x650 pixels for best quality. Maximum file size is 5MB per image.
+                    We accept all major credit cards (Visa, Mastercard, American Express) and other payment methods through our secure Stripe payment gateway.
                 </div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
-                    <span>How are payments processed?</span>
+                    <span>How long does shipping take?</span>
                     <span>+</span>
                 </div>
                 <div class="faq-answer">
-                    Payments are processed monthly. You'll receive payment for all orders from the previous month. We support bank transfers and other payment methods. Check your account settings for payment details.
+                    Standard shipping typically takes 5-7 business days. Express shipping options are available at checkout for faster delivery.
                 </div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
-                    <span>Can I edit my magazine after publishing?</span>
+                    <span>Can I cancel or modify my order?</span>
                     <span>+</span>
                 </div>
                 <div class="faq-answer">
-                    Yes! You can edit your magazine details, pricing, and images anytime from your Catalogue. Changes will be reflected immediately on the platform.
+                    Orders can be cancelled or modified within 24 hours of placement. Contact our support team for assistance with your order.
                 </div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
-                    <span>What is the commission rate?</span>
+                    <span>What is your return policy?</span>
                     <span>+</span>
                 </div>
                 <div class="faq-answer">
-                    NEESH takes a 15% commission on each sale. You receive 85% of the wholesale price. This helps us maintain the platform and support your success.
+                    We offer a 30-day return policy for unopened magazines. Please contact our support team to initiate a return.
                 </div>
             </div>
         </div>
@@ -262,14 +236,10 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const faqQuestions = document.querySelectorAll('.faq-question');
-            faqQuestions.forEach(question => {
-                question.addEventListener('click', function() {
-                    const answer = this.nextElementSibling;
-                    answer.classList.toggle('active');
-                    this.querySelector('span:last-child').textContent = answer.classList.contains('active') ? '−' : '+';
-                });
+        // Allow clicking on help categories to expand FAQs
+        document.querySelectorAll('.help-category').forEach(category => {
+            category.addEventListener('click', function() {
+                document.querySelector('.faq-section').scrollIntoView({ behavior: 'smooth' });
             });
         });
     </script>

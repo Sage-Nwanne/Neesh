@@ -262,7 +262,7 @@
     </style>
 
     <div class="page-header">
-        <a href="{{ route('publisher.dashboard') }}" style="text-decoration: none; color: #666; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+        <a href="{{ \App\Helpers\RouteHelper::getDashboardRoute() }}" style="text-decoration: none; color: #666; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;">
             <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back" style="width: 20px;">
             <span>Back to Dashboard</span>
         </a>

@@ -5,11 +5,11 @@
 @section('content')
     
       <div class="login_new_to_nessh_back_arrow_container">
-          <a href="login.html" class="login_new_to_nessh_back_arrow">
+          <a href="{{ route('retailer.catalogue') }}" class="login_new_to_nessh_back_arrow">
               <div class="back_navigation_title">
                   <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back Arrow">
               </div>
-              <h2 class="my_title">My Titles</h2>
+              <h2 class="my_title">Browse Catalogue</h2>
           </a>
       </div>
 

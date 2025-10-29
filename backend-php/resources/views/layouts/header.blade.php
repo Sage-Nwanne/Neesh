@@ -31,8 +31,9 @@
                 <a href="{{ route('retailer.orders') }}">Orders</a>
                 <a href="{{ route('retailer.messages') }}">Messages</a>
                 <a href="{{ route('retailer.account') }}">Account</a>
-                <a href="{{ route('help-center') }}">Help Center</a>
-                <a href="{{ route('faq') }}">FAQ</a>
+                <a href="{{ route('retailer.payment-shipping') }}">Payment & Shipping</a>
+                <a href="{{ route('retailer.help-center') }}">Help Center</a>
+                <a href="{{ route('retailer.faq') }}">FAQ</a>
                 <hr style="margin: 10px 0;">
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf

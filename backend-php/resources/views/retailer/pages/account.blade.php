@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account - NEESH Publisher</title>
+    <title>Account - NEESH Retailer</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/js/menu.js') }}"></script>
@@ -97,7 +97,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.publisherheader')
+    @include('layouts.header')
 
     <div class="page-container">
         <div class="page-header">
@@ -106,7 +106,7 @@
                 <span>Back to Dashboard</span>
             </a>
             <h1>Account Settings</h1>
-            <p>Manage your publisher account and preferences</p>
+            <p>Manage your retailer account and preferences</p>
         </div>
 
         <div class="account-grid">
@@ -152,14 +152,8 @@
 
             <div class="account-card">
                 <h3>Profile Settings</h3>
-                <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Customize your publisher profile, branding, and social media links.</p>
-                <a href="{{ route('profile.publisher-settings') }}" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">Manage Profile Settings</a>
-            </div>
-
-            <div class="account-card">
-                <h3>Archived Titles</h3>
-                <p style="font-size: 14px; color: #666; margin-bottom: 20px;">View and manage your archived magazine titles.</p>
-                <a href="{{ route('publisher.archived-titles') }}" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">View Archived Titles</a>
+                <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Customize your retailer profile and business information.</p>
+                <a href="{{ route('profile.retailer-settings') }}" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">Manage Profile Settings</a>
             </div>
 
             <div class="account-card">

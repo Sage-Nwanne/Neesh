@@ -230,7 +230,7 @@
                 </div>
 
                 <div class="cart-footer">
-                    <a href="{{ route('checkout') }}" id="checkoutBtn" class="cart-checkout">Checkout</a>
+                    <a href="{{ route('checkout.index') }}" id="checkoutBtn" class="cart-checkout">Checkout</a>
                 </div>
             </div>
         </aside>
