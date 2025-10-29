@@ -1,6 +1,15 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - NEESH Retailer</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <script src="{{ asset('assets/js/menu.js') }}"></script>
+</head>
+<body>
+    @include('layouts.header')
 <div class="settings-container">
     <div class="settings-header">
         <h1>Profile Settings</h1>
@@ -497,16 +506,16 @@ document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', function(e) {
         e.preventDefault();
         const section = this.dataset.section;
-        
+
         // Update active nav item
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         this.classList.add('active');
-        
+
         // Update active section
         document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
         document.getElementById(section).classList.add('active');
     });
 });
 </script>
-@endsection
-
+</body>
+</html>

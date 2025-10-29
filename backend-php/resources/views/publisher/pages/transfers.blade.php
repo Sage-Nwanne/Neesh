@@ -1,6 +1,15 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfers - NEESH Publisher</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <script src="{{ asset('assets/js/menu.js') }}"></script>
+</head>
+<body>
+    @include('layouts.publisherheader')
 <div class="transfers-container">
     <style>
         * {
@@ -418,5 +427,5 @@
     // Set initial selected state
     document.querySelector('.transfer-option input[type="radio"]:checked').closest('.transfer-option').classList.add('selected');
 </script>
-@endsection
-
+</body>
+</html>
