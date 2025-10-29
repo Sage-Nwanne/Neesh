@@ -10,6 +10,8 @@ use App\Http\Controllers\PublisherPageController;
 use App\Http\Controllers\DiscoverController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PublisherFinancialController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ProfileManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +179,34 @@ Route::get('/magazine/{id}', [MagazineController::class, 'show'])->name('magazin
 // ---------------------
 Route::get('/publisher/{publisherId}', [DiscoverController::class, 'viewPublisher'])->name('publisher.profile');
 Route::post('/magazine/{magazineId}/track-view', [DiscoverController::class, 'trackView'])->name('magazine.track-view');
+
+// ---------------------
+// Profile Management Routes
+// ---------------------
+Route::get('/profile/publisher/{publisherId}', [ProfileManagementController::class, 'publisherProfile'])->name('profile.publisher');
+Route::get('/profile/retailer/{retailerId}', [ProfileManagementController::class, 'retailerProfile'])->name('profile.retailer');
+
+Route::middleware(['auth', 'role:publisher'])->group(function () {
+    Route::get('/profile/settings', [ProfileManagementController::class, 'publisherSettings'])->name('profile.publisher-settings');
+    Route::post('/profile/update-publisher', [ProfileManagementController::class, 'updatePublisherProfile'])->name('profile.update-publisher');
+});
+
+Route::middleware(['auth', 'role:retailer'])->group(function () {
+    Route::get('/profile/settings', [ProfileManagementController::class, 'retailerSettings'])->name('profile.retailer-settings');
+    Route::post('/profile/update-retailer', [ProfileManagementController::class, 'updateRetailerProfile'])->name('profile.update-retailer');
+});
+
+// ---------------------
+// Checkout Routes
+// ---------------------
+Route::middleware(['auth', 'role:retailer'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/payment-intent', [CheckoutController::class, 'createPaymentIntent'])->name('checkout.payment-intent');
+    Route::post('/checkout/process', [CheckoutController::class, 'processOrder'])->name('checkout.process');
+    Route::get('/checkout/success/{orderId?}', [CheckoutController::class, 'success'])->name('checkout.success');
+});
+
+Route::post('/checkout/cart', [CheckoutController::class, 'getCart'])->name('checkout.cart');
 
 // ---------------------
 // Auth Scaffolding Routes
