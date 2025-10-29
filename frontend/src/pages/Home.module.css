@@ -120,6 +120,11 @@
     display: block !important;
   }
 
+  .hero {
+    padding: 40px 0 !important;
+    min-height: auto !important;
+  }
+
   .heroVisual {
     position: static !important;
     left: auto !important;
@@ -130,8 +135,6 @@
     display: block !important;
   }
 
-
-
   .heroGrid {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
@@ -140,17 +143,31 @@
 
   .heroContent {
     text-align: center !important;
+    padding: 0 10px !important;
   }
 
   .heroContent h1 {
-    font-size: 5.8rem !important;
+    font-size: 6vw !important;
+    max-width: 36ch !important;
     text-align: center !important;
+    line-height: 1.1 !important;
+    margin-bottom: 1.5rem !important;
+    word-wrap: break-word !important;
+    hyphens: auto !important;
+    bottom: 0 !important;
+  }
+
+  .heroContent p {
+    font-size: 1.2rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 2rem !important;
+    padding: 0 10px !important;
   }
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: 0 20px !important;
+    padding: 0 15px !important;
   }
 
   .nav {
@@ -161,10 +178,31 @@
     display: flex !important;
   }
 
+  .hero {
+    padding: 30px 0 !important;
+    min-height: auto !important;
+  }
+
+  .heroContent {
+    padding: 0 5px !important;
+  }
+
   .heroContent h1 {
-    font-size: 5.8rem !important;
+    font-size: 6vw !important;
+    max-width: 36ch !important;
     line-height: 1.1 !important;
     text-align: center !important;
+    margin-bottom: 1rem !important;
+    word-wrap: break-word !important;
+    hyphens: auto !important;
+    bottom: 0 !important;
+  }
+
+  .heroContent p {
+    font-size: 1.1rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1.5rem !important;
+    padding: 0 5px !important;
   }
 
   .heroVisual {
@@ -177,8 +215,6 @@
     display: block !important;
   }
 
-
-
   .ctaTitle {
     font-size: 1.6rem !important;
     max-width: 250px !important;
@@ -188,6 +224,43 @@
 
   .magOnBench {
     margin: 0 auto 1.5rem auto !important;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px !important;
+  }
+
+  .hero {
+    padding: 20px 0 !important;
+    min-height: auto !important;
+  }
+
+  .heroContent {
+    padding: 0 !important;
+  }
+
+  .heroContent h1 {
+    font-size: 6vw !important;
+    max-width: 24ch !important;
+    line-height: 1.1 !important;
+    margin-bottom: 1rem !important;
+    word-wrap: break-word !important;
+    hyphens: auto !important;
+    bottom: 0 !important;
+  }
+
+  .heroContent p {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .heroVisual {
+    width: 220px !important;
+    height: 130px !important;
   }
 }
 

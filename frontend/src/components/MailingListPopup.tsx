@@ -44,9 +44,29 @@ export default function MailingListPopup({
       return;
     }
 
+    // Check screen size and hide popup if mobile
+    const checkScreenSize = () => {
+      const isMobile = window.innerWidth < 600;
+      if (isMobile && open) {
+        setOpen(false);
+      }
+      return !isMobile;
+    };
+
+    // Don't show popup on mobile devices (screens smaller than 600px)
+    if (!checkScreenSize()) {
+      return;
+    }
+
     // Always show on refresh (no frequency cap)
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduced(!!mq.matches);
+
+    // Add resize listener to hide popup if screen becomes mobile size
+    const handleResize = () => {
+      checkScreenSize();
+    };
+    window.addEventListener("resize", handleResize);
 
     if (triggerOnScroll) {
       const handleScroll = () => {
@@ -60,12 +80,18 @@ export default function MailingListPopup({
       };
 
       window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", handleResize);
+      };
     } else {
       const t = setTimeout(() => setOpen(true), delayMs);
-      return () => clearTimeout(t);
+      return () => {
+        clearTimeout(t);
+        window.removeEventListener("resize", handleResize);
+      };
     }
-  }, [delayMs, triggerOnScroll, scrollThreshold, scrollTriggered, location.pathname]);
+  }, [delayMs, triggerOnScroll, scrollThreshold, scrollTriggered, location.pathname, open]);
 
   const handleClose = () => {
     setOpen(false);

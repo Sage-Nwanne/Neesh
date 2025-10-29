@@ -169,6 +169,7 @@ class RegisteredUserController extends Controller
                 'print_run' => ['required', 'integer'],
                 'page_count' => ['nullable', 'integer'],
                 'genre' => ['nullable', 'string'],
+                'dimensions' => ['nullable', 'string'],
                 'available_quantities' => ['required', 'integer'],
                 'wholesale_price' => ['required', 'numeric'],
                 'retail_price' => ['required', 'numeric'],
