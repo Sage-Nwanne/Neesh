@@ -15,6 +15,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileManagementController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripePayoutController;
+use App\Http\Controllers\WebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -235,4 +236,16 @@ Route::middleware(['auth', 'role:publisher'])->prefix('stripe')->name('stripe.')
 // ---------------------
 // Auth Scaffolding Routes
 // ---------------------
+
+// ---------------------
+// Webhook Routes (No Auth Required)
+// ---------------------
+Route::post('/webhooks/stripe', [WebhookController::class, 'handleStripe'])->name('webhooks.stripe')->withoutMiddleware(['web']);
+
 require __DIR__ . '/auth.php';
+
+
+// ---------------------
+// Webhook Routes (No Auth Required)
+// ---------------------
+Route::post('/webhooks/stripe', [WebhookController::class, 'handleStripe'])->name('webhooks.stripe')->withoutMiddleware(['web']);

@@ -200,6 +200,15 @@
                 </div>
             </div>
         </div>
+
+        <div style="text-align: center; margin-top: 60px; padding: 40px 20px; border-top: 1px solid #eee;">
+            <p style="font-size: 16px; color: #666; margin-bottom: 15px; font-family: 'Manrope', sans-serif;">
+                Not finding what you're looking for?
+            </p>
+            <a href="https://neesh.art/faq" target="_blank" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; font-family: 'Manrope', sans-serif; font-weight: 600;">
+                More FAQ
+            </a>
+        </div>
     </div>
 
     <script>

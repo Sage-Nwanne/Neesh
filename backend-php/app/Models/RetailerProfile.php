@@ -45,4 +45,8 @@ class RetailerProfile extends Model
     public function stores() {
         return $this->hasMany(RetailerStore::class, 'retailer_id');
     }
+
+    public function orders() {
+        return $this->hasMany(Order::class, 'retailer_id');
+    }
 }

@@ -13,6 +13,8 @@ class Order extends Model
         'retailer_id',
         'publisher_id',
         'retailer_store_id',
+        'shipping_address_id',
+        'billing_address_id',
         'status',
         'subtotal',
         'commission_fee',
@@ -47,5 +49,15 @@ class Order extends Model
     public function returns()
     {
         return $this->hasMany(ReturnModel::class);
+    }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo(Address::class, 'shipping_address_id');
+    }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(Address::class, 'billing_address_id');
     }
 }

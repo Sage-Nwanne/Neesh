@@ -3,13 +3,17 @@
 
 @section('title', 'Dashboard')
 @section('content')
-    
-      <div class="login_new_to_nessh_back_arrow_container">
+
+      <div class="login_new_to_nessh_back_arrow_container" style="display: flex; justify-content: space-between; align-items: center;">
           <a href="{{ route('retailer.catalogue') }}" class="login_new_to_nessh_back_arrow">
               <div class="back_navigation_title">
                   <img src="{{ asset('assets/image/left arrow.png') }}" alt="Back Arrow">
               </div>
               <h2 class="my_title">Browse Catalogue</h2>
+          </a>
+          <a href="{{ route('checkout.index') }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #000; font-family: 'Manrope', sans-serif; font-weight: 600; padding: 10px 20px; border: 1px solid #ddd; border-radius: 4px; transition: all 0.3s ease;">
+              <object type="image/svg+xml" data="{{ asset('assets/svg/add-to-cart.svg') }}" style="width: 24px; height: 24px;"></object>
+              <span>My Cart</span>
           </a>
       </div>
 

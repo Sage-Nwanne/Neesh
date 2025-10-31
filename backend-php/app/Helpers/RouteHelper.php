@@ -36,7 +36,7 @@ class RouteHelper
 
     /**
      * Get the dashboard route name based on user role
-     * 
+     *
      * @return string
      */
     public static function getDashboardRouteName()
@@ -60,6 +60,57 @@ class RouteHelper
         }
 
         return 'explore.index';
+    }
+
+    /**
+     * Get the user's role
+     *
+     * @return string|null
+     */
+    public static function getUserRole()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return null;
+        }
+
+        if ($user->hasRole('admin')) {
+            return 'admin';
+        }
+
+        if ($user->hasRole('publisher')) {
+            return 'publisher';
+        }
+
+        if ($user->hasRole('retailer')) {
+            return 'retailer';
+        }
+
+        return null;
+    }
+
+    /**
+     * Get role-based route
+     *
+     * @param string $routeName The route name without role prefix (e.g., 'catalogue', 'orders', 'account')
+     * @return string
+     */
+    public static function getRoleBasedRoute($routeName)
+    {
+        $role = self::getUserRole();
+
+        if (!$role) {
+            return route('explore.index');
+        }
+
+        $routeKey = $role . '.' . $routeName;
+
+        if (route($routeKey)) {
+            return route($routeKey);
+        }
+
+        return route('explore.index');
     }
 }
 

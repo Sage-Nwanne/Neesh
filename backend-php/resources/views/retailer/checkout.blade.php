@@ -1,7 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .checkout-logo-link {
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    .checkout-logo-link img {
+        max-width: 150px;
+        height: auto;
+    }
+</style>
+
 <div class="checkout-container">
+    <div style="padding: 20px 0;">
+        <a href="{{ \App\Helpers\RouteHelper::getDashboardRoute() }}" class="checkout-logo-link">
+            <img src="{{ asset('assets/image/Logo A1.png') }}" alt="NEESH Logo">
+        </a>
+    </div>
     <div class="checkout-header">
         <h1>Checkout</h1>
         <p class="breadcrumb">Explore > Cart > <span class="active">Checkout</span></p>
@@ -44,11 +60,24 @@
                     </div>
                     <div class="form-group">
                         <label for="shipping_phone">Phone</label>
-                        <input type="tel" id="shipping_phone" name="shipping_phone" required>
+                        <input type="tel" id="shipping_phone" name="shipping_phone" placeholder="10-20 digits" required>
                     </div>
                     <div class="form-group">
-                        <label for="shipping_address">Street Address</label>
-                        <input type="text" id="shipping_address" name="shipping_address" required>
+                        <label for="shipping_country">Country</label>
+                        <select id="shipping_country" name="shipping_country" required onchange="updateShippingFields()">
+                            <option value="">Select Country</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping_line1">Street Address</label>
+                        <input type="text" id="shipping_line1" name="shipping_line1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping_line2">Street Address 2 (Optional)</label>
+                        <input type="text" id="shipping_line2" name="shipping_line2">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -56,12 +85,12 @@
                             <input type="text" id="shipping_city" name="shipping_city" required>
                         </div>
                         <div class="form-group">
-                            <label for="shipping_state">State</label>
-                            <input type="text" id="shipping_state" name="shipping_state" required>
+                            <label for="shipping_state" id="shipping_state_label">State</label>
+                            <input type="text" id="shipping_state" name="shipping_state" placeholder="e.g., CA, NY">
                         </div>
                         <div class="form-group">
-                            <label for="shipping_zip">ZIP Code</label>
-                            <input type="text" id="shipping_zip" name="shipping_zip" required>
+                            <label for="shipping_postal_code" id="shipping_postal_label">ZIP Code</label>
+                            <input type="text" id="shipping_postal_code" name="shipping_postal_code" placeholder="e.g., 12345">
                         </div>
                     </div>
                     <button type="button" class="btn-next" onclick="nextStep(2)">Continue to Billing</button>
@@ -72,17 +101,26 @@
             <div class="checkout-step" id="step-2">
                 <h2>Billing Address</h2>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="same_as_shipping" checked>
-                    <label for="same_as_shipping">Same as shipping address</label>
+                    <input type="checkbox" id="billing_same_as_shipping" name="billing_same_as_shipping" checked onchange="toggleBillingForm()">
+                    <label for="billing_same_as_shipping">Same as shipping address</label>
                 </div>
                 <form id="billingForm" class="address-form" style="display: none;">
                     <div class="form-group">
-                        <label for="billing_name">Full Name</label>
-                        <input type="text" id="billing_name" name="billing_name">
+                        <label for="billing_country">Country</label>
+                        <select id="billing_country" name="billing_country" onchange="updateBillingFields()">
+                            <option value="">Select Country</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="billing_address">Street Address</label>
-                        <input type="text" id="billing_address" name="billing_address">
+                        <label for="billing_line1">Street Address</label>
+                        <input type="text" id="billing_line1" name="billing_line1">
+                    </div>
+                    <div class="form-group">
+                        <label for="billing_line2">Street Address 2 (Optional)</label>
+                        <input type="text" id="billing_line2" name="billing_line2">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -90,12 +128,12 @@
                             <input type="text" id="billing_city" name="billing_city">
                         </div>
                         <div class="form-group">
-                            <label for="billing_state">State</label>
-                            <input type="text" id="billing_state" name="billing_state">
+                            <label for="billing_state" id="billing_state_label">State</label>
+                            <input type="text" id="billing_state" name="billing_state" placeholder="e.g., CA, NY">
                         </div>
                         <div class="form-group">
-                            <label for="billing_zip">ZIP Code</label>
-                            <input type="text" id="billing_zip" name="billing_zip">
+                            <label for="billing_postal_code" id="billing_postal_label">ZIP Code</label>
+                            <input type="text" id="billing_postal_code" name="billing_postal_code" placeholder="e.g., 12345">
                         </div>
                     </div>
                 </form>
@@ -110,6 +148,13 @@
                 <h2>Payment Information</h2>
                 <div id="card-element" class="card-element"></div>
                 <div id="card-errors" class="error-message"></div>
+
+                <!-- Cloudflare Turnstile Bot Protection -->
+                <div style="margin: 20px 0;">
+                    <div class="cf-turnstile" data-sitekey="{{ config('turnstile.site_key') }}" data-theme="light"></div>
+                    <div id="turnstile-error" class="error-message" style="display: none;"></div>
+                </div>
+
                 <div class="button-group">
                     <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
                     <button type="button" class="btn-next" id="paymentBtn" onclick="processPayment()">Review Order</button>
@@ -190,11 +235,20 @@
     gap: 40px;
 }
 
+.checkout-form-section {
+    overflow: visible;
+    min-width: 0;
+}
+
 .step-indicator {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 40px;
+    align-items: flex-start;
+    margin-bottom: 50px;
     position: relative;
+    overflow: visible;
+    padding: 30px 0;
+    width: 100%;
 }
 
 .step-indicator::before {
@@ -215,6 +269,8 @@
     position: relative;
     z-index: 1;
     cursor: pointer;
+    flex: 1;
+    min-width: 80px;
 }
 
 .step-number {
@@ -228,8 +284,9 @@
     justify-content: center;
     font-weight: 600;
     color: #999;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .step.active .step-number {
@@ -239,9 +296,11 @@
 }
 
 .step-label {
-    font-size: 12px;
+    font-size: 13px;
     color: #999;
     font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .step.active .step-label {
@@ -469,6 +528,7 @@
 </style>
 
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 let stripe, elements, cardElement;
 let currentStep = 1;
@@ -496,9 +556,73 @@ function initializeStripe() {
 }
 
 function setupEventListeners() {
-    document.getElementById('same_as_shipping').addEventListener('change', function() {
+    document.getElementById('billing_same_as_shipping').addEventListener('change', function() {
         document.getElementById('billingForm').style.display = this.checked ? 'none' : 'flex';
     });
+}
+
+function updateShippingFields() {
+    const country = document.getElementById('shipping_country').value;
+    const stateLabel = document.getElementById('shipping_state_label');
+    const stateInput = document.getElementById('shipping_state');
+    const postalLabel = document.getElementById('shipping_postal_label');
+    const postalInput = document.getElementById('shipping_postal_code');
+
+    // Update labels and placeholders based on country
+    if (country === 'US') {
+        stateLabel.textContent = 'State';
+        stateInput.placeholder = 'e.g., CA, NY';
+        stateInput.required = true;
+        postalLabel.textContent = 'ZIP Code';
+        postalInput.placeholder = 'e.g., 12345 or 12345-6789';
+    } else if (country === 'UK') {
+        stateLabel.textContent = 'County (Optional)';
+        stateInput.placeholder = 'e.g., Greater London';
+        stateInput.required = false;
+        postalLabel.textContent = 'Postcode';
+        postalInput.placeholder = 'e.g., SW1A 1AA';
+    } else if (country === 'CA') {
+        stateLabel.textContent = 'Province';
+        stateInput.placeholder = 'e.g., ON, BC';
+        stateInput.required = true;
+        postalLabel.textContent = 'Postal Code';
+        postalInput.placeholder = 'e.g., K1A 0B1';
+    }
+}
+
+function updateBillingFields() {
+    const country = document.getElementById('billing_country').value;
+    const stateLabel = document.getElementById('billing_state_label');
+    const stateInput = document.getElementById('billing_state');
+    const postalLabel = document.getElementById('billing_postal_label');
+    const postalInput = document.getElementById('billing_postal_code');
+
+    // Update labels and placeholders based on country
+    if (country === 'US') {
+        stateLabel.textContent = 'State';
+        stateInput.placeholder = 'e.g., CA, NY';
+        stateInput.required = true;
+        postalLabel.textContent = 'ZIP Code';
+        postalInput.placeholder = 'e.g., 12345 or 12345-6789';
+    } else if (country === 'UK') {
+        stateLabel.textContent = 'County (Optional)';
+        stateInput.placeholder = 'e.g., Greater London';
+        stateInput.required = false;
+        postalLabel.textContent = 'Postcode';
+        postalInput.placeholder = 'e.g., SW1A 1AA';
+    } else if (country === 'CA') {
+        stateLabel.textContent = 'Province';
+        stateInput.placeholder = 'e.g., ON, BC';
+        stateInput.required = true;
+        postalLabel.textContent = 'Postal Code';
+        postalInput.placeholder = 'e.g., K1A 0B1';
+    }
+}
+
+function toggleBillingForm() {
+    const checkbox = document.getElementById('billing_same_as_shipping');
+    const billingForm = document.getElementById('billingForm');
+    billingForm.style.display = checkbox.checked ? 'none' : 'flex';
 }
 
 function loadCartFromLocalStorage() {
@@ -564,13 +688,105 @@ function updateStepIndicator() {
 
 function validateStep(step) {
     if (step === 1) {
-        return document.getElementById('shipping_name').value && 
-               document.getElementById('shipping_address').value;
+        // Validate shipping address
+        const name = document.getElementById('shipping_name').value;
+        const email = document.getElementById('shipping_email').value;
+        const phone = document.getElementById('shipping_phone').value;
+        const country = document.getElementById('shipping_country').value;
+        const line1 = document.getElementById('shipping_line1').value;
+        const city = document.getElementById('shipping_city').value;
+        const state = document.getElementById('shipping_state').value;
+        const postal = document.getElementById('shipping_postal_code').value;
+
+        if (!name || !email || !phone || !country || !line1 || !city || !postal) {
+            alert('Please fill in all required shipping address fields');
+            return false;
+        }
+
+        // Validate phone format (10-20 digits)
+        const phoneRegex = /^\d{10,20}$/;
+        if (!phoneRegex.test(phone.replace(/\D/g, ''))) {
+            alert('Please enter a valid phone number (10-20 digits)');
+            return false;
+        }
+
+        // Validate postal code format based on country
+        if (!validatePostalCode(country, postal)) {
+            return false;
+        }
+
+        // Validate state/province if required
+        if ((country === 'US' || country === 'CA') && !state) {
+            alert('Please enter your state/province');
+            return false;
+        }
+
+        return true;
+    } else if (step === 2) {
+        // Validate billing address if not same as shipping
+        const sameAsShipping = document.getElementById('billing_same_as_shipping').checked;
+        if (sameAsShipping) {
+            return true;
+        }
+
+        const country = document.getElementById('billing_country').value;
+        const line1 = document.getElementById('billing_line1').value;
+        const city = document.getElementById('billing_city').value;
+        const state = document.getElementById('billing_state').value;
+        const postal = document.getElementById('billing_postal_code').value;
+
+        if (!country || !line1 || !city || !postal) {
+            alert('Please fill in all required billing address fields');
+            return false;
+        }
+
+        if (!validatePostalCode(country, postal)) {
+            return false;
+        }
+
+        if ((country === 'US' || country === 'CA') && !state) {
+            alert('Please enter your state/province');
+            return false;
+        }
+
+        return true;
+    }
+    return true;
+}
+
+function validatePostalCode(country, postal) {
+    const postalRegex = {
+        'US': /^\d{5}(-\d{4})?$/,  // 12345 or 12345-6789
+        'UK': /^[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}$/i,  // SW1A 1AA
+        'CA': /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i,  // K1A 0B1
+    };
+
+    const regex = postalRegex[country];
+    if (!regex || !regex.test(postal)) {
+        const examples = {
+            'US': '12345 or 12345-6789',
+            'UK': 'SW1A 1AA',
+            'CA': 'K1A 0B1',
+        };
+        alert(`Invalid postal code format for ${country}. Example: ${examples[country]}`);
+        return false;
     }
     return true;
 }
 
 function processPayment() {
+    // Verify Turnstile token
+    const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+
+    if (!turnstileToken) {
+        document.getElementById('turnstile-error').textContent = 'Please complete the bot verification';
+        document.getElementById('turnstile-error').style.display = 'block';
+        return;
+    }
+
+    // Clear error message
+    document.getElementById('turnstile-error').style.display = 'none';
+
     // Move to review step
     nextStep(4);
 }

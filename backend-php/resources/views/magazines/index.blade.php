@@ -33,11 +33,17 @@
                 {{-- ====== IMAGE GALLERY ====== --}}
                 <div class="gallery" aria-label="Product images gallery">
                     <div class="main-viewport" aria-live="polite">
-                        @foreach ($magazine->images as $key => $image)
-                            <img src="{{ asset('storage/' . $image->image_path) }}" data-index="{{ $key }}"
-                                class="main-img" style="{{ $key === 0 ? '' : 'opacity:0;transform:scale(1.02)' }}"
+                        @if ($magazine->images->count() > 0)
+                            @foreach ($magazine->images as $key => $image)
+                                <img src="{{ asset('storage/' . $image->image_path) }}" data-index="{{ $key }}"
+                                    class="main-img" style="{{ $key === 0 ? '' : 'opacity:0;transform:scale(1.02)' }}"
+                                    alt="{{ $magazine->title_name }}">
+                            @endforeach
+                        @else
+                            <img src="{{ asset('magazine-placeholder.png') }}" data-index="0"
+                                class="main-img"
                                 alt="{{ $magazine->title_name }}">
-                        @endforeach
+                        @endif
 
                         {{-- 🔥 Missing controls added --}}
                         <div class="controls">
@@ -51,12 +57,19 @@
                     </div>
 
                     <div class="thumbs" role="tablist" aria-label="Thumbnails">
-                        @foreach ($magazine->images as $key => $image)
-                            <button class="thumb {{ $key === 0 ? 'active' : '' }}" data-index="{{ $key }}">
-                                <img src="{{ asset('storage/' . $image->image_path) }}"
-                                    alt="Thumbnail {{ $key + 1 }}">
+                        @if ($magazine->images->count() > 0)
+                            @foreach ($magazine->images as $key => $image)
+                                <button class="thumb {{ $key === 0 ? 'active' : '' }}" data-index="{{ $key }}">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}"
+                                        alt="Thumbnail {{ $key + 1 }}">
+                                </button>
+                            @endforeach
+                        @else
+                            <button class="thumb active" data-index="0">
+                                <img src="{{ asset('magazine-placeholder.png') }}"
+                                    alt="Placeholder">
                             </button>
-                        @endforeach
+                        @endif
                     </div>
 
                     <div class="action-buttons">
