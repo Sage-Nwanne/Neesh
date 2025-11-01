@@ -2,17 +2,11 @@
 
 namespace Tests\Unit\Services;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use App\Services\FraudDetection;
-use Mockery;
 
 class FraudDetectionTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
 
     public function test_low_risk_transaction(): void
     {
@@ -37,7 +31,10 @@ class FraudDetectionTest extends TestCase
 
         $result = FraudDetection::analyze(1, $paymentData);
 
-        $this->assertIn($result['risk_level'], ['medium', 'high']);
+        $this->assertThat($result['risk_level'], $this->logicalOr(
+            $this->equalTo('medium'),
+            $this->equalTo('high')
+        ));
         $this->assertTrue($result['requires_3ds']);
     }
 
@@ -128,7 +125,10 @@ class FraudDetectionTest extends TestCase
 
         $result = FraudDetection::analyze(1, $paymentData);
 
-        $this->assertIn($result['risk_level'], ['low', 'medium']);
+        $this->assertThat($result['risk_level'], $this->logicalOr(
+            $this->equalTo('low'),
+            $this->equalTo('medium')
+        ));
     }
 
     public function test_multiple_flags_increase_risk(): void

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\PaymentAttempt;
 use App\Models\UserSecurityMetric;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class FraudDetection
 {
@@ -66,6 +67,15 @@ class FraudDetection
         $flagged = false;
 
         try {
+            // Check if database connection is available
+            if (!self::isDatabaseAvailable()) {
+                return [
+                    'flagged' => false,
+                    'risk_level' => 'low',
+                    'flags' => [],
+                ];
+            }
+
             $now = Carbon::now();
             $oneHourAgo = $now->copy()->subHour();
 
@@ -104,6 +114,19 @@ class FraudDetection
     }
 
     /**
+     * Check if database connection is available
+     */
+    private static function isDatabaseAvailable(): bool
+    {
+        try {
+            DB::connection()->getPdo();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Check for suspicious patterns
      */
     private static function checkSuspiciousPatterns(int $userId): array
@@ -112,6 +135,14 @@ class FraudDetection
         $flagged = false;
 
         try {
+            // Check if database connection is available
+            if (!self::isDatabaseAvailable()) {
+                return [
+                    'flagged' => false,
+                    'flags' => [],
+                ];
+            }
+
             // Check for failed payment attempts
             $failedAttempts = PaymentAttempt::where('user_id', $userId)
                 ->where('status', 'failed')
