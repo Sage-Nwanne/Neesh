@@ -275,8 +275,17 @@ class RegisteredUserController extends Controller
 
             DB::commit();
 
-            // Step 6: Send confirmation email to user
-            Mail::to($user->email)->send(new ApplicationConfirmation($user, 'publisher'));
+            // Step 6: Send confirmation email to user (wrapped in try-catch to prevent error display)
+            try {
+                Mail::to($user->email)->send(new ApplicationConfirmation($user, 'publisher'));
+            } catch (\Exception $mailException) {
+                Log::error('Confirmation email failed to send', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'error' => $mailException->getMessage(),
+                ]);
+                // Don't expose mail errors to user - email may still be queued
+            }
 
             // Step 7: login + redirect
             event(new Registered($user));

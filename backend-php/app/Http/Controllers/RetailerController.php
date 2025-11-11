@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\ApplicationConfirmation;
 
 
@@ -95,8 +96,17 @@ class RetailerController extends Controller
             return $user;
         });
 
-        // Send confirmation email to user
-        Mail::to($user->email)->send(new ApplicationConfirmation($user, 'retailer'));
+        // Send confirmation email to user (wrapped in try-catch to prevent error display)
+        try {
+            Mail::to($user->email)->send(new ApplicationConfirmation($user, 'retailer'));
+        } catch (\Exception $mailException) {
+            Log::error('Confirmation email failed to send', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'error' => $mailException->getMessage(),
+            ]);
+            // Don't expose mail errors to user - email may still be queued
+        }
 
         event(new Registered($user));
         Auth::login($user);
