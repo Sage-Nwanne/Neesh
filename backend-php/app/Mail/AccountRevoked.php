@@ -25,6 +25,7 @@ class AccountRevoked extends Mailable
         $roleLabel = ucfirst($this->role);
         
         return $this->markdown('emails.account-revoked')
+            ->to($this->user->email)
             ->subject("Your {$roleLabel} Account Has Been Revoked - NEESH")
             ->with([
                 'user' => $this->user,

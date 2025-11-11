@@ -25,6 +25,7 @@ class ApplicationConfirmation extends Mailable
         $roleLabel = ucfirst($this->role);
         
         return $this->markdown('emails.application-confirmation')
+            ->to($this->user->email)
             ->subject("Your {$roleLabel} Application Received - NEESH")
             ->with([
                 'user' => $this->user,

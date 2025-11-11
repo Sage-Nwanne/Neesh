@@ -6,10 +6,18 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ApplicationApproved;
 use App\Mail\ApplicationRejected;
+use App\Services\AuthProvisioning;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    protected AuthProvisioning $authProvisioning;
+
+    public function __construct(AuthProvisioning $authProvisioning)
+    {
+        $this->authProvisioning = $authProvisioning;
+    }
+
     public function usersList(Request $request)
     {
         $query = User::with('roles');
@@ -85,7 +93,7 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('users'));
     }
 
-    // ✅ Approve user application
+    // ✅ Approve user application with credential provisioning
     public function approveUser($id)
     {
         $user = User::findOrFail($id);
@@ -99,11 +107,39 @@ class AdminController extends Controller
         // Get user role
         $role = $user->roles->pluck('name')->first() ?? 'user';
 
-        // Send approval email
-        Mail::to($user->email)->send(new ApplicationApproved($user, $role));
+        try {
+            // Provision login credentials (magic link or temporary password)
+            $provisioningData = $this->authProvisioning->provisionUser($user, $role);
+            
+            // Extract provisioning info
+            $loginLink = $provisioningData['loginLink'] ?? null;
+            $tempCreds = $provisioningData['tempCreds'] ?? null;
+            $authMode = $provisioningData['authMode'] ?? 'password';
+            $dashboardUrl = $this->authProvisioning->getDashboardUrl();
 
-        return redirect()->route('admin.users.view', $user->id)
-            ->with('success', 'User approved successfully! Approval email sent.');
+            // Send approval email with login credentials
+            Mail::to($user->email)->send(
+                new ApplicationApproved(
+                    $user,
+                    $role,
+                    $loginLink,
+                    $tempCreds,
+                    $authMode,
+                    $dashboardUrl
+                )
+            );
+
+            return redirect()->route('admin.users.view', $user->id)
+                ->with('success', 'User approved successfully! Approval email with login details sent.');
+        } catch (\Exception $e) {
+            \Log::error('Error approving user', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->route('admin.users.view', $user->id)
+                ->with('error', 'User approved but error sending email: ' . $e->getMessage());
+        }
     }
 
     // ✅ Reject user application
@@ -163,3 +199,4 @@ class AdminController extends Controller
         return view('admin.account');
     }
 }
+

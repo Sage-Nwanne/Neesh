@@ -24,6 +24,7 @@ class VerifyNewUser extends Mailable
     public function build()
     {
         return $this->markdown('emails.verify-user')
+            ->to($this->user->email)
             ->subject("New User Verification Needed")
             ->with([
                 'user' => $this->user,

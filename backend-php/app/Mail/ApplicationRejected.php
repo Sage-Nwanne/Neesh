@@ -27,6 +27,7 @@ class ApplicationRejected extends Mailable
         $roleLabel = ucfirst($this->role);
         
         return $this->markdown('emails.application-rejected')
+            ->to($this->user->email)
             ->subject("Your {$roleLabel} Application Status - NEESH")
             ->with([
                 'user' => $this->user,
