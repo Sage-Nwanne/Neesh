@@ -108,7 +108,17 @@ class RetailerController extends Controller
             // Don't expose mail errors to user - email may still be queued
         }
 
-        event(new Registered($user));
+        // Trigger registered event (wrapped to prevent mail errors from displaying)
+        try {
+            event(new Registered($user));
+        } catch (\Exception $eventException) {
+            Log::error('Registered event failed', [
+                'user_id' => $user->id,
+                'error' => $eventException->getMessage(),
+            ]);
+            // Don't expose errors to user - admin verification email is secondary
+        }
+
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME)

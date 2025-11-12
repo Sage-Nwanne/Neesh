@@ -287,8 +287,18 @@ class RegisteredUserController extends Controller
                 // Don't expose mail errors to user - email may still be queued
             }
 
-            // Step 7: login + redirect
-            event(new Registered($user));
+            // Step 7: Trigger registered event (wrapped to prevent mail errors from displaying)
+            try {
+                event(new Registered($user));
+            } catch (\Exception $eventException) {
+                Log::error('Registered event failed', [
+                    'user_id' => $user->id,
+                    'error' => $eventException->getMessage(),
+                ]);
+                // Don't expose errors to user - admin verification email is secondary
+            }
+
+            // Step 8: login + redirect
             Auth::login($user);
 
             return redirect(RouteServiceProvider::HOME)
