@@ -217,8 +217,8 @@ php artisan tinker  # Should connect to database
 
 **Test Keys (Development):**
 ```
-STRIPE_PUBLIC_KEY=pk_test_51RxKK0PVuxHtOyNZML2RIZTdF09gQCELJgErEYVUGa1wrvPuQCUCm1KmSjGFvr3pVXmlJp17fXWHqwTXAlHj7Ib600YOpTomI1
-STRIPE_SECRET_KEY=sk_test_51RxKK0PVuxHtOyNZNs6aGdv2KPXQuhqESY9TXvY5jr8XvRJFjvawqHQGbMmvAReltjb59t1hlHzsDI1Eb2UWsyZy00eWTqNF72
+STRIPE_PUBLIC_KEY=pk_test_[YOUR_STRIPE_TEST_PUBLISHABLE_KEY]
+STRIPE_SECRET_KEY=sk_test_[YOUR_STRIPE_TEST_SECRET_KEY]
 ```
 
 **Test Cards:**
